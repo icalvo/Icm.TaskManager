@@ -69,6 +69,7 @@
     };
 
     // UI state
+    self.title = ko.observable("TaskManager1");
     self.errors = ko.observableArray();
     self.user = ko.observable(null);
     self.view = ko.observable(self.Views.Loading);
@@ -116,7 +117,7 @@
         }
 
         self.user(new UserInfoViewModel(self, userName, dataModel));
-        self.navigateToHome();
+        self.navigateToTasks();
     };
 
     self.navigateToLoggedOff = function () {

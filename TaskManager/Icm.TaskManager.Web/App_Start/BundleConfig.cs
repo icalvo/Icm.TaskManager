@@ -28,6 +28,7 @@ namespace Icm.TaskManager.Web
                 "~/Scripts/app/account/registerExternal.viewmodel.js",
                 "~/Scripts/app/account/manage.viewmodel.js",
                 "~/Scripts/app/account/userInfo.viewmodel.js",
+                "~/Scripts/app/task/tasks.viewmodel.js",
                 "~/Scripts/app/_run.js"));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're

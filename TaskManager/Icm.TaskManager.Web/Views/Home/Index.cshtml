@@ -2,12 +2,11 @@
     Layout = null;
     Response.Headers["X-UA-Compatible"] = "IE=10";
 }
-@model IEnumerable<Icm.TaskManager.Domain.Task>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>My ASP.NET Application</title>
+    <title>TaskManager1</title>
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <meta name="viewport" content="width=device-width" />
     @Styles.Render("~/Content/css")
@@ -24,12 +23,13 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <p class="navbar-brand" data-bind="if: !loggedIn()">Application Name</p>
-                    <a href="#" class="navbar-brand" data-bind="if: loggedIn, click: navigateToHome">Application Name</a>
+                    <p class="navbar-brand" data-bind="text: title, if: !loggedIn()"></p>
+                    <a href="#" class="navbar-brand" data-bind="text: title, if: loggedIn, click: navigateToHome"></a>
                 </div>
                 <div data-bind="if: loggedIn" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li><a href="#" data-bind="click: navigateToHome">Home</a></li>
+                        <li><a href="#" data-bind="click: navigateToTasks">Tasks</a></li>
                         <li>@Html.ActionLink("API", "Index", "Help", new { area = "HelpPage" }, null)</li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right" data-bind="with: user">
@@ -52,7 +52,7 @@
         @Html.Partial("_Tasks")
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year Ignacio Calvo</p>
         </footer>
     </div>
 

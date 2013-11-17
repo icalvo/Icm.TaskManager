@@ -1,2 +1,7 @@
 ﻿<!-- ko with: tasks -->
+<h2>Tareillas</h2>
+<div data-bind="foreach: tasks">
+    <p data-bind="text: $data.id"></p>
+    <p data-bind="text: $data.name"></p>
+</div>
 <!-- /ko -->

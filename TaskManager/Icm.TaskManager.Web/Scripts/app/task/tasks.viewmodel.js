@@ -2,27 +2,21 @@
 function Task(id, name) {
     var self = this;
 
-    self.name = name;
+    self.id = ko.observable(id);
 
-    self.id = ko.observable(initialMeal);
+    self.name = name;
 }
 
-function TaskViewModel(app, title, dataModel) {
+function TasksViewModel(app, dataModel) {
     var self = this;
 
-    // Data
-    self.title = ko.observable(title);
-
-    // Operations
-    self.complete = function () {
-        dataModel.logout().done(function () {
-            app.navigateToLoggedOff();
-        }).fail(function () {
-            app.errors.push("Log off failed.");
-        });
-    };
-
-    self.manage = function () {
-        app.navigateToManage();
-    };
+    self.tasks = ko.observableArray([
+        new Task(345, 'Lavavajillas'),
+        new Task(441, 'Ensayo')]);
 }
+
+app.addViewModel({
+    name: "Tasks",
+    bindingMemberName: "tasks",
+    factory: TasksViewModel
+});
