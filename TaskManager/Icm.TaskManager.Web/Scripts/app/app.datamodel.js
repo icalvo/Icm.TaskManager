@@ -10,8 +10,7 @@
         removeLoginUrl = "/api/Account/RemoveLogin",
         setPasswordUrl = "/api/Account/setPassword",
         siteUrl = "/",
-        userInfoUrl = "/api/Account/UserInfo",
-        taskListUrl = "/api/Task/Get";
+        userInfoUrl = "/api/Account/UserInfo";
 
     // Route operations
     function externalLoginsUrl(returnUrl, generateState) {
@@ -108,6 +107,10 @@
             cache: false,
             headers: getSecurityHeaders()
         });
+    };
+
+    self.getTasks = function () {
+        return $.ajax(taskListUrl);
     };
 
     self.getUserInfo = function (accessToken) {

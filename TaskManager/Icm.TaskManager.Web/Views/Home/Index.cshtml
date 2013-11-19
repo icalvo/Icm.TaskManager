@@ -3,10 +3,10 @@
     Response.Headers["X-UA-Compatible"] = "IE=10";
 }
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="htmlDoc">
 <head>
     <meta charset="utf-8" />
-    <title>TaskManager1</title>
+    <title data-bind="text: title"></title>
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <meta name="viewport" content="width=device-width" />
     @Styles.Render("~/Content/css")

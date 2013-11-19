@@ -10,5 +10,7 @@ namespace Icm.TaskManager.Domain
     {
         void Create(Task task);
         Task GetById(int id);
+        bool Update(Task task);
+        void Delete(Task task);
     }
 }

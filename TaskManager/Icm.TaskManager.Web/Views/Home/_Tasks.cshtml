@@ -1,7 +1,18 @@
 ﻿<!-- ko with: tasks -->
 <h2>Tareillas</h2>
+<form data-bind="submit: addTask">
+    <input data-bind="value: newTaskDescription" placeholder="What do you want to do?" />
+    <button type="submit">Add</button>
+</form>
 <div data-bind="foreach: tasks">
-    <p data-bind="text: $data.id"></p>
-    <p data-bind="text: $data.name"></p>
+    <hr />
+    <h3 data-bind="text: $data.description"></h3>
+    <p>
+        Id: <span data-bind="text: $data.id"></span>
+        CreatedOn: <span data-bind="text: $data.creationDate"></span>
+        <a data-bind="click: $parent.doneTask">Done</a>
+        <a data-bind="click: $parent.editTask">Edit</a>
+        <a data-bind="click: $parent.deleteTask">Delete</a>   
+     </p>
 </div>
 <!-- /ko -->

@@ -50,6 +50,14 @@
     <Compile Include="Migrations\201311132316350_FirstSchema.Designer.cs">
       <DependentUpon>201311132316350_FirstSchema.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201311172350185_TaskDescription.cs" />
+    <Compile Include="Migrations\201311172350185_TaskDescription.Designer.cs">
+      <DependentUpon>201311172350185_TaskDescription.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201311182127025_TaskRestFields.cs" />
+    <Compile Include="Migrations\201311182127025_TaskRestFields.Designer.cs">
+      <DependentUpon>201311182127025_TaskRestFields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="TaskRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -68,6 +76,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201311132316350_FirstSchema.resx">
       <DependentUpon>201311132316350_FirstSchema.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201311172350185_TaskDescription.resx">
+      <DependentUpon>201311172350185_TaskDescription.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201311182127025_TaskRestFields.resx">
+      <DependentUpon>201311182127025_TaskRestFields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
