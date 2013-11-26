@@ -13,9 +13,9 @@ namespace Icm.TaskManager.Web.Controllers
     {
         private Domain.ITaskRepository taskRepository;
 
-        public TaskController()
+        public TaskController(Domain.ITaskRepository taskRepository)
         {
-            this.taskRepository = new TaskManager.Infrastructure.TaskRepository(new TaskManager.Infrastructure.TaskManagerContext());
+            this.taskRepository = taskRepository;
         }
 
         // GET api/task
@@ -37,7 +37,7 @@ namespace Icm.TaskManager.Web.Controllers
             return Ok(task);
         }
 
-        // PUT api/Default1/5
+        // PUT api/task/5
         public IHttpActionResult PutTask(int id, Task task)
         {
             if (!ModelState.IsValid)
@@ -85,6 +85,9 @@ namespace Icm.TaskManager.Web.Controllers
             return Ok(task);
         }
 
+
+        #region IDisposable implementation
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -92,6 +95,7 @@ namespace Icm.TaskManager.Web.Controllers
                 //this.taskRepository.Dispose();
             }
             base.Dispose(disposing);
-        }
+        } 
+        #endregion
     }
 }

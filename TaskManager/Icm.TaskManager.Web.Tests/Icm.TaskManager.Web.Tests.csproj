@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TaskControllerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />
@@ -100,6 +101,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Icm.TaskManager.Domain.Tests\Icm.TaskManager.Domain.Tests.csproj">
+      <Project>{ac757e23-3521-480b-b86b-efcef0bc34ca}</Project>
+      <Name>Icm.TaskManager.Domain.Tests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Icm.TaskManager.Domain\Icm.TaskManager.Domain.csproj">
+      <Project>{9b2297cb-2def-4b8e-b147-4bad6046900f}</Project>
+      <Name>Icm.TaskManager.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Icm.TaskManager.Web\Icm.TaskManager.Web.csproj">
       <Project>{4DB211A6-0BDA-4614-96EC-972151EFC13A}</Project>
       <Name>Icm.TaskManager.Web</Name>

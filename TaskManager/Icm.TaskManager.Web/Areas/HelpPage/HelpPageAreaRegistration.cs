@@ -3,8 +3,14 @@ using System.Web.Mvc;
 
 namespace Icm.TaskManager.Web.Areas.HelpPage
 {
+    /// <summary>
+    /// Help page area registration
+    /// </summary>
     public class HelpPageAreaRegistration : AreaRegistration
     {
+        /// <summary>
+        /// The name of the area
+        /// </summary>
         public override string AreaName
         {
             get
@@ -13,6 +19,10 @@ namespace Icm.TaskManager.Web.Areas.HelpPage
             }
         }
 
+        /// <summary>
+        /// Route registration for the help page area
+        /// </summary>
+        /// <param name="context"></param>
         public override void RegisterArea(AreaRegistrationContext context)
         {
             context.MapRoute(

@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Icm.TaskManager.Web", "Icm.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Icm.TaskManager.Web.Tests", "Icm.TaskManager.Web.Tests\Icm.TaskManager.Web.Tests.csproj", "{FBA7EDF5-082A-41B3-BB64-CE437E3F15B0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Icm.TaskManager.Domain.Tests", "Icm.TaskManager.Domain.Tests\Icm.TaskManager.Domain.Tests.csproj", "{AC757E23-3521-480B-B86B-EFCEF0BC34CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{FBA7EDF5-082A-41B3-BB64-CE437E3F15B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FBA7EDF5-082A-41B3-BB64-CE437E3F15B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FBA7EDF5-082A-41B3-BB64-CE437E3F15B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC757E23-3521-480B-B86B-EFCEF0BC34CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC757E23-3521-480B-B86B-EFCEF0BC34CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC757E23-3521-480B-B86B-EFCEF0BC34CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC757E23-3521-480B-B86B-EFCEF0BC34CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
