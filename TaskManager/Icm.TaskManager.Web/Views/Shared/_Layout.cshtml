@@ -5,7 +5,10 @@
     <title>@ViewBag.Title - TaskManager</title>
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @Styles.Render("~/Content/bootstrap")
+    @Styles.Render("~/Content/bootstrap-theme")
     @Styles.Render("~/Content/css")
+
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
@@ -37,6 +40,7 @@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/respond")
     @RenderSection("Scripts", required: false)
 </body>
 </html>

@@ -21,6 +21,14 @@ namespace Icm.TaskManager.Domain
         public DateTime? AlarmDate { get; set; }
         public string Notes { get; set; }
 
+        public bool IsDone
+        {
+            get
+            {
+                return FinishDate.HasValue;
+            }
+        }
+
         public string Labels { get; set; }
 
         public override string ToString()

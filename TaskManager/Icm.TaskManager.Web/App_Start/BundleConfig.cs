@@ -29,6 +29,7 @@ namespace Icm.TaskManager.Web
                 "~/Scripts/app/account/registerExternal.viewmodel.js",
                 "~/Scripts/app/account/manage.viewmodel.js",
                 "~/Scripts/app/account/userInfo.viewmodel.js",
+                "~/Scripts/app/task/task.datamodel.js",
                 "~/Scripts/app/task/tasks.viewmodel.js",
                 "~/Scripts/app/_run.js"));
 
@@ -37,12 +38,10 @@ namespace Icm.TaskManager.Web
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                 "~/Scripts/modernizr-*"));
 
-            bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                "~/Scripts/bootstrap.js",
+            bundles.Add(new ScriptBundle("~/bundles/respond").Include(
                 "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                 "~/Content/bootstrap.css",
                  "~/Content/Site.css"));
         }
     }

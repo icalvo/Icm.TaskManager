@@ -2,6 +2,7 @@
     var self = this;
     var startedLoad = false;
 
+    self.title = ko.observable("Mis tareas");
     self.tasks = ko.observableArray();
     self.loading = ko.observable(true);
     self.message = ko.observable();
@@ -66,9 +67,15 @@
         self.newTaskDescription("");
     }
 
-    self.doneTask = function () { };
-    self.editTask = function () { };
-    self.deleteTask = function () { };
+    self.doneTask = function (task) {
+        task.finishDate(new Date());
+        task.isDone(true);
+    };
+    self.editTask = function (task) {
+    };
+    self.deleteTask = function (task) {
+        self.tasks.remove(task);
+    };
 
     self.load();
 }
