@@ -54,12 +54,6 @@ input[type="checkbox"].input-validation-error {
     }
 }
 
-.task {
-    background-color: #ddd;
-    border-left: 4px solid #005bff;
-    margin-top: 4px;
-}
-
 .taskDone {
     color: red;
 }

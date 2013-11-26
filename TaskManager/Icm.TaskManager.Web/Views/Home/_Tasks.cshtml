@@ -4,18 +4,20 @@
     <div class="form-group">
         <label class="sr-only" for="newTaskDescription">New task description</label>
         <input type="text" id="newTaskDescription" data-bind="value: newTaskDescription" placeholder="What do you want to do?" class="form-control" />
-        <button type="button" class="btn btn-primary">Add</button>
     </div>
+    <button type="button" class="btn btn-primary">Add</button>
 </form>
 <div data-bind="foreach: tasks">
-    <div class="task">
-        <h3 data-bind="text: $data.description, css: { taskDone: $data.isDone }, title: $data.id"></h3>
-        <p>
+    <div class="panel panel-default task">
+        <div class="panel-heading">
+            <h3 data-bind="text: $data.description, css: { taskDone: $data.isDone }, title: $data.id" class="panel-title"></h3>
+        </div>
+        <div class="panel-body">
             CreatedOn: <span data-bind="text: $data.creationDate"></span>
             <button data-bind="click: $parent.doneTask" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Done</button>
             <a data-bind="click: $parent.editTask" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
             <a data-bind="click: $parent.deleteTask" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Delete</a>
-        </p>
+        </div>
     </div>
 </div>
 <!-- /ko -->
