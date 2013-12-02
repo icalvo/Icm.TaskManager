@@ -5,7 +5,7 @@
         <label class="sr-only" for="newTaskDescription">New task description</label>
         <input type="text" id="newTaskDescription" data-bind="value: newTaskDescription" placeholder="What do you want to do?" class="form-control" />
     </div>
-    <button type="button" class="btn btn-primary">Add</button>
+    <button type="button" class="btn btn-primary" data-bind="click: addTask">Add</button>
 </form>
 <div data-bind="foreach: tasks">
     <div class="panel panel-default task">

@@ -7,7 +7,6 @@
     self.loading = ko.observable(true);
     self.message = ko.observable();
     self.errors = ko.observableArray();
-    self.dataModel = new TaskDataModel();
 
     // For creating tasks
     self.newTaskDescription = ko.observable();
@@ -15,55 +14,26 @@
     // Operations
     self.load = function () { // Load user management data
         if (!startedLoad) {
-            startedLoad = true;
-
-            self.dataModel.getTasks(dataModel.returnUrl, true /* generateState */)
+            taskmanager.api.Task.GetTasks()
                 .done(function (data) {
                     self.tasks.removeAll();
-                    if (true) {
-                        for (var i = 0; i < data.length; i++) {
-                            var viewmodel = ko.mapping.fromJS(data[i]);
-                            self.tasks.push(viewmodel);
-                        }
-                    } else {
-                        app.errors.push("Error retrieving task list.");
+                    for (var i = 0; i < data.length; i++) {
+                        var viewmodel = ko.mapping.fromJS(data[i]);
+                        self.tasks.push(viewmodel);
                     }
-
-                    self.loading(false);
-                }).failJSON(function (data) {
-                    var errors;
-
-                    self.loading(false);
-                    errors = dataModel.toErrorsArray(data);
-
-                    if (errors) {
-                        app.errors(errors);
-                    } else {
-                        app.errors.push("Error retrieving task list.");
-                    }
-                });
+                })
+                .failJSON(function (data) { app.showErrors(data, "Error retrieving task list.") });
         }
     }
 
     self.addTask = function () {
-        var data = { id: 0, description: this.newTaskDescription() };
-        var observable = ko.mapping.fromJS(data);
-        self.tasks.push(observable);
-        self.dataModel.createTask(data, true /* generateState */)
-                .done(function (data) {
-                    //observable.creating(false);
-                }).failJSON(function (data) {
-                    var errors;
-
-                    self.loading(false);
-                    errors = dataModel.toErrorsArray(data);
-
-                    if (errors) {
-                        app.errors(errors);
-                    } else {
-                        app.errors.push("Error retrieving task list.");
-                    }
-                });
+        var newTaskData = { Id: 0, Description: this.newTaskDescription() };
+        taskmanager.api.Task.PostTask({ task: newTaskData })
+                .done(function (newTask) {
+                    var observable = ko.mapping.fromJS(newTask);
+                    self.tasks.push(observable);
+                })
+                .failJSON(function (data) { app.showErrors(data, "Error adding a task.") });
         self.newTaskDescription("");
     }
 
@@ -74,7 +44,11 @@
     self.editTask = function (task) {
     };
     self.deleteTask = function (task) {
-        self.tasks.remove(task);
+        taskmanager.api.Task.DeleteTask({ id: task.id() })
+                .done(function (data) {
+                    self.tasks.remove(task);
+                })
+                .failJSON(function (data) { app.showErrors(data, "Error deleting task.") });
     };
 
     self.load();

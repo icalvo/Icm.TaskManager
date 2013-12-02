@@ -158,6 +158,18 @@
         self["navigateTo" + options.name] = navigator;
     };
 
+    self.showErrors = function (data, defaultMessage) {
+        var errors;
+
+        errors = dataModel.toErrorsArray(data);
+
+        if (errors) {
+            self.errors(errors);
+        } else {
+            self.errors.push(defaultMessage);
+        }
+    }
+
     self.initialize = function () {
         var fragment = getFragment(),
             externalAccessToken, externalError, loginUrl;
