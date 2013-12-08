@@ -3,6 +3,9 @@ using System.Web.Mvc;
 
 namespace Icm.TaskManager.Web
 {
+    /// <summary>
+    /// MVC filter configuration
+    /// </summary>
     public class FilterConfig
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)

@@ -277,21 +277,3 @@ function SetPasswordViewModel(app, parent, dataModel) {
         });
     };
 }
-
-app.addViewModel({
-    name: "Manage",
-    bindingMemberName: "manage",
-    factory: ManageViewModel,
-    navigatorFactory: function (app) {
-        return function (externalAccessToken, externalError) {
-            app.errors.removeAll();
-            app.view(app.Views.Manage);
-
-            if (typeof (externalAccessToken) !== "undefined" || typeof (externalError) !== "undefined") {
-                app.manage().addExternalLogin(externalAccessToken, externalError);
-            } else {
-                app.manage().load();
-            };
-        }
-    }
-});

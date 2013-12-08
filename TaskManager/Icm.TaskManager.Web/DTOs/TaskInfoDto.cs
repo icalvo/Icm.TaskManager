@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Web;
 
-namespace Icm.TaskManager.Domain
+namespace Icm.TaskManager.Web.DTOs
 {
-    public class Task
+    /// <summary>
+    /// DTO for getting task information
+    /// </summary>
+    public class TaskInfoDto
     {
         public int Id { get; set; }
         public string Description { get; set; }
@@ -18,22 +20,7 @@ namespace Icm.TaskManager.Domain
         public TimeSpan? RepeatInterval { get; set; }
         public bool RepeatFromDueDate { get; set; }
         public int Priority { get; set; }
-        public DateTime? AlarmDate { get; set; }
         public string Notes { get; set; }
-
-        public bool IsDone
-        {
-            get
-            {
-                return FinishDate.HasValue;
-            }
-        }
-
         public string Labels { get; set; }
-
-        public override string ToString()
-        {
-            return string.Format("{0} {2:yyyy-MM-dd} {1}", this.Id, this.Description, this.StartDate);
-        }
     }
 }

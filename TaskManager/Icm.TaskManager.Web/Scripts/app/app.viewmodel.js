@@ -117,7 +117,7 @@
         }
 
         self.user(new UserInfoViewModel(self, userName, dataModel));
-        self.navigateToTasks();
+        self.navigateToTaskList();
     };
 
     self.navigateToLoggedOff = function () {
@@ -250,5 +250,3 @@
         }
     }
 }
-
-var app = new AppViewModel(new AppDataModel());

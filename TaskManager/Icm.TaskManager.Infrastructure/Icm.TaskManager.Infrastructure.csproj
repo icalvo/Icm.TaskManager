@@ -58,7 +58,12 @@
     <Compile Include="Migrations\201311182127025_TaskRestFields.Designer.cs">
       <DependentUpon>201311182127025_TaskRestFields.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201312072154026_Reminders.cs" />
+    <Compile Include="Migrations\201312072154026_Reminders.Designer.cs">
+      <DependentUpon>201312072154026_Reminders.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="NowCurrentDateProvider.cs" />
     <Compile Include="TaskRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TaskManagerContext.cs" />
@@ -82,6 +87,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201311182127025_TaskRestFields.resx">
       <DependentUpon>201311182127025_TaskRestFields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201312072154026_Reminders.resx">
+      <DependentUpon>201312072154026_Reminders.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

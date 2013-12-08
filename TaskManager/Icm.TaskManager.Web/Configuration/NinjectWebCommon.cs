@@ -17,6 +17,8 @@ namespace Icm.TaskManager.Web.App_Start
     using System.Linq;
     using Ninject.Parameters;
     using System.Collections.Generic;
+    using Icm.TaskManager.Domain.Tasks;
+    using Icm.TaskManager.Domain;
 
     public class NinjectScope : IDependencyScope
     {
@@ -104,8 +106,9 @@ namespace Icm.TaskManager.Web.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            var repo = new TaskManager.Infrastructure.TaskRepository(new TaskManager.Infrastructure.TaskManagerContext());
-            kernel.Bind<Domain.ITaskRepository>().ToConstant(repo);
+            kernel.Bind<ITaskRepository>().To<Infrastructure.TaskRepository>().InRequestScope();
+            kernel.Bind<ITaskService>().To<TaskService>().InRequestScope();
+            kernel.Bind<ICurrentDateProvider>().To<Infrastructure.NowCurrentDateProvider>().InRequestScope();
         }        
     }
 }

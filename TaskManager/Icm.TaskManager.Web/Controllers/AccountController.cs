@@ -1,6 +1,14 @@
-﻿using System;
+﻿using Icm.TaskManager.Web.Models.Account.BindingModels;
+using Icm.TaskManager.Web.Models.Account.ViewModels;
+using Icm.TaskManager.Web.Providers;
+using Icm.TaskManager.Web.Results;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.OAuth;
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -8,14 +16,6 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.ModelBinding;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.Owin.Security;
-using Microsoft.Owin.Security.Cookies;
-using Microsoft.Owin.Security.OAuth;
-using Icm.TaskManager.Web.Models;
-using Icm.TaskManager.Web.Providers;
-using Icm.TaskManager.Web.Results;
 
 namespace Icm.TaskManager.Web.Controllers
 {

@@ -5,6 +5,9 @@ using System.Web.Http.Description;
 
 namespace Icm.TaskManager.Web.Areas.HelpPage
 {
+    /// <summary>
+    /// Extensions for <see cref="ApiDescription"/>
+    /// </summary>
     public static class ApiDescriptionExtensions
     {
         /// <summary>

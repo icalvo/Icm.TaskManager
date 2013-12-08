@@ -1,4 +1,5 @@
 ﻿using Icm.TaskManager.Domain;
+using Icm.TaskManager.Web.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,22 +7,27 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
+using AutoMapper;
+using Icm.TaskManager.Domain.Tasks;
 
 namespace Icm.TaskManager.Web.Controllers
 {
     public class TaskController : ApiController
     {
-        private Domain.ITaskRepository taskRepository;
+        private ITaskRepository taskRepository;
+        private ITaskService taskService;
 
-        public TaskController(Domain.ITaskRepository taskRepository)
+        public TaskController(ITaskRepository taskRepository, ITaskService taskService)
         {
             this.taskRepository = taskRepository;
+            this.taskService = taskService;
+            Mapper.CreateMap<Task, TaskInfoDto>();
         }
 
         // GET api/task
-        public IQueryable<Task> GetTasks()
+        public IEnumerable<TaskInfoDto> GetTasks()
         {
-            return this.taskRepository.AsQueryable();
+            return this.taskRepository.Select(Mapper.Map<Task, TaskInfoDto>).ToList();
         }
 
         // GET api/task/5
@@ -33,22 +39,24 @@ namespace Icm.TaskManager.Web.Controllers
             {
                 return NotFound();
             }
-
+            Mapper.Map<TaskInfoDto>(task);
             return Ok(task);
         }
 
         // PUT api/task/5
-        public IHttpActionResult PutTask(int id, Task task)
+        public IHttpActionResult PutTask(int id, TaskModifyDto taskInfo)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != task.Id)
+            if (id != taskInfo.Id)
             {
                 return BadRequest();
             }
+
+            Task task = Mapper.Map<Task>(taskInfo);
 
             if (!this.taskRepository.Update(task))
             {
@@ -60,13 +68,23 @@ namespace Icm.TaskManager.Web.Controllers
 
         // POST api/task
         [ResponseType(typeof(Task))]
-        public IHttpActionResult PostTask(Task task)
+        public IHttpActionResult PostTask(TaskInfoDto taskInfo)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            this.taskRepository.Create(task);
+
+            var task = this.taskService.CreateTask(
+                taskInfo.Description,
+                taskInfo.StartDate,
+                taskInfo.DueDate,
+                taskInfo.RepeatInterval,
+                taskInfo.RepeatFromDueDate,
+                taskInfo.Priority,
+                taskInfo.Notes,
+                taskInfo.Labels
+            );
 
             return CreatedAtRoute("DefaultApi", new { id = task.Id }, task);
         }
@@ -84,7 +102,6 @@ namespace Icm.TaskManager.Web.Controllers
 
             return Ok(task);
         }
-
 
         #region IDisposable implementation
 

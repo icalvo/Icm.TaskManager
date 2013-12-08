@@ -5,9 +5,12 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace Icm.TaskManager.Web
+namespace Icm.TaskManager.Web.Configuration.Routes
 {
-    public class RouteConfig
+    /// <summary>
+    /// Routing configuration for MVC
+    /// </summary>
+    public class MvcConfig
     {
         public static void RegisterRoutes(RouteCollection routes)
         {

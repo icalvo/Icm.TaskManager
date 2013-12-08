@@ -5,6 +5,9 @@ using System.Web.Optimization;
 
 namespace Icm.TaskManager.Web
 {
+    /// <summary>
+    /// General bundle configuration
+    /// </summary>
     public class BundleConfig
     {
         // For more information on bundling, visit http://go.microsoft.com/fwlink/?LinkId=301862
@@ -29,8 +32,8 @@ namespace Icm.TaskManager.Web
                 "~/Scripts/app/account/registerExternal.viewmodel.js",
                 "~/Scripts/app/account/manage.viewmodel.js",
                 "~/Scripts/app/account/userInfo.viewmodel.js",
-                "~/Scripts/app/task/task.datamodel.js",
-                "~/Scripts/app/task/tasks.viewmodel.js",
+                "~/Scripts/app/task/task.viewmodel.js",
+                "~/Scripts/app/task/taskList.viewmodel.js",
                 "~/Scripts/app/_run.js"));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're

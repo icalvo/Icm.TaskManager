@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using Icm.TaskManager.Web.Configuration.Routes;
+using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -13,7 +14,7 @@ namespace Icm.TaskManager.Web
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
+            MvcConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
     }

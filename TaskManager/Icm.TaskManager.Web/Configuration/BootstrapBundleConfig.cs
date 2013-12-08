@@ -4,6 +4,9 @@ using System.Web.Optimization;
 
 namespace Icm.TaskManager.Web.App_Start
 {
+    /// <summary>
+    /// Bootstrap bundle
+    /// </summary>
 	public class BootstrapBundleConfig
 	{
 		public static void RegisterBundles()

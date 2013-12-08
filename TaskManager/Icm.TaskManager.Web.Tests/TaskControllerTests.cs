@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Icm.TaskManager.Domain.Tasks;
+using Icm.TaskManager.Domain.Tests.Fakes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Web.Http.Results;
 
 namespace Icm.TaskManager.Web.Tests
@@ -10,7 +12,9 @@ namespace Icm.TaskManager.Web.Tests
         [TestMethod]
         public void GetTaskId_WhenNotFound_ReturnsNotFound()
         {
-            var controller = new Web.Controllers.TaskController(new Domain.Tests.FakeRepository());
+            var repo = new Domain.Tests.Fakes.FakeTaskRepository();
+            var currentDateProvider = new FakeCurrentDateProvider(new DateTime(2013, 12, 7));
+            var controller = new Web.Controllers.TaskController(repo, new Domain.Tasks.TaskService(currentDateProvider));
 
             var result = controller.GetTask(1);
             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
@@ -19,10 +23,13 @@ namespace Icm.TaskManager.Web.Tests
         [TestMethod]
         public void GetTaskId_WhenFound_ReturnsOk()
         {
-            var controller = new Web.Controllers.TaskController(new Domain.Tests.FakeRepository(new[] { new Domain.Task { Id = 1 } } ));
+            var repo = new Domain.Tests.Fakes.FakeTaskRepository(new[] { new Domain.Tests.Fakes.FakeTask(1) });
+            var currentDateProvider = new FakeCurrentDateProvider(new DateTime(2013, 12, 7));
+            var controller = new Web.Controllers.TaskController(repo, new Domain.Tasks.TaskService(currentDateProvider));
 
             var result = controller.GetTask(1);
-            Assert.IsInstanceOfType(result, typeof(OkNegotiatedContentResult<Domain.Task>));
+            Assert.IsInstanceOfType(result, typeof(OkNegotiatedContentResult<Task>));
         }
+
     }
 }

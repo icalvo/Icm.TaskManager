@@ -94,16 +94,3 @@ function ExternalLoginProviderViewModel(app, data) {
         window.location = data.url;
     };
 }
-
-app.addViewModel({
-    name: "Login",
-    bindingMemberName: "login",
-    factory: LoginViewModel,
-    navigatorFactory: function (app) {
-        return function () {
-            app.errors.removeAll();
-            app.user(null);
-            app.view(app.Views.Login);
-        };
-    }
-});

@@ -1,11 +1,10 @@
-﻿using Icm.TaskManager.Domain;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using Icm.TaskManager.Domain.Tasks;
 
 namespace Icm.TaskManager.Infrastructure
 {
@@ -18,13 +17,12 @@ namespace Icm.TaskManager.Infrastructure
             this.context = context;
         }
 
-        public void Create(Domain.Task task) {
-            task.CreationDate = DateTime.Now;
+        public void Create(Task task) {
             this.context.Tasks.Add(task);
             this.context.SaveChanges();
         }
 
-        public bool Update(Domain.Task task)
+        public bool Update(Task task)
         {
             this.context.Entry(task).State = EntityState.Modified;
 
@@ -46,23 +44,29 @@ namespace Icm.TaskManager.Infrastructure
             return true;
         }
 
-        public void Delete(Domain.Task task)
+        public void Delete(Task task)
         {
             this.context.Tasks.Remove(task);
             this.context.SaveChanges();
         }
 
-        public Domain.Task GetById(int id)
+        public Task GetById(int id)
         {
             return context.Tasks.Find(id);
         }
 
-        private bool Exists(int id)
+        public bool Exists(int id)
         {
             return context.Tasks.Any(task => task.Id == id);
         }
 
-        public IEnumerator<Domain.Task> GetEnumerator()
+        public IEnumerable<Reminder> GetActiveReminders()
+        {
+            var now = DateTime.Now;
+            return context.Tasks.SelectMany(task => task.Reminders).Where(reminder => reminder.AlarmDate >= now);
+        }
+
+        public IEnumerator<Task> GetEnumerator()
         {
             return context.Tasks.GetEnumerator();
         }

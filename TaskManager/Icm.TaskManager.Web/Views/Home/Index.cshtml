@@ -47,7 +47,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-3" data-bind="visible: taskList">
                 <div class="row">
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -82,7 +82,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-6" data-bind="css: {'col-md-6' : taskList, 'col-md-12' : !taskList }">
                 <div data-bind="foreach: errors, visible: errors().length > 0" class="alert alert-warning alert-dismissable">
                     <p class="text-danger" data-bind="text: $data"></p>
                 </div>
@@ -93,9 +93,13 @@
                 @Html.Partial("_RegisterExternal")
                 @Html.Partial("_Manage")
                 @Html.Partial("_Tasks")
+                @Html.Partial("_Reminder")
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3" data-bind="visible: taskList, with: taskList">
                 <h2>Actividad</h2>
+                <ul id="activity" data-bind="foreach: activity">
+                    <li data-bind="text: $data.message"></li>
+                </ul>
             </div>
         </div>
         <footer>
@@ -103,12 +107,28 @@
         </footer>
     </div>
 
-            @Scripts.Render("~/bundles/jquery")
-            @Scripts.Render("~/bundles/knockout")
-            @Html.Action("WebApiDescription", "Metadata")
-            @Scripts.Render("~/bundles/signalr")
-            <script src="/signalr/hubs"></script>
-            @Scripts.Render("~/bundles/app")
-            @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/knockout")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Scripts/moment.js"></script>
+
+    @Html.Action("WebApiDescription", "Metadata")
+
+    <script src="~/Scripts/app/modals.js"></script>
+    <script src="~/Scripts/app/ajaxPrefilters.js"></script>
+    <script src="~/Scripts/app/app.datamodel.js"></script>
+    <script src="~/Scripts/app/app.viewmodel.js"></script>
+    <script src="~/Scripts/app/home.viewmodel.js"></script>
+    <script src="~/Scripts/app/account/login.viewmodel.js"></script>
+    <script src="~/Scripts/app/account/register.viewmodel.js"></script>
+    <script src="~/Scripts/app/account/registerExternal.viewmodel.js"></script>
+    <script src="~/Scripts/app/account/manage.viewmodel.js"></script>
+    <script src="~/Scripts/app/account/userInfo.viewmodel.js"></script>
+    <script src="~/Scripts/app/task/reminder.viewmodel.js"></script>
+    <script src="~/Scripts/app/task/activity.viewmodel.js"></script>
+    <script src="~/Scripts/app/task/task.viewmodel.js"></script>
+    <script src="~/Scripts/app/task/taskList.viewmodel.js"></script>
+    <script src="~/Scripts/app/_run.js"></script>
+
 </body>
 </html>

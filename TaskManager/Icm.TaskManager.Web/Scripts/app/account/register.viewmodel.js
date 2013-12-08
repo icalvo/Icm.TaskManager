@@ -64,9 +64,3 @@
         app.navigateToLogin();
     };
 }
-
-app.addViewModel({
-    name: "Register",
-    bindingMemberName: "register",
-    factory: RegisterViewModel
-});

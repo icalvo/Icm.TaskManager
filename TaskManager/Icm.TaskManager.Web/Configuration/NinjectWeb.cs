@@ -1,10 +1,10 @@
+using Microsoft.Web.Infrastructure.DynamicModuleHelper;
+using Ninject.Web;
+
 [assembly: WebActivator.PreApplicationStartMethod(typeof(Icm.TaskManager.Web.App_Start.NinjectWeb), "Start")]
 
 namespace Icm.TaskManager.Web.App_Start
 {
-    using Microsoft.Web.Infrastructure.DynamicModuleHelper;
-
-    using Ninject.Web;
 
     public static class NinjectWeb 
     {

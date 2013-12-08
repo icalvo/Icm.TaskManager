@@ -6,8 +6,11 @@ using System.Web.Http;
 using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json.Serialization;
 
-namespace Icm.TaskManager.Web
+namespace Icm.TaskManager.Web.Configuration.Routes
 {
+    /// <summary>
+    /// Routing configuration for Web API
+    /// </summary>
     public static class WebApiConfig
     {
         public static void Register(HttpConfiguration config)

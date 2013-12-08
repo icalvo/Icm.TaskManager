@@ -39,7 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Fakes\FakeRepository.cs" />
+    <Compile Include="Fakes\FakeCurrentDateProvider.cs" />
+    <Compile Include="Fakes\FakeTaskRepository.cs" />
+    <Compile Include="Fakes\FakeTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

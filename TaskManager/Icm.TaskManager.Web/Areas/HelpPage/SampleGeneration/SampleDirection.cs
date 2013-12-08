@@ -5,7 +5,13 @@ namespace Icm.TaskManager.Web.Areas.HelpPage
     /// </summary>
     public enum SampleDirection
     {
+        /// <summary>
+        /// Sample used for request
+        /// </summary>
         Request = 0,
+        /// <summary>
+        /// Sample used for response
+        /// </summary>
         Response
     }
 }

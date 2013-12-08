@@ -9,6 +9,6 @@ namespace Icm.TaskManager.Infrastructure
 {
     public class TaskManagerContext : DbContext
     {
-        public IDbSet<Domain.Task> Tasks { get; set; }
+        public IDbSet<Domain.Tasks.Task> Tasks { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿function TasksViewModel(app, dataModel) {
+﻿function TaskListViewModel(app) {
     var self = this;
     var startedLoad = false;
 
@@ -7,22 +7,37 @@
     self.loading = ko.observable(true);
     self.message = ko.observable();
     self.errors = ko.observableArray();
-
+    self.activity = ko.observableArray();
+    self.reminders = ko.observableArray();
     // For creating tasks
     self.newTaskDescription = ko.observable();
 
     // Operations
     self.load = function () { // Load user management data
         if (!startedLoad) {
+            self.tasks.removeAll();
+            var alert = moment().add("seconds", 5).toISOString();
+            self.reminders.push(new ReminderViewModel(self, {
+                "description": "MY REMINDER TEST",
+                "alarmDate": alert
+            }));
             taskmanager.api.Task.GetTasks()
                 .done(function (data) {
-                    self.tasks.removeAll();
                     for (var i = 0; i < data.length; i++) {
-                        var viewmodel = ko.mapping.fromJS(data[i]);
+                        var viewmodel = new TaskViewModel(self, data[i]);
                         self.tasks.push(viewmodel);
                     }
+
                 })
                 .failJSON(function (data) { app.showErrors(data, "Error retrieving task list.") });
+            taskmanager.api.Reminder.GetActiveReminders()
+                .done(function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        var viewmodel = new ReminderViewModel(self, data[i]);
+                        self.reminders.push(viewmodel);
+                    }
+                })
+                .failJSON(function (data) { app.showErrors(data, "Error retrieving active reminders list.") });
         }
     }
 
@@ -35,6 +50,10 @@
                 })
                 .failJSON(function (data) { app.showErrors(data, "Error adding a task.") });
         self.newTaskDescription("");
+    }
+
+    self.hideTask = function (element, index, data) {
+        $(element).hide(function() { this.remove() } );
     }
 
     self.doneTask = function (task) {
@@ -53,9 +72,3 @@
 
     self.load();
 }
-
-app.addViewModel({
-    name: "Tasks",
-    bindingMemberName: "tasks",
-    factory: TasksViewModel
-});
