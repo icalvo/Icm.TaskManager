@@ -43,13 +43,14 @@
     <Compile Include="IRepository.cs" />
     <Compile Include="MemoryRepository.cs" />
     <Compile Include="Reminder\IReminderRepository.cs" />
-    <Compile Include="Task\Reminder.cs" />
-    <Compile Include="Task\ITaskRepository.cs" />
-    <Compile Include="Task\ITaskService.cs" />
-    <Compile Include="Task\Task.cs" />
+    <Compile Include="Tasks\Recurrence.cs" />
+    <Compile Include="Tasks\Reminder.cs" />
+    <Compile Include="Tasks\ITaskRepository.cs" />
+    <Compile Include="Tasks\ITaskService.cs" />
+    <Compile Include="Tasks\Task.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Task\TaskAlreadyDoneException.cs" />
-    <Compile Include="Task\TaskService.cs" />
+    <Compile Include="Tasks\TaskAlreadyDoneException.cs" />
+    <Compile Include="Tasks\TaskService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

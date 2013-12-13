@@ -21,7 +21,7 @@
                 "description": "MY REMINDER TEST",
                 "alarmDate": alert
             }));
-            taskmanager.api.Task.GetTasks()
+            taskManagerApi.Task.GetTasks()
                 .done(function (data) {
                     for (var i = 0; i < data.length; i++) {
                         var viewmodel = new TaskViewModel(self, data[i]);
@@ -30,7 +30,7 @@
 
                 })
                 .failJSON(function (data) { app.showErrors(data, "Error retrieving task list.") });
-            taskmanager.api.Reminder.GetActiveReminders()
+            taskManagerApi.Reminder.GetActiveReminders()
                 .done(function (data) {
                     for (var i = 0; i < data.length; i++) {
                         var viewmodel = new ReminderViewModel(self, data[i]);
@@ -43,7 +43,7 @@
 
     self.addTask = function () {
         var newTaskData = { Id: 0, Description: this.newTaskDescription() };
-        taskmanager.api.Task.PostTask({ task: newTaskData })
+        taskManagerApi.Task.PostTask({ task: newTaskData })
                 .done(function (newTask) {
                     var observable = ko.mapping.fromJS(newTask);
                     self.tasks.push(observable);
@@ -63,7 +63,7 @@
     self.editTask = function (task) {
     };
     self.deleteTask = function (task) {
-        taskmanager.api.Task.DeleteTask({ id: task.id() })
+        taskManagerApi.Task.DeleteTask({ id: task.id() })
                 .done(function (data) {
                     self.tasks.remove(task);
                 })

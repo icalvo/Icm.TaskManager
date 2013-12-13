@@ -9,13 +9,13 @@ using Microsoft.Owin.Security.OAuth;
 using Owin;
 using Icm.TaskManager.Web.Providers;
 
-namespace Icm.TaskManager.Web
+namespace Icm.TaskManager.Web.Configuration
 {
     public partial class Startup
     {
         static Startup()
         {
-            PublicClientId = "self";
+            PublicClientId = "http:/localhost:53187";
 
             UserManagerFactory = () => new UserManager<IdentityUser>(new UserStore<IdentityUser>());
 

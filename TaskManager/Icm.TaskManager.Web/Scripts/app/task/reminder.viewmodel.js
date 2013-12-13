@@ -34,7 +34,7 @@
         var diff = -moment().diff(data.alarmDate);
         if (diff > 0) {
             self.taskListViewModel.activity.push(new ActivityViewModel("Set alarm for: " + self.description()));
-            setTimeout(self.showAlarm, alarm - now);
+            setTimeout(self.showAlarm, diff);
         }
     }
 }

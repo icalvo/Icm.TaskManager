@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Optimization;
 
-namespace Icm.TaskManager.Web
+namespace Icm.TaskManager.Web.Configuration
 {
     /// <summary>
     /// General bundle configuration

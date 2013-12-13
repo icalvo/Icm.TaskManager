@@ -1,19 +1,15 @@
-﻿@{
-    Layout = null;
-    Response.Headers["X-UA-Compatible"] = "IE=10";
-}
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" id="htmlDoc">
 <head>
     <meta charset="utf-8" />
     <title data-bind="text: title"></title>
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <meta name="viewport" content="width=device-width" />
-    @Styles.Render("~/Content/bootstrap")
-    @Styles.Render("~/Content/bootstrap-theme")
-    @Styles.Render("~/Content/css")
 
-    @Scripts.Render("~/bundles/modernizr")
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <script src="~/Scripts/modernizr-2.7.1.js"></script>
 </head>
 <body>
     <div data-bind="visible: loading">Loading...</div>
@@ -21,25 +17,30 @@
         <div class="navbar navbar-inverse navbar-fixed-top">
             <div class="container">
                 <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <p class="navbar-brand" data-bind="text: title, if: !loggedIn()"></p>
-                    <a href="#" class="navbar-brand" data-bind="text: title, if: loggedIn, click: navigateToHome"></a>
+                    <!-- ko if: !loggedIn() -->
+                    <p class="navbar-brand" data-bind="text: title,"></p>
+                    <!-- /ko -->
+                    <!-- ko if: loggedIn -->
+                    <a href="#/" class="navbar-brand" data-bind="text: title"></a>
+                    <!-- /ko -->
                 </div>
                 <div data-bind="if: loggedIn" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li>@Html.ActionLink("API", "Index", "Help", new { area = "HelpPage" }, null)</li>
+                        <li><a href="#/help">Help</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right" data-bind="with: user">
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span data-bind="text: name, click: manage"></span> <b class="caret"></b></a>
+                            <a href="#/user/manage" class="dropdown-toggle" data-toggle="dropdown"><span data-bind="text: name"></span> <b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li><a href="#">Edit profile</a></li>
+                                <li><a href="#/user/profile">Edit profile</a></li>
                                 <li class="divider"></li>
-                                <li><a href="#">Log off</a></li>
+                                <li><a href="#/user/logoff">Log off</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -47,7 +48,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-3" data-bind="visible: taskList">
+            <div class="col-md-3" data-bind="visible: threeColumnLayout">
                 <div class="row">
                     <div class="panel panel-default">
                         <div class="panel-body">
@@ -82,20 +83,319 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6" data-bind="css: {'col-md-6' : taskList, 'col-md-12' : !taskList }">
+            <div class="col-md-6" data-bind="css: {'col-md-6' : threeColumnLayout, 'col-md-12' : !threeColumnLayout }">
                 <div data-bind="foreach: errors, visible: errors().length > 0" class="alert alert-warning alert-dismissable">
                     <p class="text-danger" data-bind="text: $data"></p>
                 </div>
 
-                @Html.Partial("_Home")
-                @Html.Partial("_Login")
-                @Html.Partial("_Register")
-                @Html.Partial("_RegisterExternal")
-                @Html.Partial("_Manage")
-                @Html.Partial("_Tasks")
-                @Html.Partial("_Reminder")
+                <div data-bind="template: { data: viewmodel(), name: viewmodel().constructor.name }"></div>
+
+                <script type="text/html" id="HomeView">
+                    <div class="jumbotron">
+                        <h1>ASP.NET</h1>
+                        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS, and JavaScript.</p>
+                        <p><a href="http://asp.net" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h2>Getting started</h2>
+                            <p>
+                                ASP.NET Single Page Application (SPA) helps you build applications that include significant client-side interactions using HTML, CSS, and JavaScript.
+                                It's now easier than ever before to getting started writing highly interactive web applications.
+                            </p>
+                            <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=273732">Learn more &raquo;</a></p>
+                        </div>
+                        <div class="col-md-4">
+                            <h2>Get more libraries</h2>
+                            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
+                            <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+                        </div>
+                        <div class="col-md-4">
+                            <h2>Web Hosting</h2>
+                            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
+                            <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+                        </div>
+                    </div>
+                </script>
+
+                <script type="text/html" id="LoginView">
+                    <h2>Log in</h2>
+
+                    <div class="row">
+                        <section class="col-md-8">
+                            <form class="form-horizontal" role="form">
+                                <h4>Use a local account to log in.</h4>
+                                <hr />
+                                <ul class="text-danger" data-bind="foreach: errors">
+                                    <li data-bind="text: $data"></li>
+                                </ul>
+                                <div class="form-group">
+                                    <label for="LoginUserName" class="col-md-2 control-label">User name</label>
+                                    <div class="col-md-10">
+                                        <input type="text" id="LoginUserName" class="form-control" data-bind="value: userName, hasFocus: true" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="LoginPassword" class="col-md-2 control-label">Password</label>
+                                    <div class="col-md-10">
+                                        <input type="password" id="LoginPassword" class="form-control" data-bind="value: password" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-offset-2 col-md-10">
+                                        <div class="checkbox">
+                                            <input type="checkbox" id="LoginRememberMe" data-bind="checked: rememberMe" />
+                                            <label for="LoginRememberMe">Remember me?</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-offset-2 col-md-10">
+                                        <button type="submit" class="btn btn-default" data-bind="click: login, disable: loggingIn">Log in</button>
+                                    </div>
+                                </div>
+                                <p><a href="#" data-bind="click: register">Register</a> if you don't have a local account.</p>
+
+                            </form>
+                        </section>
+                        <section class="col-md-4">
+                            <h4>Use another service to login.</h4>
+                            <hr />
+                            <div data-bind="visible: loadingExternalLogin">Loading...</div>
+                            <div data-bind="visible: !loadingExternalLogin()">
+                                <div data-bind="visible: !hasExternalLogin()">
+                                    <p>
+                                        There are no external authentication services configured. See <a href="http://go.microsoft.com/fwlink/?LinkId=313242">this article</a>
+                                        for details on setting up this ASP.NET application to support logging in via external services.
+                                    </p>
+                                </div>
+                                <form class="form-horizontal" role="form" data-bind="visible: hasExternalLogin">
+                                    <p data-bind="foreach: externalLoginProviders">
+                                        <button type="submit" class="btn btn-default" data-bind="text: name, attr: { title: 'Log in using your ' + name() + ' account' }, click: login"></button>
+                                    </p>
+                                </form>
+                            </div>
+                        </section>
+                    </div>
+                </script>
+
+                <script type="text/html" id="RegisterView">
+                    <h2>Register</h2>
+                    <form class="form-horizontal" role="form">
+                        <h4>Create a new account.</h4>
+                        <hr />
+                        <ul class="text-danger" data-bind="foreach: errors">
+                            <li data-bind="text: $data"></li>
+                        </ul>
+                        <div class="form-group">
+                            <label for="RegisterUserName" class="col-md-2 control-label">User name</label>
+                            <div class="col-md-10">
+                                <input type="text" id="RegisterUserName" class="form-control" data-bind="value: userName, hasFocus: true" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="RegisterPassword" class="col-md-2 control-label">Password</label>
+                            <div class="col-md-10">
+                                <input type="password" id="RegisterPassword" class="form-control" data-bind="value: password" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="RegisterConfirmPassword" class="col-md-2 control-label">Confirm password</label>
+                            <div class="col-md-10">
+                                <input type="password" id="RegisterConfirmPassword" class="form-control" data-bind="value: confirmPassword" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <button type="submit" class="btn btn-default" data-bind="click: register, disable: registering">Register</button>
+                            </div>
+                        </div>
+                        <p><a href="#" data-bind="click: login">Log in</a> if you already have a local account.</p>
+                    </form>
+                </script>
+
+                <script type="text/html" id="RegisterExternalView">
+                    <h2>Register</h2>
+                    <form class="form-horizontal" role="form">
+                        <h4 data-bind="text: 'Associate your ' + loginProvider() + ' account.'"></h4>
+                        <hr />
+                        <p class="text-success">
+                            You've successfully authenticated with <strong data-bind="text: loginProvider"></strong>.
+                            Please enter a user name for this site below and click the Register button to finish logging in.
+                        </p>
+                        <ul class="text-danger" data-bind="foreach: errors">
+                            <li data-bind="text: $data"></li>
+                        </ul>
+                        <div class="form-group">
+                            <label for="RegisterExternalUserName" class="col-md-2 control-label">User name</label>
+                            <div class="col-md-10">
+                                <input type="text" id="RegisterExternalUserName" class="form-control" data-bind="value: userName, hasFocus: true" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <button type="submit" class="btn btn-default" data-bind="click: register, disable: registering">Sign up</button>
+                            </div>
+                        </div>
+                    </form>
+                </script>
+
+                <script type="text/html" id="ManageView">
+                    <div data-bind="visible: loading">Loading...</div>
+                    <div data-bind="visible: !loading()">
+                        <p class="text-success" data-bind="text: message"></p>
+                        <h2>Manage Account</h2>
+                        <section>
+                            <div data-bind="with: changePassword">
+                                <p class="text-info">You're logged in as <strong data-bind="text: name"></strong>.</p>
+                                <form class="form-horizontal" role="form">
+                                    <h4>Change your password</h4>
+                                    <hr />
+                                    <ul class="text-danger" data-bind="foreach: errors">
+                                        <li data-bind="text: $data"></li>
+                                    </ul>
+                                    <div class="form-group">
+                                        <label for="ChangePasswordOldPassword" class="col-md-2 control-label">Old password</label>
+                                        <div class="col-md-10">
+                                            <input type="password" id="ChangePasswordOldPassword" class="form-control" data-bind="value: oldPassword" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ChangePasswordNewPassword" class="col-md-2 control-label">New password</label>
+                                        <div class="col-md-10">
+                                            <input type="password" id="ChangePasswordNewPassword" class="form-control" data-bind="value: newPassword" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ChangePasswordConfirmPassword" class="col-md-2 control-label">Confirm new password</label>
+                                        <div class="col-md-10">
+                                            <input type="password" id="ChangePasswordConfirmPassword" class="form-control" data-bind="value: confirmPassword" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-offset-2 col-md-10">
+                                            <button type="submit" class="btn btn-default" data-bind="click: change, disable: changing">Change password</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div data-bind="with: setPassword">
+                                <p>You do not have a local username/password for this site. Add a local account so you can log in without an external login.</p>
+                                <form class="form-horizontal" role="form">
+                                    <h4>Create Local Login</h4>
+                                    <hr />
+                                    <ul class="text-danger" data-bind="foreach: errors">
+                                        <li data-bind="text: $data"></li>
+                                    </ul>
+                                    <div class="form-group">
+                                        <label for="SetPasswordNewPassword" class="col-md-2 control-label">New password</label>
+                                        <div class="col-md-10">
+                                            <input type="password" id="SetPasswordNewPassword" class="form-control" data-bind="value: newPassword" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="SetPasswordConfirmPassword" class="col-md-2 control-label">Confirm new password</label>
+                                        <div class="col-md-10">
+                                            <input type="password" id="SetPasswordConfirmPassword" class="form-control" data-bind="value: confirmPassword" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-offset-2 col-md-10">
+                                            <button type="submit" class="btn btn-default" data-bind="click: set, disable: setting">Set password</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </section>
+                        <section>
+                            <ul class="text-danger" data-bind="foreach: errors">
+                                <li data-bind="text: $data"></li>
+                            </ul>
+                            <div data-bind="if: logins().length > 0">
+                                <h4>Registered logins</h4>
+                                <table class="table">
+                                    <tbody data-bind="foreach: logins">
+                                        <tr>
+                                            <td data-bind="text: loginProvider"></td>
+                                            <td>
+                                                <div data-bind="if: $parent.canRemoveLogin">
+                                                    <form>
+                                                        <div>
+                                                            <button type="submit" class="btn btn-default" data-bind="attr: { title: 'Remove this ' + loginProvider() + ' credential from your account' }, click: remove, disable: removing">Remove</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <span data-bind="if: !$parent.canRemoveLogin()">&nbsp;</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <h2>Add an external login</h2>
+                            <div data-bind="visible: !hasExternalLogin()">
+                                <p>
+                                    There are no external authentication services configured. See <a href="http://go.microsoft.com/fwlink/?LinkId=313242">this article</a>
+                                    for details on setting up this ASP.NET application to support logging in via external services.
+                                </p>
+                            </div>
+                            <form class="form-horizontal" role="form" data-bind="visible: hasExternalLogin">
+                                <h4>Use another service to log in.</h4>
+                                <hr />
+                                <p data-bind="foreach: externalLoginProviders">
+                                    <button type="submit" class="btn btn-default" data-bind="text: name, attr: { title: 'Log in using your ' + name() + ' account' }, click: login"></button>
+                                </p>
+                            </form>
+                        </section>
+                    </div>
+                </script>
+
+                <script type="text/html" id="TaskListViewModel">
+                    <h2 data-bind="text: $data.title"></h2>
+                    <form data-bind="submit: addTask" class="form-inline" role="form">
+                        <div class="form-group">
+                            <label class="sr-only" for="newTaskDescription">New task description</label>
+                            <input type="text" id="newTaskDescription" data-bind="value: newTaskDescription" placeholder="What do you want to do?" class="form-control" />
+                        </div>
+                        <button type="button" class="btn btn-primary" data-bind="click: addTask">Add</button>
+                    </form>
+                    <div data-bind="foreach: { data: tasks, beforeRemove: $data.hideTask }">
+                        <div class="panel panel-default task">
+                            <div class="panel-heading">
+                                <h3 data-bind="text: $data.description, css: { taskDone: $data.isDone }, title: $data.id" class="panel-title"></h3>
+                            </div>
+                            <div class="panel-body">
+                                <p>
+                                    <small>CreatedOn: <span data-bind="dateString: $data.creationDate"></span></small>
+                                    <small>Alarm: <span data-bind="dateString: $data.alarmDate"></span></small>
+                                </p>
+                                <button data-bind="click: $parent.doneTask" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Done</button>
+                                <a data-bind="click: $parent.editTask" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+                                <a data-bind="click: $parent.deleteTask" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </script>
+
+                <script type="text/html" id="reminder-template">
+                    <div class="modal fade">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" aria-hidden="true" data-bind="click: cancel">&times;</button>
+                                    <h3><span class="glyphicon glyphicon-bell"></span>Reminder</h3>
+                                </div>
+                                <div class="modal-body">
+                                    <h3 data-bind="text: description"></h3>
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="#" class="btn btn-primary" data-bind="click: cancel">Close</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </script>
             </div>
-            <div class="col-md-3" data-bind="visible: taskList, with: taskList">
+            <div class="col-md-3" data-bind="visible: threeColumnLayout, with: viewmodel">
                 <h2>Actividad</h2>
                 <ul id="activity" data-bind="foreach: activity">
                     <li data-bind="text: $data.message"></li>
@@ -103,20 +403,21 @@
             </div>
         </div>
         <footer>
-            <p>&copy; @DateTime.Now.Year Ignacio Calvo</p>
+            <p>&copy; <span data-bind="text: moment().year()"></span> Ignacio Calvo</p>
         </footer>
     </div>
+    <script src="~/Scripts/jquery-2.0.3.js"></script>
+    <script src="~/Scripts/knockout-3.0.0.debug.js"></script>
+    <script src="~/Scripts/knockout.validation.debug.js"></script>
+    <script src="~/Scripts/knockout.mapping-latest.debug.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/knockout")
-    @Scripts.Render("~/bundles/bootstrap")
     <script src="~/Scripts/moment.js"></script>
 
-    @Html.Action("WebApiDescription", "Metadata")
+    <script src="~/Scripts/app/metadata/api.js"></script>
 
     <script src="~/Scripts/app/modals.js"></script>
     <script src="~/Scripts/app/ajaxPrefilters.js"></script>
-    <script src="~/Scripts/app/app.datamodel.js"></script>
     <script src="~/Scripts/app/app.viewmodel.js"></script>
     <script src="~/Scripts/app/home.viewmodel.js"></script>
     <script src="~/Scripts/app/account/login.viewmodel.js"></script>

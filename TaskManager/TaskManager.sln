@@ -9,9 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Icm.TaskManager.Infrastruct
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Icm.TaskManager.Web", "Icm.TaskManager.Web\Icm.TaskManager.Web.csproj", "{4DB211A6-0BDA-4614-96EC-972151EFC13A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Icm.TaskManager.Web.Tests", "Icm.TaskManager.Web.Tests\Icm.TaskManager.Web.Tests.csproj", "{FBA7EDF5-082A-41B3-BB64-CE437E3F15B0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Icm.TaskManager.Rest.Tests", "Icm.TaskManager.Rest.Tests\Icm.TaskManager.Rest.Tests.csproj", "{FBA7EDF5-082A-41B3-BB64-CE437E3F15B0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Icm.TaskManager.Domain.Tests", "Icm.TaskManager.Domain.Tests\Icm.TaskManager.Domain.Tests.csproj", "{AC757E23-3521-480B-B86B-EFCEF0BC34CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Icm.TaskManager.Rest", "Icm.TaskManager.Rest\Icm.TaskManager.Rest.csproj", "{5D049C5B-7B58-44C0-B88D-D6AE5E5C6339}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{AC757E23-3521-480B-B86B-EFCEF0BC34CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AC757E23-3521-480B-B86B-EFCEF0BC34CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AC757E23-3521-480B-B86B-EFCEF0BC34CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D049C5B-7B58-44C0-B88D-D6AE5E5C6339}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D049C5B-7B58-44C0-B88D-D6AE5E5C6339}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D049C5B-7B58-44C0-B88D-D6AE5E5C6339}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D049C5B-7B58-44C0-B88D-D6AE5E5C6339}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

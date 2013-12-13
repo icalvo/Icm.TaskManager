@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Mvc;
 
-namespace Icm.TaskManager.Web
+namespace Icm.TaskManager.Web.Configuration
 {
     /// <summary>
     /// MVC filter configuration
