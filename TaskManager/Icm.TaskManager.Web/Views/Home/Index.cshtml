@@ -9,7 +9,7 @@
     <link href="~/Content/bootstrap.css" rel="stylesheet" />
     <link href="~/Content/bootstrap-theme.css" rel="stylesheet" />
     <link href="~/Content/Site.css" rel="stylesheet" />
-    <script src="~/Scripts/modernizr-2.7.1.js"></script>
+    <script src="~/Scripts/lib/modernizr-2.7.1.js"></script>
 </head>
 <body>
     <div data-bind="visible: loading">Loading...</div>
@@ -403,33 +403,11 @@
             </div>
         </div>
         <footer>
-            <p>&copy; <span data-bind="text: moment().year()"></span> Ignacio Calvo</p>
+            <p>&copy; <span data-bind="text: copyrightYear"></span> Ignacio Calvo</p>
         </footer>
     </div>
-    <script src="~/Scripts/jquery-2.0.3.js"></script>
-    <script src="~/Scripts/knockout-3.0.0.debug.js"></script>
-    <script src="~/Scripts/knockout.validation.debug.js"></script>
-    <script src="~/Scripts/knockout.mapping-latest.debug.js"></script>
-    <script src="~/Scripts/bootstrap.js"></script>
 
-    <script src="~/Scripts/moment.js"></script>
-
-    <script src="~/Scripts/app/metadata/api.js"></script>
-
-    <script src="~/Scripts/app/modals.js"></script>
-    <script src="~/Scripts/app/ajaxPrefilters.js"></script>
-    <script src="~/Scripts/app/app.viewmodel.js"></script>
-    <script src="~/Scripts/app/home.viewmodel.js"></script>
-    <script src="~/Scripts/app/account/login.viewmodel.js"></script>
-    <script src="~/Scripts/app/account/register.viewmodel.js"></script>
-    <script src="~/Scripts/app/account/registerExternal.viewmodel.js"></script>
-    <script src="~/Scripts/app/account/manage.viewmodel.js"></script>
-    <script src="~/Scripts/app/account/userInfo.viewmodel.js"></script>
-    <script src="~/Scripts/app/task/reminder.viewmodel.js"></script>
-    <script src="~/Scripts/app/task/activity.viewmodel.js"></script>
-    <script src="~/Scripts/app/task/task.viewmodel.js"></script>
-    <script src="~/Scripts/app/task/taskList.viewmodel.js"></script>
-    <script src="~/Scripts/app/_run.js"></script>
+    <script data-main="Scripts/main" src="~/Scripts/lib/require.js"></script>
 
 </body>
 </html>

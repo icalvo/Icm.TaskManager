@@ -153,6 +153,7 @@
     <Compile Include="DTOs\ReminderDto.cs" />
     <Compile Include="DTOs\TaskInfoDto.cs" />
     <Compile Include="DTOs\TaskModifyDto.cs" />
+    <Compile Include="Formatters\JsonpMediaFormatter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

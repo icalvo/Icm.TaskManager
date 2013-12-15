@@ -1,8 +1,4 @@
-﻿$(function () {
-    var app = new AppViewModel();
-
-    app.viewmodel(new TaskListViewModel(app));
-
+﻿define(['knockout', 'moment'], function (ko, moment) {
     ko.bindingHandlers.dateString = {
         update: function (element, valueAccessor, allBindingsAccessor, viewModel) {
             var value = valueAccessor(),
@@ -12,8 +8,4 @@
             $(element).text(moment(valueUnwrapped).calendar());
         }
     }
-
-    // Activate Knockout
-    ko.validation.init({ grouping: { observable: false } });
-    ko.applyBindings(app, document.getElementById("htmlDoc"));
 });

@@ -107,9 +107,28 @@ namespace Icm.TaskManager.Web.Configuration
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Bind<ITaskRepository>().To<Infrastructure.TaskRepository>().InRequestScope();
+            kernel.Bind<ITaskRepository>().To<FakeTaskRepository>().InSingletonScope();
+            //kernel.Bind<ITaskRepository>().To<Infrastructure.TaskRepository>().InRequestScope();
             kernel.Bind<ITaskService>().To<TaskService>().InRequestScope();
             kernel.Bind<ICurrentDateProvider>().To<Infrastructure.NowCurrentDateProvider>().InRequestScope();
         }        
+    }
+
+    internal class FakeTaskRepository : MemoryRepository<int, Task>, ITaskRepository
+    {
+        public FakeTaskRepository()
+            : base(task => task.Id)
+        {
+        }
+
+        public FakeTaskRepository(IEnumerable<Task> items)
+            : base(items, task => task.Id)
+        {
+        }
+
+        public IEnumerable<Reminder> GetActiveReminders()
+        {
+            return new List<Reminder>();
+        }
     }
 }

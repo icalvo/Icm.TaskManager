@@ -1,4 +1,4 @@
-﻿using Icm.TaskManager.Web.DTOs;
+﻿using Icm.TaskManager.Rest.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,15 +11,19 @@ namespace Icm.TaskManager.Web.Controllers
     [EnableCors("*", "*", "*")]
     public class MetadataController : ApiController
     {
+        private class MetadataDto
+        {
+            public IEnumerable<ApiMethodDto> Methods { get; set; }
+        }
         // GET api/metadata
         [HttpGet]
-        [ResponseType(typeof(IEnumerable<ApiMethodDto>))]
+        [ResponseType(typeof(MetadataDto))]
         public IHttpActionResult Get()
         {
             var apiExplorer = GlobalConfiguration.Configuration.Services.GetApiExplorer();
             var apiMethods = apiExplorer.ApiDescriptions.Select(ad => new ApiMethodDto(ad)).ToList();
 
-            return Ok(apiMethods);
+            return Ok(new MetadataDto { Methods = apiMethods });
         }
 
 

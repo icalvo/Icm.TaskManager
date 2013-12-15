@@ -9,9 +9,7 @@ namespace Icm.TaskManager.Web.Controllers
     {
         public ActionResult Index()
         {
-            var repo = new TaskManager.Infrastructure.TaskRepository(new TaskManager.Infrastructure.TaskManagerContext());
-
-            return View(repo);
+            return View();
         }
     }
 }

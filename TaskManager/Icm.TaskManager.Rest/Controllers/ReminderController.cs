@@ -1,5 +1,5 @@
 ﻿using Icm.TaskManager.Domain;
-using Icm.TaskManager.Web.DTOs;
+using Icm.TaskManager.Rest.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;

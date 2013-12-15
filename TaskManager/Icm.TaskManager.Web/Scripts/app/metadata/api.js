@@ -1,18 +1,15 @@
-﻿function TaskManagerApi() {
-    var self = this;
+﻿define(['knockout', 'jquery', 'http://localhost:53187/api/metadata?callback=define'], function (ko, module, data) {
+    function TaskManagerApi() {
+        var self = this;
 
-    self.restRoot = "http://localhost:53187";
+        var restRoot = 'http://localhost:53187';
 
-    $.ajax(self.restRoot + "/api/metadata")
-    .done(function(data) {
-        var metadata = data;
-
-        $.each(metadata, function (i, action) {
+        $.each(data.methods, function (i, action) {
             if (!self[action.controllerName]) {
                 self[action.controllerName] = {};
             }
             self[action.controllerName][action.actionName] = function (parameters) {
-                var url = self.restRoot + '/' + action.url;
+                var url = restRoot + '/' + action.url;
                 var data;
                 $.each(action.parameters, function (j, parameter) {
                     if (parameters[parameter.Name] === undefined) {
@@ -32,10 +29,9 @@
                 });
             };
         });
-    })
-    .fail(function () {
-        alert("FATAL ERROR: Failed to load API metadata");
-    });
-}
+    }
 
-var taskManagerApi = new TaskManagerApi();
+    var result = new TaskManagerApi();
+
+    return result;
+});

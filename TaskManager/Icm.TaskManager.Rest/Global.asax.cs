@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Icm.TaskManager.Domain.Tasks;
-using Icm.TaskManager.Web.Configuration.Routes;
-using Icm.TaskManager.Web.DTOs;
+using Icm.TaskManager.Rest.Configuration.Routes;
+using Icm.TaskManager.Rest.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;

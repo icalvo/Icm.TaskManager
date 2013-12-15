@@ -1,27 +1,33 @@
-﻿function AppViewModel() {
-    var self = this;
+﻿define(['knockout', 'moment'], function (ko, moment) {
+    return function AppViewModel() {
+        var self = this;
 
-    self.title = ko.observable('TaskManagr');
+        self.title = ko.observable('TaskManagr');
 
-    self.viewmodel = ko.observable();
+        self.viewmodel = ko.observable();
 
-    self.loading = ko.observable(false);
-    self.loggedIn = ko.observable(true);
+        self.loading = ko.observable(false);
+        self.loggedIn = ko.observable(true);
 
-    self.errors = ko.observableArray();
+        self.errors = ko.observableArray();
 
-    self.threeColumnLayout = true;
-    self.user = "icalvo";
-    self.showErrors = function (data, defaultMessage) {
-        var errors;
+        self.threeColumnLayout = true;
+        self.user = "icalvo";
 
-        //errors = dataModel.toErrorsArray(data);
-
-        if (errors) {
-            self.errors(errors);
-        } else {
-            self.errors.push(defaultMessage);
+        self.copyrightYear = function () {
+            return moment().year();
         }
-    }
 
-}
+        self.showErrors = function (data, defaultMessage) {
+            var errors;
+
+            //errors = dataModel.toErrorsArray(data);
+
+            if (errors) {
+                self.errors(errors);
+            } else {
+                self.errors.push(defaultMessage);
+            }
+        }
+    };
+});

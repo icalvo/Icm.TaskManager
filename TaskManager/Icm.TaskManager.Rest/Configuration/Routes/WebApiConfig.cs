@@ -4,8 +4,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
 using Newtonsoft.Json.Serialization;
+using Icm.TaskManager.Rest.Formatters;
 
-namespace Icm.TaskManager.Web.Configuration.Routes
+namespace Icm.TaskManager.Rest.Configuration.Routes
 {
     /// <summary>
     /// Routing configuration for Web API
@@ -15,6 +16,7 @@ namespace Icm.TaskManager.Web.Configuration.Routes
         public static void Register(HttpConfiguration config)
         {
             config.EnableCors();
+            config.Formatters.Insert(0, new JsonpMediaTypeFormatter());
             
             // Use camel case for JSON data.
             config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();

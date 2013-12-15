@@ -196,7 +196,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\BootstrapBundleConfig.cs" />
-    <Compile Include="Configuration\BundleConfig.cs" />
     <Compile Include="Configuration\FilterConfig.cs" />
     <Compile Include="Configuration\Routes\MvcConfig.cs" />
     <Compile Include="Configuration\Startup.Auth.cs">
@@ -221,8 +220,8 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Scripts\app\appold.viewmodel.js" />
-    <Content Include="Scripts\app\modals.js" />
+    <Content Include="Scripts\app\infrastructure\koBindingHandlers.js" />
+    <Content Include="Scripts\app\infrastructure\modals.js" />
     <Content Include="Scripts\app\task\activity.viewmodel.js" />
     <Content Include="Scripts\app\task\reminder.viewmodel.js" />
     <Content Include="Scripts\app\task\task.viewmodel.js" />
@@ -230,31 +229,32 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Scripts\app\_runold.js" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
-    <None Include="Scripts\jquery-2.0.3.intellisense.js" />
-    <Content Include="Scripts\jquery-2.0.3.js" />
-    <Content Include="Scripts\jquery-2.0.3.min.js" />
-    <Content Include="Scripts\knockout-3.0.0.debug.js" />
-    <Content Include="Scripts\knockout-3.0.0.js" />
-    <Content Include="Scripts\knockout.mapping-latest.debug.js" />
-    <Content Include="Scripts\knockout.mapping-latest.js" />
-    <Content Include="Scripts\knockout.validation.debug.js" />
-    <Content Include="Scripts\knockout.validation.js" />
-    <Content Include="Scripts\modernizr-2.7.1.js" />
-    <Content Include="Scripts\moment-with-langs.js" />
-    <Content Include="Scripts\moment-with-langs.min.js" />
-    <Content Include="Scripts\moment.js" />
-    <Content Include="Scripts\moment.min.js" />
-    <Content Include="Scripts\respond.js" />
-    <Content Include="Scripts\respond.min.js" />
-    <Content Include="Scripts\_references.js" />
-    <Content Include="Scripts\app\_run.js" />
-    <Content Include="Scripts\app\ajaxPrefilters.js" />
-    <Content Include="Scripts\app\appold.datamodel.js" />
+    <Content Include="Scripts\lib\bootstrap.js" />
+    <Content Include="Scripts\lib\bootstrap.min.js" />
+    <None Include="Scripts\lib\jquery.intellisense.js" />
+    <Content Include="Scripts\lib\finch.js" />
+    <Content Include="Scripts\lib\finch.min.js" />
+    <Content Include="Scripts\lib\jquery.js" />
+    <Content Include="Scripts\lib\jquery.min.js" />
+    <Content Include="Scripts\lib\knockout.debug.js" />
+    <Content Include="Scripts\lib\knockout.js" />
+    <Content Include="Scripts\lib\knockout.mapping.debug.js" />
+    <Content Include="Scripts\lib\knockout.mapping.js" />
+    <Content Include="Scripts\lib\knockout.validation.debug.js" />
+    <Content Include="Scripts\lib\knockout.validation.js" />
+    <Content Include="Scripts\lib\modernizr-2.7.1.js" />
+    <Content Include="Scripts\lib\moment-with-langs.js" />
+    <Content Include="Scripts\lib\moment-with-langs.min.js" />
+    <Content Include="Scripts\lib\moment.js" />
+    <Content Include="Scripts\lib\moment.min.js" />
+    <Content Include="Scripts\main.js" />
+    <Content Include="Scripts\lib\r.js" />
+    <Content Include="Scripts\lib\require.js" />
+    <Content Include="Scripts\lib\respond.js" />
+    <Content Include="Scripts\lib\respond.min.js" />
+    <Content Include="Scripts\lib\_references.js" />
+    <Content Include="Scripts\app\infrastructure\ajaxPrefilters.js" />
     <Content Include="Scripts\app\app.viewmodel.js" />
-    <Content Include="Scripts\app\home.viewmodel.js" />
     <Content Include="Scripts\app\account\login.viewmodel.js" />
     <Content Include="Scripts\app\account\manage.viewmodel.js" />
     <Content Include="Scripts\app\account\register.viewmodel.js" />
@@ -277,7 +277,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Scripts\app\metadata\api.js" />
-    <Content Include="Scripts\jquery-2.0.3.min.map" />
+    <Content Include="Scripts\lib\jquery.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Http.Description;
 
-namespace Icm.TaskManager.Web.DTOs
+namespace Icm.TaskManager.Rest.DTOs
 {
 
     public class ApiParameterDto
