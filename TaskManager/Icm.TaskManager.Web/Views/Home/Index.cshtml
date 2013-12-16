@@ -6,10 +6,10 @@
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <meta name="viewport" content="width=device-width" />
 
-    <link href="~/Content/bootstrap.css" rel="stylesheet" />
-    <link href="~/Content/bootstrap-theme.css" rel="stylesheet" />
-    <link href="~/Content/Site.css" rel="stylesheet" />
-    <script src="~/Scripts/lib/modernizr-2.7.1.js"></script>
+    <link href="~/assets/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/assets/css/bootstrap-theme.css" rel="stylesheet" />
+    <link href="~/assets/css/Site.css" rel="stylesheet" />
+    <script src="~/assets/js/lib/modernizr-2.7.1.js"></script>
 </head>
 <body>
     <div data-bind="visible: loading">Loading...</div>
@@ -89,34 +89,6 @@
                 </div>
 
                 <div data-bind="template: { data: viewmodel(), name: viewmodel().constructor.name }"></div>
-
-                <script type="text/html" id="HomeView">
-                    <div class="jumbotron">
-                        <h1>ASP.NET</h1>
-                        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS, and JavaScript.</p>
-                        <p><a href="http://asp.net" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <h2>Getting started</h2>
-                            <p>
-                                ASP.NET Single Page Application (SPA) helps you build applications that include significant client-side interactions using HTML, CSS, and JavaScript.
-                                It's now easier than ever before to getting started writing highly interactive web applications.
-                            </p>
-                            <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=273732">Learn more &raquo;</a></p>
-                        </div>
-                        <div class="col-md-4">
-                            <h2>Get more libraries</h2>
-                            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-                            <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-                        </div>
-                        <div class="col-md-4">
-                            <h2>Web Hosting</h2>
-                            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-                            <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-                        </div>
-                    </div>
-                </script>
 
                 <script type="text/html" id="LoginView">
                     <h2>Log in</h2>
@@ -407,7 +379,7 @@
         </footer>
     </div>
 
-    <script data-main="Scripts/main" src="~/Scripts/lib/require.js"></script>
+    <script data-main="assets/js/main" src="~/assets/js/lib/require.js"></script>
 
 </body>
 </html>

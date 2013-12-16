@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using Icm.TaskManager.Domain.Tasks;
-using Icm.TaskManager.Web.Configuration;
+﻿using Icm.TaskManager.Web.Configuration;
 using Icm.TaskManager.Web.Configuration.Routes;
 using System.Web;
 using System.Web.Mvc;

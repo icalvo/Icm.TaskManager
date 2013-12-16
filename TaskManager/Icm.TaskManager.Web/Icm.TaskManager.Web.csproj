@@ -47,29 +47,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="AutoMapper, Version=3.1.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\AutoMapper.3.1.0\lib\net40\AutoMapper.dll</HintPath>
-    </Reference>
-    <Reference Include="AutoMapper.Net4, Version=3.1.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\AutoMapper.3.1.0\lib\net40\AutoMapper.Net4.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EntityFramework.6.0.1\lib\net45\EntityFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EntityFramework.6.0.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.1.0.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.1.0.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -119,15 +99,6 @@
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Ninject">
-      <HintPath>..\packages\Ninject.3.0.1.10\lib\net45-full\Ninject.dll</HintPath>
-    </Reference>
-    <Reference Include="Ninject.Web">
-      <HintPath>..\packages\Ninject.Web.3.0.0.5\lib\net45-full\Ninject.Web.dll</HintPath>
-    </Reference>
-    <Reference Include="Ninject.Web.Common">
-      <HintPath>..\packages\Ninject.Web.Common.3.0.0.7\lib\net45-full\Ninject.Web.Common.dll</HintPath>
     </Reference>
     <Reference Include="Owin">
       <Private>True</Private>
@@ -195,12 +166,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\BootstrapBundleConfig.cs" />
     <Compile Include="Configuration\FilterConfig.cs" />
     <Compile Include="Configuration\Routes\MvcConfig.cs" />
-    <Compile Include="Configuration\Startup.Auth.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Configuration\Startup.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -209,57 +176,55 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\ApplicationOAuthProvider.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap-theme.css" />
-    <Content Include="Content\bootstrap-theme.min.css" />
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\Site.css" />
+    <Content Include="assets\css\bootstrap-theme.css" />
+    <Content Include="assets\css\bootstrap-theme.min.css" />
+    <Content Include="assets\css\bootstrap.css" />
+    <Content Include="assets\css\bootstrap.min.css" />
+    <Content Include="assets\css\Site.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Scripts\app\infrastructure\koBindingHandlers.js" />
-    <Content Include="Scripts\app\infrastructure\modals.js" />
-    <Content Include="Scripts\app\task\activity.viewmodel.js" />
-    <Content Include="Scripts\app\task\reminder.viewmodel.js" />
-    <Content Include="Scripts\app\task\task.viewmodel.js" />
-    <Content Include="Scripts\app\task\taskList.viewmodel.js" />
+    <Content Include="assets\js\app\infrastructure\koBindingHandlers.js" />
+    <Content Include="assets\js\app\infrastructure\modals.js" />
+    <Content Include="assets\js\app\task\activity.viewmodel.js" />
+    <Content Include="assets\js\app\task\reminder.viewmodel.js" />
+    <Content Include="assets\js\app\task\task.viewmodel.js" />
+    <Content Include="assets\js\app\task\taskList.viewmodel.js" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Scripts\lib\bootstrap.js" />
-    <Content Include="Scripts\lib\bootstrap.min.js" />
-    <None Include="Scripts\lib\jquery.intellisense.js" />
-    <Content Include="Scripts\lib\finch.js" />
-    <Content Include="Scripts\lib\finch.min.js" />
-    <Content Include="Scripts\lib\jquery.js" />
-    <Content Include="Scripts\lib\jquery.min.js" />
-    <Content Include="Scripts\lib\knockout.debug.js" />
-    <Content Include="Scripts\lib\knockout.js" />
-    <Content Include="Scripts\lib\knockout.mapping.debug.js" />
-    <Content Include="Scripts\lib\knockout.mapping.js" />
-    <Content Include="Scripts\lib\knockout.validation.debug.js" />
-    <Content Include="Scripts\lib\knockout.validation.js" />
-    <Content Include="Scripts\lib\modernizr-2.7.1.js" />
-    <Content Include="Scripts\lib\moment-with-langs.js" />
-    <Content Include="Scripts\lib\moment-with-langs.min.js" />
-    <Content Include="Scripts\lib\moment.js" />
-    <Content Include="Scripts\lib\moment.min.js" />
-    <Content Include="Scripts\main.js" />
-    <Content Include="Scripts\lib\r.js" />
-    <Content Include="Scripts\lib\require.js" />
-    <Content Include="Scripts\lib\respond.js" />
-    <Content Include="Scripts\lib\respond.min.js" />
-    <Content Include="Scripts\lib\_references.js" />
-    <Content Include="Scripts\app\infrastructure\ajaxPrefilters.js" />
-    <Content Include="Scripts\app\app.viewmodel.js" />
-    <Content Include="Scripts\app\account\login.viewmodel.js" />
-    <Content Include="Scripts\app\account\manage.viewmodel.js" />
-    <Content Include="Scripts\app\account\register.viewmodel.js" />
-    <Content Include="Scripts\app\account\registerExternal.viewmodel.js" />
-    <Content Include="Scripts\app\account\userInfo.viewmodel.js" />
+    <Content Include="assets\js\lib\bootstrap.js" />
+    <Content Include="assets\js\lib\bootstrap.min.js" />
+    <None Include="assets\js\lib\jquery.intellisense.js" />
+    <Content Include="assets\js\lib\finch.js" />
+    <Content Include="assets\js\lib\finch.min.js" />
+    <Content Include="assets\js\lib\jquery.js" />
+    <Content Include="assets\js\lib\jquery.min.js" />
+    <Content Include="assets\js\lib\knockout.debug.js" />
+    <Content Include="assets\js\lib\knockout.js" />
+    <Content Include="assets\js\lib\knockout.mapping.debug.js" />
+    <Content Include="assets\js\lib\knockout.mapping.js" />
+    <Content Include="assets\js\lib\knockout.validation.debug.js" />
+    <Content Include="assets\js\lib\knockout.validation.js" />
+    <Content Include="assets\js\lib\modernizr-2.7.1.js" />
+    <Content Include="assets\js\lib\moment-with-langs.js" />
+    <Content Include="assets\js\lib\moment-with-langs.min.js" />
+    <Content Include="assets\js\lib\moment.js" />
+    <Content Include="assets\js\lib\moment.min.js" />
+    <Content Include="assets\js\main.js" />
+    <Content Include="assets\js\lib\r.js" />
+    <Content Include="assets\js\lib\require.js" />
+    <Content Include="assets\js\lib\respond.js" />
+    <Content Include="assets\js\lib\respond.min.js" />
+    <Content Include="assets\js\app\infrastructure\ajaxPrefilters.js" />
+    <Content Include="assets\js\app\app.viewmodel.js" />
+    <Content Include="assets\js\app\account\login.viewmodel.js" />
+    <Content Include="assets\js\app\account\manage.viewmodel.js" />
+    <Content Include="assets\js\app\account\register.viewmodel.js" />
+    <Content Include="assets\js\app\account\registerExternal.viewmodel.js" />
+    <Content Include="assets\js\app\account\userInfo.viewmodel.js" />
     <Content Include="Tests\UnitTests.html" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
@@ -276,27 +241,17 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
-    <Content Include="Scripts\app\metadata\api.js" />
-    <Content Include="Scripts\lib\jquery.min.map" />
+    <Content Include="assets\js\app\metadata\api.js" />
+    <Content Include="assets\js\lib\jquery.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Areas\" />
+    <Folder Include="assets\html\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Icm.TaskManager.Domain\Icm.TaskManager.Domain.csproj">
-      <Project>{9b2297cb-2def-4b8e-b147-4bad6046900f}</Project>
-      <Name>Icm.TaskManager.Domain</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Icm.TaskManager.Infrastructure\Icm.TaskManager.Infrastructure.csproj">
-      <Project>{88488a6a-8bae-4f57-bb49-b5d1e35626ec}</Project>
-      <Name>Icm.TaskManager.Infrastructure</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

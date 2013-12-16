@@ -1,4 +1,4 @@
-﻿define(['knockout', 'app/task/activity.viewmodel', 'app/modals', 'knockout.mapping', 'moment'], function (ko, ActivityViewModel, modals, mapping, moment) {
+﻿define(['knockout', 'app/task/activity.viewmodel', 'app/infrastructure/modals', 'knockout.mapping', 'moment'], function (ko, ActivityViewModel, modals, mapping, moment) {
     return function ReminderViewModel(taskListViewModel, data) {
         var self = this;
 
