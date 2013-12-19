@@ -4,7 +4,6 @@
 
         mapping.fromJS(data, {}, self);
 
-        self.template = "reminder-template";
         self.modal = null;
 
         self.taskListViewModel = taskListViewModel;

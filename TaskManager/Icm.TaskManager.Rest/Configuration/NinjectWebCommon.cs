@@ -107,7 +107,10 @@ namespace Icm.TaskManager.Web.Configuration
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Bind<ITaskRepository>().To<FakeTaskRepository>().InSingletonScope();
+            var repo = new FakeTaskRepository(new[] {
+                new Task { Description = "Test task 1"}
+            });
+            kernel.Bind<ITaskRepository>().ToConstant(repo).InSingletonScope();
             //kernel.Bind<ITaskRepository>().To<Infrastructure.TaskRepository>().InRequestScope();
             kernel.Bind<ITaskService>().To<TaskService>().InRequestScope();
             kernel.Bind<ICurrentDateProvider>().To<Infrastructure.NowCurrentDateProvider>().InRequestScope();

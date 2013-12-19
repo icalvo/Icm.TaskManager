@@ -183,8 +183,11 @@
     <Content Include="assets\css\bootstrap.css" />
     <Content Include="assets\css\bootstrap.min.css" />
     <Content Include="assets\css\Site.css" />
+    <Content Include="assets\html\ReminderViewModel.html" />
+    <Content Include="assets\html\TaskListViewModel.html" />
+    <Content Include="assets\js\app\infrastructure\templateLoader.js" />
     <Content Include="favicon.ico" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="assets\js\app\infrastructure\koBindingHandlers.js" />
     <Content Include="assets\js\app\infrastructure\modals.js" />
@@ -192,9 +195,9 @@
     <Content Include="assets\js\app\task\reminder.viewmodel.js" />
     <Content Include="assets\js\app\task\task.viewmodel.js" />
     <Content Include="assets\js\app\task\taskList.viewmodel.js" />
-    <Content Include="fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="assets\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="assets\js\lib\bootstrap.js" />
     <Content Include="assets\js\lib\bootstrap.min.js" />
     <None Include="assets\js\lib\jquery.intellisense.js" />
@@ -246,7 +249,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="assets\html\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

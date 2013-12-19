@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en" id="htmlDoc">
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <title data-bind="text: title"></title>
@@ -36,7 +36,7 @@
                     </ul>
                     <ul class="nav navbar-nav navbar-right" data-bind="with: user">
                         <li class="dropdown">
-                            <a href="#/user/manage" class="dropdown-toggle" data-toggle="dropdown"><span data-bind="text: name"></span> <b class="caret"></b></a>
+                            <a href="" class="dropdown-toggle" data-toggle="dropdown"><span data-bind="text: name"></span> <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li><a href="#/user/profile">Edit profile</a></li>
                                 <li class="divider"></li>
@@ -321,51 +321,9 @@
                     </div>
                 </script>
 
-                <script type="text/html" id="TaskListViewModel">
-                    <h2 data-bind="text: $data.title"></h2>
-                    <form data-bind="submit: addTask" class="form-inline" role="form">
-                        <div class="form-group">
-                            <label class="sr-only" for="newTaskDescription">New task description</label>
-                            <input type="text" id="newTaskDescription" data-bind="value: newTaskDescription" placeholder="What do you want to do?" class="form-control" />
-                        </div>
-                        <button type="button" class="btn btn-primary" data-bind="click: addTask">Add</button>
-                    </form>
-                    <div data-bind="foreach: { data: tasks, beforeRemove: $data.hideTask }">
-                        <div class="panel panel-default task">
-                            <div class="panel-heading">
-                                <h3 data-bind="text: $data.description, css: { taskDone: $data.isDone }, title: $data.id" class="panel-title"></h3>
-                            </div>
-                            <div class="panel-body">
-                                <p>
-                                    <small>CreatedOn: <span data-bind="dateString: $data.creationDate"></span></small>
-                                    <small>Alarm: <span data-bind="dateString: $data.alarmDate"></span></small>
-                                </p>
-                                <button data-bind="click: $parent.doneTask" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Done</button>
-                                <a data-bind="click: $parent.editTask" class="btn btn-default"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
-                                <a data-bind="click: $parent.deleteTask" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Delete</a>
-                            </div>
-                        </div>
-                    </div>
-                </script>
+                <script type="text/html" id="TaskListViewModel" data-template-src></script>
 
-                <script type="text/html" id="reminder-template">
-                    <div class="modal fade">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" aria-hidden="true" data-bind="click: cancel">&times;</button>
-                                    <h3><span class="glyphicon glyphicon-bell"></span>Reminder</h3>
-                                </div>
-                                <div class="modal-body">
-                                    <h3 data-bind="text: description"></h3>
-                                </div>
-                                <div class="modal-footer">
-                                    <a href="#" class="btn btn-primary" data-bind="click: cancel">Close</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </script>
+                <script type="text/html" id="ReminderViewModel" data-template-src></script>
             </div>
             <div class="col-md-3" data-bind="visible: threeColumnLayout, with: viewmodel">
                 <h2>Actividad</h2>
@@ -375,11 +333,11 @@
             </div>
         </div>
         <footer>
-            <p>&copy; <span data-bind="text: copyrightYear"></span> Ignacio Calvo</p>
+            <p>&copy; <span data-bind="text: copyrightYear()"></span> Ignacio Calvo</p>
         </footer>
     </div>
 
-    <script data-main="assets/js/main" src="~/assets/js/lib/require.js"></script>
+    <script data-main="../assets/js/main" src="~/assets/js/lib/require.js"></script>
 
 </body>
 </html>

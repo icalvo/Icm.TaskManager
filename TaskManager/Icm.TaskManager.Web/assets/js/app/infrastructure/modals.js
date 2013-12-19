@@ -1,4 +1,4 @@
-﻿define(['knockout', 'jquery', 'bootstrap'], function (ko) {
+﻿define(['knockout', 'jquery', 'bootstrap'], function (ko, $) {
     var createModalElement = function (templateName, viewModel) {
         var temporaryDiv = addHiddenDivToBody();
         var deferredElement = $.Deferred();
@@ -37,7 +37,7 @@
         if (typeof options.viewModel !== "object") throw new Error("options.viewModel is required.");
 
         var viewModel = options.viewModel;
-        var template = options.template || viewModel.template;
+        var template = options.template || viewModel.template || viewModel.constructor.name;
         var context = options.context;
 
         if (!template) throw new Error("options.template or options.viewModel.template is required.");
