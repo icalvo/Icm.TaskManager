@@ -2,9 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Icm.TaskManager.Domain
 {
@@ -21,45 +18,52 @@ namespace Icm.TaskManager.Domain
 
         public MemoryRepository(IEnumerable<TItem> initialElements, Func<TItem, TKey> keyFunction)
         {
-            this.store = initialElements.ToDictionary(item => keyFunction(item));
+            this.store = initialElements.ToDictionary(keyFunction);
             this.keyFunction = keyFunction;
         }
 
         public void Create(TItem item)
         {
-            store.Add(keyFunction(item), item);
+            this.store.Add(this.keyFunction(item), item);
         }
 
         public TItem GetById(TKey id)
         {
-            return store[id];
+            if (this.store.ContainsKey(id))
+            {
+                return this.store[id];
+            }
+
+            return default(TItem);
         }
 
         public bool Update(TItem item)
         {
-            TKey key = keyFunction(item);
-            if (store.ContainsKey(key)) {
-                store[key] = item;
+            TKey key = this.keyFunction(item);
+            if (this.store.ContainsKey(key))
+            {
+                this.store[key] = item;
                 return true;
             }
-            else {
+            else
+            {
                 return false;
             }
         }
 
         public void Delete(TItem item)
         {
-            store.Remove(keyFunction(item));
+            this.store.Remove(this.keyFunction(item));
         }
 
         public IEnumerator<TItem> GetEnumerator()
         {
-            return store.Values.GetEnumerator();
+            return this.store.Values.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return store.Values.GetEnumerator();
+            return this.store.Values.GetEnumerator();
         }
     }
 }

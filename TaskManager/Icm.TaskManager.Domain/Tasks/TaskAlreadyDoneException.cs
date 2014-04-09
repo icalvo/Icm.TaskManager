@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Icm.TaskManager.Domain.Tasks
 {
-    class TaskAlreadyDoneException : Exception
+    public class TaskAlreadyDoneException : Exception
     {
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Icm.TaskManager.Rest.Configuration;
+using Icm.TaskManager.Rest.Models.Account.BindingModels;
 using Icm.TaskManager.Web.Models.Account.BindingModels;
 using Icm.TaskManager.Web.Models.Account.ViewModels;
 using Icm.TaskManager.Web.Providers;

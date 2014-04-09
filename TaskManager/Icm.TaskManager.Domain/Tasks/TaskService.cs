@@ -1,4 +1,6 @@
 ﻿using System;
+using NodaTime;
+
 namespace Icm.TaskManager.Domain.Tasks
 {
     public class TaskService : ITaskService
@@ -27,7 +29,7 @@ namespace Icm.TaskManager.Domain.Tasks
             return recurringTask;
         }
 
-        public Task CreateTask(string description, System.DateTime? startDate, System.DateTime dueDate, string recurrenceType, TimeSpan? repeatInterval, int priority, string notes, string labels)
+        public Task CreateTask(string description, Instant? startDate, Instant dueDate, string recurrenceType, Duration? repeatInterval, int priority, string notes, string labels)
         {
             var newTask = new Task();
 

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Icm.TaskManager.Web.Models.Account.BindingModels
+namespace Icm.TaskManager.Rest.Models.Account.BindingModels
 {
     public class RegisterExternalBindingModel
     {

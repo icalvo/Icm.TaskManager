@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NodaTime;
 
 namespace Icm.TaskManager.Domain.Tests.Fakes
 {
     public class FakeCurrentDateProvider : ICurrentDateProvider
     {
-        private readonly DateTime now;
+        private readonly Instant now;
 
-        public FakeCurrentDateProvider(DateTime now)
+        public FakeCurrentDateProvider(Instant now)
         {
             this.now = now;
         }
 
-        public DateTime Now
+        public Instant Now
         {
             get
             {

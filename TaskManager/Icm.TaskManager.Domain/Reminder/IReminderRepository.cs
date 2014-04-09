@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Icm.TaskManager.Domain.Reminder
 {
-    class IReminderRepository
+    public interface IReminderRepository
     {
     }
 }

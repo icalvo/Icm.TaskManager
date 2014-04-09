@@ -16,13 +16,14 @@ namespace Icm.TaskManager.Web.Controllers
     [EnableCors("*", "*", "*")]
     public class TaskController : ApiController
     {
-        private ITaskRepository taskRepository;
-        private ITaskService taskService;
+        private readonly ITaskRepository taskRepository;
+        private readonly ITaskService taskService;
 
         public TaskController(ITaskRepository taskRepository, ITaskService taskService)
         {
             this.taskRepository = taskRepository;
             this.taskService = taskService;
+            Mapper.CreateMap<Task, TaskInfoDto>();
         }
 
         // GET api/task
@@ -41,8 +42,8 @@ namespace Icm.TaskManager.Web.Controllers
             {
                 return NotFound();
             }
-            Mapper.Map<TaskInfoDto>(task);
-            return Ok(task);
+
+            return Ok(Mapper.Map<TaskInfoDto>(task));
         }
 
         // PUT api/task/5

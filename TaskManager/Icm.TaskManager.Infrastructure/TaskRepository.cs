@@ -5,6 +5,7 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
 using Icm.TaskManager.Domain.Tasks;
+using NodaTime;
 
 namespace Icm.TaskManager.Infrastructure
 {
@@ -41,6 +42,7 @@ namespace Icm.TaskManager.Infrastructure
                     throw;
                 }
             }
+
             return true;
         }
 
@@ -62,7 +64,7 @@ namespace Icm.TaskManager.Infrastructure
 
         public IEnumerable<Reminder> GetActiveReminders()
         {
-            var now = DateTime.Now;
+            var now = SystemClock.Instance.Now;
             return context.Tasks.SelectMany(task => task.Reminders).Where(reminder => reminder.AlarmDate >= now);
         }
 

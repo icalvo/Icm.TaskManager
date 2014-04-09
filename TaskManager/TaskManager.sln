@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2013 for Web
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Icm.TaskManager.Domain", "Icm.TaskManager.Domain\Icm.TaskManager.Domain.csproj", "{9B2297CB-2DEF-4B8E-B147-4BAD6046900F}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Icm.TaskManager.Domain.Tests", "Icm.TaskManager.Domain.Tests\Icm.TaskManager.Domain.Tests.csproj", "{AC757E23-3521-480B-B86B-EFCEF0BC34CA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Icm.TaskManager.Rest", "Icm.TaskManager.Rest\Icm.TaskManager.Rest.csproj", "{5D049C5B-7B58-44C0-B88D-D6AE5E5C6339}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{3FEA6EE0-4ED0-4A15-B16C-9E09E6D92B28}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,5 +50,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AC757E23-3521-480B-B86B-EFCEF0BC34CA} = {3FEA6EE0-4ED0-4A15-B16C-9E09E6D92B28}
+		{FBA7EDF5-082A-41B3-BB64-CE437E3F15B0} = {3FEA6EE0-4ED0-4A15-B16C-9E09E6D92B28}
 	EndGlobalSection
 EndGlobal

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Icm.TaskManager.Domain
+﻿namespace Icm.TaskManager.Domain
 {
+    using NodaTime;
+
     public interface ICurrentDateProvider
     {
-        DateTime Now { get; }
+        Instant Now { get; }
     }
 }

@@ -25,7 +25,5 @@ namespace Icm.TaskManager.Web.Controllers
 
             return Ok(new MetadataDto { Methods = apiMethods });
         }
-
-
     }
 }

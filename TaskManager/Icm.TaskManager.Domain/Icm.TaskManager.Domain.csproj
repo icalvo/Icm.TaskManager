@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NodaTime">
+      <HintPath>..\packages\NodaTime.1.2.0\lib\net35-Client\NodaTime.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,6 +46,8 @@
     <Compile Include="IRepository.cs" />
     <Compile Include="MemoryRepository.cs" />
     <Compile Include="Reminder\IReminderRepository.cs" />
+    <Compile Include="Tasks\DueDateRecurrence.cs" />
+    <Compile Include="Tasks\FinishDateRecurrence.cs" />
     <Compile Include="Tasks\Recurrence.cs" />
     <Compile Include="Tasks\Reminder.cs" />
     <Compile Include="Tasks\ITaskRepository.cs" />
@@ -51,6 +56,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tasks\TaskAlreadyDoneException.cs" />
     <Compile Include="Tasks\TaskService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

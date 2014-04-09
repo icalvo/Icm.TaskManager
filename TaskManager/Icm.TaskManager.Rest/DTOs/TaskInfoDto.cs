@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using NodaTime;
 
 namespace Icm.TaskManager.Rest.DTOs
 {
@@ -11,16 +12,25 @@ namespace Icm.TaskManager.Rest.DTOs
     public class TaskInfoDto
     {
         public int Id { get; set; }
+
         public string Description { get; set; }
 
-        public DateTime? CreationDate { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime DueDate { get; set; }
-        public DateTime? FinishDate { get; set; }
-        public TimeSpan? RepeatInterval { get; set; }
+        public Instant? CreationDate { get; set; }
+
+        public Instant? StartDate { get; set; }
+
+        public Instant DueDate { get; set; }
+
+        public Instant? FinishDate { get; set; }
+
+        public Duration? RepeatInterval { get; set; }
+
         public string RecurrenceType { get; set; }
+
         public int Priority { get; set; }
+
         public string Notes { get; set; }
+
         public string Labels { get; set; }
     }
 }

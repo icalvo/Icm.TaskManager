@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Web.Http;
-using Newtonsoft.Json.Serialization;
+﻿using System.Web.Http;
 using Icm.TaskManager.Rest.Formatters;
+using Newtonsoft.Json.Serialization;
 
 namespace Icm.TaskManager.Rest.Configuration.Routes
 {
@@ -17,7 +13,7 @@ namespace Icm.TaskManager.Rest.Configuration.Routes
         {
             config.EnableCors();
             config.Formatters.Insert(0, new JsonpMediaTypeFormatter());
-            
+
             // Use camel case for JSON data.
             config.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
 

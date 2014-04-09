@@ -1,69 +1,18 @@
 using System;
+using System.Collections.Generic;
 using System.Web;
-
+using Icm.TaskManager.Domain;
+using Icm.TaskManager.Domain.Tasks;
+using Icm.TaskManager.Rest.Configuration;
 using Microsoft.Web.Infrastructure.DynamicModuleHelper;
-
 using Ninject;
 using Ninject.Web.Common;
-using System.Web.Http;
-using System.Web.Http.Dependencies;
-using Ninject.Syntax;
-using Ninject.Activation;
-using System.Linq;
-using Ninject.Parameters;
-using System.Collections.Generic;
-using Icm.TaskManager.Domain.Tasks;
-using Icm.TaskManager.Domain;
 
-[assembly: WebActivator.PreApplicationStartMethod(typeof(Icm.TaskManager.Web.Configuration.NinjectWebCommon), "Start")]
-[assembly: WebActivator.ApplicationShutdownMethodAttribute(typeof(Icm.TaskManager.Web.Configuration.NinjectWebCommon), "Stop")]
+[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(NinjectWebCommon), "Start")]
+[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(NinjectWebCommon), "Stop")]
 
-namespace Icm.TaskManager.Web.Configuration
+namespace Icm.TaskManager.Rest.Configuration
 {
-
-    public class NinjectScope : IDependencyScope
-    {
-        protected IResolutionRoot resolutionRoot;
-
-        public NinjectScope(IResolutionRoot kernel)
-        {
-            resolutionRoot = kernel;
-        }
-
-        public object GetService(Type serviceType)
-        {
-            IRequest request = resolutionRoot.CreateRequest(serviceType, null, new Parameter[0], true, true);
-            return resolutionRoot.Resolve(request).SingleOrDefault();
-        }
-
-        public IEnumerable<object> GetServices(Type serviceType)
-        {
-            IRequest request = resolutionRoot.CreateRequest(serviceType, null, new Parameter[0], true, true);
-            return resolutionRoot.Resolve(request).ToList();
-        }
-
-        public void Dispose()
-        {
-            IDisposable disposable = (IDisposable)resolutionRoot;
-            if (disposable != null) disposable.Dispose();
-            resolutionRoot = null;
-        }
-    }
-
-    public class NinjectResolver : NinjectScope, IDependencyResolver
-    {
-        private IKernel _kernel;
-        public NinjectResolver(IKernel kernel)
-            : base(kernel)
-        {
-            _kernel = kernel;
-        }
-        public IDependencyScope BeginScope()
-        {
-            return new NinjectScope(_kernel.BeginBlock());
-        }
-    }
-
     public static class NinjectWebCommon 
     {
         private static readonly Bootstrapper bootstrapper = new Bootstrapper();
@@ -76,7 +25,6 @@ namespace Icm.TaskManager.Web.Configuration
             DynamicModuleUtility.RegisterModule(typeof(OnePerRequestHttpModule));
             DynamicModuleUtility.RegisterModule(typeof(NinjectHttpModule));
             bootstrapper.Initialize(CreateKernel);
-            GlobalConfiguration.Configuration.DependencyResolver = new NinjectResolver(bootstrapper.Kernel);
         }
         
         /// <summary>
@@ -94,11 +42,19 @@ namespace Icm.TaskManager.Web.Configuration
         private static IKernel CreateKernel()
         {
             var kernel = new StandardKernel();
-            kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
-            kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
-            
-            RegisterServices(kernel);
-            return kernel;
+            try
+            {
+                kernel.Bind<Func<IKernel>>().ToMethod(ctx => () => new Bootstrapper().Kernel);
+                kernel.Bind<IHttpModule>().To<HttpApplicationInitializationHttpModule>();
+
+                RegisterServices(kernel);
+                return kernel;
+            }
+            catch
+            {
+                kernel.Dispose();
+                throw;
+            }
         }
 
         /// <summary>
@@ -116,6 +72,7 @@ namespace Icm.TaskManager.Web.Configuration
             kernel.Bind<ICurrentDateProvider>().To<Infrastructure.NowCurrentDateProvider>().InRequestScope();
         }        
     }
+
 
     internal class FakeTaskRepository : MemoryRepository<int, Task>, ITaskRepository
     {
