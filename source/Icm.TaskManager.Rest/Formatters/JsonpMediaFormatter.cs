@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Formatting;
@@ -13,27 +11,21 @@ namespace Icm.TaskManager.Rest.Formatters
 {
     public class JsonpMediaTypeFormatter : JsonMediaTypeFormatter
     {
-        private string callbackQueryParameter;
+        private readonly string callbackQueryParameter;
 
-        public JsonpMediaTypeFormatter()
+        public JsonpMediaTypeFormatter(string callbackQueryParameter = "callback")
         {
+            this.callbackQueryParameter = callbackQueryParameter;
             SupportedMediaTypes.Add(DefaultMediaType);
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/javascript"));
-
             MediaTypeMappings.Add(new UriPathExtensionMapping("jsonp", DefaultMediaType));
-        }
-
-        public string CallbackQueryParameter
-        {
-            get { return callbackQueryParameter ?? "callback"; }
-            set { callbackQueryParameter = value; }
         }
 
         public override Task WriteToStreamAsync(Type type, object value, Stream stream, HttpContent content, TransportContext transportContext)
         {
-            string callback;
+            string callback = this.Callback();
 
-            if (IsJsonpRequest(out callback))
+            if (callback != null)
             {
                 return Task.Factory.StartNew(() =>
                 {
@@ -47,23 +39,26 @@ namespace Icm.TaskManager.Rest.Formatters
                     writer.Flush();
                 });
             }
-            else
-            {
-                return base.WriteToStreamAsync(type, value, stream, content, transportContext);
-            }
+
+            return base.WriteToStreamAsync(type, value, stream, content, transportContext);
         }
 
 
-        private bool IsJsonpRequest(out string callback)
+        private string Callback()
         {
-            callback = null;
-
             if (HttpContext.Current.Request.HttpMethod != "GET")
-                return false;
+            {
+                return null;
+            }
 
-            callback = HttpContext.Current.Request.QueryString[CallbackQueryParameter];
+            string callback = HttpContext.Current.Request.QueryString[this.callbackQueryParameter];
 
-            return !string.IsNullOrEmpty(callback);
+            if (string.IsNullOrEmpty(callback))
+            {
+                return null;
+            }
+
+            return callback;
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿require.config({
-    baseUrl: '../../assets/js/lib',
+    baseUrl: '../../client/js/lib',
     paths: {
         app: '../app',
         'knockout.validation': 'knockout.validation.debug'
@@ -9,7 +9,7 @@
     },
     config: {
         'app/infrastructure/templateLoader': {
-            'pathTemplate': 'assets/html/{0}.html'
+            'pathTemplate': 'client/html/{0}.html'
         }
     }
 });

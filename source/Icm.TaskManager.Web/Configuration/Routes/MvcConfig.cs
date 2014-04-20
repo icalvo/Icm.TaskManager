@@ -17,8 +17,8 @@ namespace Icm.TaskManager.Web.Configuration.Routes
             routes.RouteExistingFiles = true;
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            // Ignore the assets directory which contains images, js, css & html
-            routes.IgnoreRoute("assets/{*pathInfo}");
+            // Ignore the client directory which contains images, js, css & html
+            routes.IgnoreRoute("client/{*pathInfo}");
 
             routes.MapRoute(
                 name: "Default",

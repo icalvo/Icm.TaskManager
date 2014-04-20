@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Jasmine Spec Runner v2.0.0</title>
+
+    <link rel="shortcut icon" type="image/png" href="../lib/jasmine-2.0.0/jasmine_favicon.png">
+    <link href="../lib/jasmine-2.0.0/jasmine.css" rel="stylesheet" />
+    <script src="../lib/jasmine-2.0.0/jasmine.js"></script>
+    <script src="../lib/jasmine-2.0.0/jasmine-html.js"></script>
+    <script src="../lib/jasmine-2.0.0/boot.js"></script>
+
+    <!-- include source files here... -->
+    <script src="../lib/jquery-2.0.3.js"></script>
+    <script src="../lib/knockout-3.0.0.debug.js"></script>
+    <script src="../lib/knockout.mapping-latest.debug.js"></script>
+    <script src="../lib/bootstrap/bootstrap.min.js"></script>
+    <script src="../lib/finch-latest.js"></script>
+    <script src="../lib/moment.js"></script>
+    <script src="../lib/shortcut.js"></script>
+    <script src="../infrastructure/consoleExtensions.js"></script>
+    <script src="../infrastructure/restApi.js"></script>
+    <script src="../infrastructure/ajaxPrefilters.js"></script>
+    <script src="../infrastructure/modals.js"></script>
+    <script src="../infrastructure/bootstrapLoader.js"></script>
+    <script src="../infrastructure/koBindingHandlers.js"></script>
+    <script src="../infrastructure/routing.js"></script>
+    <script src="../app/viewmodels/textissuemodal.viewmodel.js"></script>
+    <script src="../app/viewmodels/audioissue.viewmodel.js"></script>
+    <script src="../app/viewmodels/audioissuesmodal.viewmodel.js"></script>
+    <script src="../app/viewmodels/stream.viewmodel.js"></script>
+    <script src="../app/viewmodels/asset.viewmodel.js"></script>
+    <script src="../app/viewmodels/track.viewmodel.js"></script>
+    <script src="../app/viewmodels/task.viewmodel.js"></script>
+    <script src="../app/viewmodels/project.viewmodel.js"></script>
+    <script src="../app/viewmodels/apihelp.viewmodel.js"></script>
+    <script src="../app/viewmodels/apihelpdetail.viewmodel.js"></script>
+    <script src="../app/viewmodels/app.viewmodel.js"></script>
+    <!-- include spec files here... -->
+    <script src="fakeApi.js"></script>
+    <script src="app.viewmodel.test.js"></script>
+    <script src="asset.viewmodel.test.js"></script>
+    <script src="stream.viewmodel.test.js"></script>
+
+  <script type="text/javascript">
+      (function () {
+          var jasmineEnv = jasmine.getEnv();
+          jasmineEnv.updateInterval = 1000;
+
+          var htmlReporter = new jasmine.HtmlReporter();
+
+          jasmineEnv.addReporter(htmlReporter);
+
+          jasmineEnv.specFilter = function (spec) {
+              return htmlReporter.specFilter(spec);
+          };
+
+          var currentWindowOnload = window.onload;
+
+          window.onload = function () {
+              if (currentWindowOnload) {
+                  currentWindowOnload();
+              }
+              execJasmine();
+          };
+
+          function execJasmine() {
+              jasmineEnv.execute();
+          }
+
+      })();
+  </script>
+
+</head>
+
+<body>
+</body>
+</html>
