@@ -1,21 +1,11 @@
 ﻿using Icm.TaskManager.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Icm.TaskManager.Infrastructure.Interfaces;
 using NodaTime;
 
 namespace Icm.TaskManager.Infrastructure
 {
     public class NowCurrentDateProvider : ICurrentDateProvider
     {
-        public Instant Now
-        {
-            get 
-            {
-                return SystemClock.Instance.Now;
-            }
-        }
+        public Instant Now => SystemClock.Instance.Now;
     }
 }

@@ -1,22 +1,18 @@
-﻿using Icm.TaskManager.Domain;
-using Icm.TaskManager.Rest.DTOs;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.Description;
 using AutoMapper;
 using Icm.TaskManager.Domain.Tasks;
-using System.Web.Http.Cors;
+using Icm.TaskManager.Rest.DTOs;
 
 namespace Icm.TaskManager.Web.Controllers
 {
     [EnableCors("*", "*", "*")]
     public class ReminderController : ApiController
     {
-        private ITaskRepository taskRepository;
+        private readonly ITaskRepository taskRepository;
         private ITaskService taskService;
 
         public ReminderController(ITaskRepository taskRepository, ITaskService taskService)
@@ -30,19 +26,16 @@ namespace Icm.TaskManager.Web.Controllers
         [ResponseType(typeof(IEnumerable<ReminderDto>))]
         public IHttpActionResult GetActiveReminders()
         {
-            return Ok(this.taskRepository.GetActiveReminders());
+            return Ok(taskRepository.GetActiveReminders().Select(x => new ReminderDto { AlertDate = x.ToDateTimeUtc() }));
         }
-
-        #region IDisposable implementation
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                //this.taskRepository.Dispose();
             }
+
             base.Dispose(disposing);
-        } 
-        #endregion
+        }
     }
 }

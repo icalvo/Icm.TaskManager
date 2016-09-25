@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Owin;
+﻿using Microsoft.Owin;
 using Owin;
 
 [assembly: OwinStartup(typeof(Icm.TaskManager.Web.Configuration.Startup))]
@@ -12,7 +9,6 @@ namespace Icm.TaskManager.Web.Configuration
     {
         public void Configuration(IAppBuilder app)
         {
-            //ConfigureAuth(app);
         }
     }
 }

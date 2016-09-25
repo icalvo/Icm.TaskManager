@@ -2,7 +2,6 @@
 using Icm.TaskManager.Web.Configuration.Routes;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Optimization;
 using System.Web.Routing;
 
 namespace Icm.TaskManager.Web

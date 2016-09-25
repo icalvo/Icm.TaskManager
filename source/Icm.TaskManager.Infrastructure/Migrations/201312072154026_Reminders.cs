@@ -1,8 +1,7 @@
 namespace Icm.TaskManager.Infrastructure.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class Reminders : DbMigration
     {
         public override void Up()
@@ -18,10 +17,10 @@ namespace Icm.TaskManager.Infrastructure.Migrations
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Tasks", t => t.Task_Id)
                 .Index(t => t.Task_Id);
-            
+
             DropColumn("dbo.Tasks", "AlarmDate");
         }
-        
+
         public override void Down()
         {
             AddColumn("dbo.Tasks", "AlarmDate", c => c.DateTime());

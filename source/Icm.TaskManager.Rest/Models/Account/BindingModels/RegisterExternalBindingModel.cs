@@ -8,5 +8,4 @@ namespace Icm.TaskManager.Rest.Models.Account.BindingModels
         [Display(Name = "User name")]
         public string UserName { get; set; }
     }
-
 }

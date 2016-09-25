@@ -15,5 +15,4 @@ namespace Icm.TaskManager.Web.Models.Account.BindingModels
         [Display(Name = "Provider key")]
         public string ProviderKey { get; set; }
     }
-
 }

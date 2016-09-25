@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Icm.TaskManager.Domain</RootNamespace>
     <AssemblyName>Icm.TaskManager.Domain</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\CodeAnalysisRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,8 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NodaTime">
-      <HintPath>..\packages\NodaTime.1.2.0\lib\net35-Client\NodaTime.dll</HintPath>
+    <Reference Include="NodaTime, Version=1.3.0.0, Culture=neutral, PublicKeyToken=4226afe0d9b296d1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NodaTime.1.3.2\lib\net35-Client\NodaTime.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -42,23 +45,38 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ICurrentDateProvider.cs" />
-    <Compile Include="IRepository.cs" />
-    <Compile Include="MemoryRepository.cs" />
+    <Compile Include="MemoryRepoKeyRepository.cs" />
+    <Compile Include="MemoryOwnKeyRepository.cs" />
     <Compile Include="Reminder\IReminderRepository.cs" />
     <Compile Include="Tasks\DueDateRecurrence.cs" />
+    <Compile Include="Tasks\EventBusExtensions.cs" />
     <Compile Include="Tasks\FinishDateRecurrence.cs" />
+    <Compile Include="Tasks\MonadicExtensions.cs" />
     <Compile Include="Tasks\Recurrence.cs" />
-    <Compile Include="Tasks\Reminder.cs" />
     <Compile Include="Tasks\ITaskRepository.cs" />
     <Compile Include="Tasks\ITaskService.cs" />
+    <Compile Include="Tasks\ReminderAddedEvent.cs" />
+    <Compile Include="Tasks\ReminderAddedEventHandler.cs" />
+    <Compile Include="Tasks\ReminderElapsedEvent.cs" />
     <Compile Include="Tasks\Task.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tasks\TaskAlreadyDoneException.cs" />
+    <Compile Include="Tasks\TaskId.cs" />
     <Compile Include="Tasks\TaskService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\Newtonsoft.Json.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Icm.TaskManager.Infrastructure.Interfaces\Icm.TaskManager.Infrastructure.Interfaces.csproj">
+      <Project>{018fd1f2-2f5c-47ea-83df-d6e5f4248346}</Project>
+      <Name>Icm.TaskManager.Infrastructure.Interfaces</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

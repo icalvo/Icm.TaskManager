@@ -11,5 +11,4 @@ namespace Icm.TaskManager.Web.Models.Account.BindingModels
         [Display(Name = "External access token")]
         public string ExternalAccessToken { get; set; }
     }
-
 }

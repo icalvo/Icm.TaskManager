@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
@@ -13,28 +12,28 @@ namespace Icm.TaskManager.Web.Providers
 {
     public class ApplicationOAuthProvider : OAuthAuthorizationServerProvider
     {
-        private readonly string _publicClientId;
-        private readonly Func<UserManager<IdentityUser>> _userManagerFactory;
+        private readonly string publicClientId;
+        private readonly Func<UserManager<IdentityUser>> userManagerFactory;
 
         public ApplicationOAuthProvider(string publicClientId, Func<UserManager<IdentityUser>> userManagerFactory)
         {
             if (publicClientId == null)
             {
-                throw new ArgumentNullException("publicClientId");
+                throw new ArgumentNullException(nameof(publicClientId));
             }
 
             if (userManagerFactory == null)
             {
-                throw new ArgumentNullException("userManagerFactory");
+                throw new ArgumentNullException(nameof(userManagerFactory));
             }
 
-            _publicClientId = publicClientId;
-            _userManagerFactory = userManagerFactory;
+            this.publicClientId = publicClientId;
+            this.userManagerFactory = userManagerFactory;
         }
 
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
-            using (UserManager<IdentityUser> userManager = _userManagerFactory())
+            using (UserManager<IdentityUser> userManager = userManagerFactory())
             {
                 IdentityUser user = await userManager.FindAsync(context.UserName, context.Password);
 
@@ -44,9 +43,11 @@ namespace Icm.TaskManager.Web.Providers
                     return;
                 }
 
-                ClaimsIdentity oAuthIdentity = await userManager.CreateIdentityAsync(user,
+                ClaimsIdentity oAuthIdentity = await userManager.CreateIdentityAsync(
+                    user,
                     context.Options.AuthenticationType);
-                ClaimsIdentity cookiesIdentity = await userManager.CreateIdentityAsync(user,
+                ClaimsIdentity cookiesIdentity = await userManager.CreateIdentityAsync(
+                    user,
                     CookieAuthenticationDefaults.AuthenticationType);
                 AuthenticationProperties properties = CreateProperties(user.UserName);
                 AuthenticationTicket ticket = new AuthenticationTicket(oAuthIdentity, properties);
@@ -78,7 +79,7 @@ namespace Icm.TaskManager.Web.Providers
 
         public override Task ValidateClientRedirectUri(OAuthValidateClientRedirectUriContext context)
         {
-            if (context.ClientId == _publicClientId)
+            if (context.ClientId == publicClientId)
             {
                 Uri expectedRootUri = new Uri(context.Request.Uri, "/");
 

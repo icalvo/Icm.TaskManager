@@ -3,38 +3,40 @@ using System.Collections.Generic;
 using System.Web;
 using Icm.TaskManager.Domain;
 using Icm.TaskManager.Domain.Tasks;
+using Icm.TaskManager.Infrastructure.Interfaces;
 using Icm.TaskManager.Rest.Configuration;
 using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using Ninject;
 using Ninject.Web.Common;
+using NodaTime;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(NinjectWebCommon), "Start")]
 [assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(NinjectWebCommon), "Stop")]
 
 namespace Icm.TaskManager.Rest.Configuration
 {
-    public static class NinjectWebCommon 
+    public static class NinjectWebCommon
     {
-        private static readonly Bootstrapper bootstrapper = new Bootstrapper();
+        private static readonly Bootstrapper Bootstrapper = new Bootstrapper();
 
         /// <summary>
         /// Starts the application
         /// </summary>
-        public static void Start() 
+        public static void Start()
         {
             DynamicModuleUtility.RegisterModule(typeof(OnePerRequestHttpModule));
             DynamicModuleUtility.RegisterModule(typeof(NinjectHttpModule));
-            bootstrapper.Initialize(CreateKernel);
+            Bootstrapper.Initialize(CreateKernel);
         }
-        
+
         /// <summary>
         /// Stops the application.
         /// </summary>
         public static void Stop()
         {
-            bootstrapper.ShutDown();
+            Bootstrapper.ShutDown();
         }
-        
+
         /// <summary>
         /// Creates the kernel that will manage your application.
         /// </summary>
@@ -63,32 +65,14 @@ namespace Icm.TaskManager.Rest.Configuration
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            var repo = new FakeTaskRepository(new[] {
-                new Task { Description = "Test task 1"}
+            var repo = new FakeTaskRepository(new Dictionary<TaskId, Task>
+            {
+                { new TaskId(1), Task.Create("Test task 1", null, Instant.FromUtc(2016, 1, 1, 1, 1), null, null, 1, "Notes", "Labels", SystemClock.Instance.Now) }
             });
             kernel.Bind<ITaskRepository>().ToConstant(repo).InSingletonScope();
-            //kernel.Bind<ITaskRepository>().To<Infrastructure.TaskRepository>().InRequestScope();
+            ////kernel.Bind<ITaskRepository>().To<Infrastructure.TaskRepository>().InRequestScope();
             kernel.Bind<ITaskService>().To<TaskService>().InRequestScope();
             kernel.Bind<ICurrentDateProvider>().To<Infrastructure.NowCurrentDateProvider>().InRequestScope();
-        }        
-    }
-
-
-    internal class FakeTaskRepository : MemoryRepository<int, Task>, ITaskRepository
-    {
-        public FakeTaskRepository()
-            : base(task => task.Id)
-        {
-        }
-
-        public FakeTaskRepository(IEnumerable<Task> items)
-            : base(items, task => task.Id)
-        {
-        }
-
-        public IEnumerable<Reminder> GetActiveReminders()
-        {
-            return new List<Reminder>();
         }
     }
 }

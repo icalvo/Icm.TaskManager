@@ -11,5 +11,4 @@
 
         public string State { get; set; }
     }
-
 }

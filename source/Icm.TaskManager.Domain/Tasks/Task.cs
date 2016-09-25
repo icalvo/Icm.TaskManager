@@ -1,99 +1,122 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NodaTime;
 
 namespace Icm.TaskManager.Domain.Tasks
 {
     public class Task
     {
-        public int Id { get; protected set; }
+        private Instant? startDate;
+        private Instant? finishDate;
 
         public string Description { get; set; }
 
-        public Instant? CreationDate { get; internal set; }
+        public Instant CreationDate { get; private set; }
 
-        public Instant? StartDate { get; internal set; }
-
-        public Instant DueDate { get; internal set; }
-
-        public Instant? FinishDate { get; internal set; }
-
-        public Recurrence Recurrence
+        public Instant? StartDate
         {
-            get 
+            get
             {
-                Type recurrenceType = System.Reflection.Assembly.GetExecutingAssembly().DefinedTypes.SingleOrDefault(type => type.Name == this.RecurrenceType);
-
-                if (recurrenceType != null && this.RepeatInterval.HasValue)
-                {
-                    var recurrence = (Recurrence)Activator.CreateInstance(recurrenceType);
-                    recurrence.RepeatInterval = this.RepeatInterval.Value;
-                    return recurrence;
-                }
-
-                return null;
+                return startDate;
             }
 
             set
             {
-                if (value == null)
+                if (value.HasValue && value > finishDate)
                 {
-                    this.RecurrenceType = null;
+                    throw new Exception("Cannot set a task start date after its finish date");
                 }
-                else
-                {
-                    this.RecurrenceType = value.GetType().Name;
-                    this.RepeatInterval = value.RepeatInterval;
-                }
+
+                startDate = value;
             }
         }
 
-        public string RecurrenceType { get; set; }
+        public Instant DueDate { get; internal set; }
 
-        public Duration? RepeatInterval { get; set; }
+        public Instant? FinishDate
+        {
+            get
+            {
+                return finishDate;
+            }
 
-        public int Priority { get; internal set; }
+            set
+            {
+                if (IsDone)
+                {
+                    throw new TaskAlreadyDoneException();
+                }
+
+                if (StartDate.HasValue && StartDate > value)
+                {
+                    throw new Exception();
+                }
+
+                finishDate = value;
+            }
+        }
+
+        public Recurrence Recurrence { get; private set; }
+
+        public Duration? RepeatInterval { get; internal set; }
+
+        public int Priority { get; set; }
 
         public string Notes { get; set; }
 
         public string Labels { get; set; }
 
-        public ICollection<Reminder> Reminders { get; internal set; }
+        public ICollection<Instant> Reminders { get; internal set; }
 
-        public bool IsDone
+        public bool IsDone => FinishDate.HasValue;
+
+        public Task CopyWithNewDueDate(Instant newDueDate, Instant now)
         {
-            get
+            var newTask = new Task
             {
-                return FinishDate.HasValue;
-            }
+                Description = Description,
+                CreationDate = now,
+                DueDate = newDueDate,
+                Recurrence = Recurrence,
+                Priority = Priority,
+                Notes = Notes,
+                Labels = Labels
+            };
+
+            return newTask;
         }
 
-        public Task CopyWithNewDueDate(Instant newDueDate, ICurrentDateProvider currentDateProvider)
+        public static Task Create(
+            string description,
+            Instant? startDate,
+            Instant dueDate,
+            Recurrence recurrenceType,
+            Duration? repeatInterval,
+            int priority,
+            string notes,
+            string labels,
+            Instant now)
         {
-            var newTask = new Task();
-
-            newTask.Description = this.Description;
-            newTask.CreationDate = currentDateProvider.Now;
-            newTask.DueDate = newDueDate;
-            newTask.Recurrence = this.Recurrence;
-            newTask.Priority = this.Priority;
-            newTask.Notes = this.Notes;
-            newTask.Labels = this.Labels;
+            var newTask = new Task
+            {
+                Description = description,
+                StartDate = startDate,
+                CreationDate = now,
+                DueDate = dueDate,
+                Recurrence = recurrenceType,
+                RepeatInterval = repeatInterval,
+                Priority = priority,
+                Notes = notes,
+                Labels = labels,
+                Reminders = new HashSet<Instant>()
+            };
 
             return newTask;
         }
 
         public override string ToString()
         {
-            return string.Format("{0} {2:yyyy-MM-dd} {1}", this.Id, this.Description, this.StartDate);
-        }
-
-        internal void SetFinishDate(Instant finishDate)
-        {
-            this.FinishDate = finishDate;
+            return $"{StartDate:yyyy-MM-dd} {Description}";
         }
     }
 }

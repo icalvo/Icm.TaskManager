@@ -1,15 +1,13 @@
-﻿using Icm.TaskManager.Domain;
-using Icm.TaskManager.Rest.DTOs;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Cors;
 using System.Web.Http.Description;
 using AutoMapper;
+using Icm.TaskManager.Application;
 using Icm.TaskManager.Domain.Tasks;
-using System.Web.Http.Cors;
+using Icm.TaskManager.Rest.DTOs;
 
 namespace Icm.TaskManager.Web.Controllers
 {
@@ -17,27 +15,21 @@ namespace Icm.TaskManager.Web.Controllers
     public class TaskController : ApiController
     {
         private readonly ITaskRepository taskRepository;
-        private readonly ITaskService taskService;
+        private readonly TaskApplicationService taskService;
 
-        public TaskController(ITaskRepository taskRepository, ITaskService taskService)
+        public TaskController(ITaskRepository taskRepository, TaskApplicationService taskService)
         {
             this.taskRepository = taskRepository;
             this.taskService = taskService;
             Mapper.CreateMap<Task, TaskInfoDto>();
         }
 
-        // GET api/task
-        [ResponseType(typeof(IEnumerable<TaskInfoDto>))]
-        public IHttpActionResult GetTasks()
-        {
-            return Ok(this.taskRepository.Select(Mapper.Map<Task, TaskInfoDto>).ToList());
-        }
-
         // GET api/task/5
-        [ResponseType(typeof(Task))]
+        [ResponseType(typeof(TaskInfoDto))]
         public IHttpActionResult GetTask(int id)
         {
-            Task task = this.taskRepository.GetById(id);
+            TaskId taskId = new TaskId(id);
+            Task task = taskRepository.GetById(taskId);
             if (task == null)
             {
                 return NotFound();
@@ -61,16 +53,19 @@ namespace Icm.TaskManager.Web.Controllers
 
             Task task = Mapper.Map<Task>(taskInfo);
 
-            if (!this.taskRepository.Update(task))
+            var key = new TaskId(id);
+            if (taskRepository.GetById(key) == null)
             {
                 return NotFound();
             }
+
+            taskRepository.Update(key, task);
 
             return StatusCode(HttpStatusCode.NoContent);
         }
 
         // POST api/task
-        [ResponseType(typeof(Task))]
+        [ResponseType(typeof(TaskInfoDto))]
         public IHttpActionResult PostTask(TaskInfoDto taskInfo)
         {
             if (!ModelState.IsValid)
@@ -78,44 +73,41 @@ namespace Icm.TaskManager.Web.Controllers
                 return BadRequest(ModelState);
             }
 
-            var task = this.taskService.CreateTask(
+            var taskId = taskService.CreateTask(
                 taskInfo.Description,
-                taskInfo.StartDate,
                 taskInfo.DueDate,
                 taskInfo.RecurrenceType,
                 taskInfo.RepeatInterval,
                 taskInfo.Priority,
                 taskInfo.Notes,
-                taskInfo.Labels
-            );
+                taskInfo.Labels);
 
-            return CreatedAtRoute("DefaultApi", new { id = task.Id }, task);
+            return CreatedAtRoute("DefaultApi", new { id = taskId }, taskInfo);
         }
 
         // DELETE api/task/5
-        [ResponseType(typeof(Task))]
+        [ResponseType(typeof(TaskInfoDto))]
         public IHttpActionResult DeleteTask(int id)
         {
-            Task task = this.taskRepository.GetById(id);
+            TaskId taskId = new TaskId(id);
+            Task task = taskRepository.GetById(taskId);
             if (task == null)
             {
                 return NotFound();
             }
-            this.taskRepository.Delete(task);
 
-            return Ok(task);
+            taskRepository.Delete(taskId);
+
+            return Ok(Mapper.Map<TaskInfoDto>(task));
         }
-
-        #region IDisposable implementation
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                //this.taskRepository.Dispose();
             }
+
             base.Dispose(disposing);
-        } 
-        #endregion
+        }
     }
 }

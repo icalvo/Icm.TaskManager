@@ -11,6 +11,7 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -18,7 +19,6 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
-using System.Web.Http.ModelBinding;
 
 namespace Icm.TaskManager.Web.Controllers
 {
@@ -32,8 +32,6 @@ namespace Icm.TaskManager.Web.Controllers
     {
         private const string LocalLoginProvider = "Local";
 
-        #region Ctor
-
         /// <summary>
         /// Creates an instance of <see cref="AccountController" />
         /// </summary>
@@ -45,29 +43,19 @@ namespace Icm.TaskManager.Web.Controllers
         /// <summary>
         /// Creates an instance of <see cref="AccountController" />
         /// </summary>
-        public AccountController(UserManager<IdentityUser> userManager,
+        public AccountController(
+            UserManager<IdentityUser> userManager,
             ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
         {
             UserManager = userManager;
             AccessTokenFormat = accessTokenFormat;
         }
 
-        #endregion
-
-        #region Properties
-
         public UserManager<IdentityUser> UserManager { get; private set; }
+
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
 
-        #endregion
-
-        #region Controller actions
-
         // GET api/Account/UserInfo
-        /// <summary>
-        /// Gets user information
-        /// </summary>
-        /// <returns></returns>
         [Route("UserInfo")]
         public UserInfoViewModel GetUserInfo()
         {
@@ -138,7 +126,9 @@ namespace Icm.TaskManager.Web.Controllers
                 return BadRequest(ModelState);
             }
 
-            IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword,
+            IdentityResult result = await UserManager.ChangePasswordAsync(
+                User.Identity.GetUserId(),
+                model.OldPassword,
                 model.NewPassword);
             IHttpActionResult errorResult = GetErrorResult(result);
 
@@ -197,7 +187,8 @@ namespace Icm.TaskManager.Web.Controllers
                 return BadRequest("The external login is already associated with an account.");
             }
 
-            IdentityResult result = await UserManager.AddLoginAsync(User.Identity.GetUserId(),
+            IdentityResult result = await UserManager.AddLoginAsync(
+                User.Identity.GetUserId(),
                 new UserLoginInfo(externalData.LoginProvider, externalData.ProviderKey));
 
             IHttpActionResult errorResult = GetErrorResult(result);
@@ -227,7 +218,8 @@ namespace Icm.TaskManager.Web.Controllers
             }
             else
             {
-                result = await UserManager.RemoveLoginAsync(User.Identity.GetUserId(),
+                result = await UserManager.RemoveLoginAsync(
+                    User.Identity.GetUserId(),
                     new UserLoginInfo(model.LoginProvider, model.ProviderKey));
             }
 
@@ -271,7 +263,8 @@ namespace Icm.TaskManager.Web.Controllers
                 return new ChallengeResult(provider, this);
             }
 
-            IdentityUser user = await UserManager.FindAsync(new UserLoginInfo(externalLogin.LoginProvider,
+            IdentityUser user = await UserManager.FindAsync(new UserLoginInfo(
+                externalLogin.LoginProvider,
                 externalLogin.ProviderKey));
 
             bool hasRegistered = user != null;
@@ -279,9 +272,11 @@ namespace Icm.TaskManager.Web.Controllers
             if (hasRegistered)
             {
                 Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-                ClaimsIdentity oAuthIdentity = await UserManager.CreateIdentityAsync(user,
+                ClaimsIdentity oAuthIdentity = await UserManager.CreateIdentityAsync(
+                    user,
                     OAuthDefaults.AuthenticationType);
-                ClaimsIdentity cookieIdentity = await UserManager.CreateIdentityAsync(user,
+                ClaimsIdentity cookieIdentity = await UserManager.CreateIdentityAsync(
+                    user,
                     CookieAuthenticationDefaults.AuthenticationType);
                 AuthenticationProperties properties = ApplicationOAuthProvider.CreateProperties(user.UserName);
                 Authentication.SignIn(properties, oAuthIdentity, cookieIdentity);
@@ -310,7 +305,6 @@ namespace Icm.TaskManager.Web.Controllers
             {
                 descriptions = new List<AuthenticationDescription>();
             }
-            List<ExternalLoginViewModel> logins = new List<ExternalLoginViewModel>();
 
             string state;
 
@@ -324,25 +318,27 @@ namespace Icm.TaskManager.Web.Controllers
                 state = null;
             }
 
-            foreach (AuthenticationDescription description in descriptions)
-            {
-                ExternalLoginViewModel login = new ExternalLoginViewModel
+            return
+                descriptions
+                .Select(description => new
                 {
-                    Name = description.Caption,
-                    Url = Url.Route("ExternalLogin", new
+                    description,
+                    routeValues = new
                     {
                         provider = description.AuthenticationType,
                         response_type = "token",
                         client_id = Startup.PublicClientId,
                         redirect_uri = new Uri(Request.RequestUri, returnUrl).AbsoluteUri,
                         state = state
-                    }),
+                    }
+                })
+                .Select(@t => new ExternalLoginViewModel
+                {
+                    Name = @t.description.Caption,
+                    Url = Url.Route("ExternalLogin", @t.routeValues),
                     State = state
-                };
-                logins.Add(login);
-            }
-
-            return logins;
+                })
+                .ToList();
         }
 
         // POST api/Account/Register
@@ -409,10 +405,6 @@ namespace Icm.TaskManager.Web.Controllers
             return Ok();
         }
 
-        #endregion
-
-        #region IDisposable implementation
-
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -422,10 +414,6 @@ namespace Icm.TaskManager.Web.Controllers
 
             base.Dispose(disposing);
         }
-
-        #endregion
-
-        #region Helpers
 
         private IAuthenticationManager Authentication
         {
@@ -445,7 +433,7 @@ namespace Icm.TaskManager.Web.Controllers
                 {
                     foreach (string error in result.Errors)
                     {
-                        ModelState.AddModelError("", error);
+                        ModelState.AddModelError(string.Empty, error);
                     }
                 }
 
@@ -464,7 +452,9 @@ namespace Icm.TaskManager.Web.Controllers
         private class ExternalLoginData
         {
             public string LoginProvider { get; set; }
+
             public string ProviderKey { get; set; }
+
             public string UserName { get; set; }
 
             public IList<Claim> GetClaims()
@@ -489,8 +479,8 @@ namespace Icm.TaskManager.Web.Controllers
 
                 Claim providerKeyClaim = identity.FindFirst(ClaimTypes.NameIdentifier);
 
-                if (providerKeyClaim == null || String.IsNullOrEmpty(providerKeyClaim.Issuer)
-                    || String.IsNullOrEmpty(providerKeyClaim.Value))
+                if (providerKeyClaim == null || string.IsNullOrEmpty(providerKeyClaim.Issuer)
+                    || string.IsNullOrEmpty(providerKeyClaim.Value))
                 {
                     return null;
                 }
@@ -511,7 +501,7 @@ namespace Icm.TaskManager.Web.Controllers
 
         private static class RandomOAuthStateGenerator
         {
-            private static RandomNumberGenerator _random = new RNGCryptoServiceProvider();
+            private static readonly RandomNumberGenerator Random = new RNGCryptoServiceProvider();
 
             public static string Generate(int strengthInBits)
             {
@@ -519,17 +509,15 @@ namespace Icm.TaskManager.Web.Controllers
 
                 if (strengthInBits % bitsPerByte != 0)
                 {
-                    throw new ArgumentException("strengthInBits must be evenly divisible by 8.", "strengthInBits");
+                    throw new ArgumentException("strengthInBits must be evenly divisible by 8.", nameof(strengthInBits));
                 }
 
                 int strengthInBytes = strengthInBits / bitsPerByte;
 
                 byte[] data = new byte[strengthInBytes];
-                _random.GetBytes(data);
+                Random.GetBytes(data);
                 return HttpServerUtility.UrlTokenEncode(data);
             }
         }
-
-        #endregion
     }
 }

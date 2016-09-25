@@ -1,8 +1,7 @@
 namespace Icm.TaskManager.Infrastructure.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class FirstSchema : DbMigration
     {
         public override void Up()
@@ -14,9 +13,8 @@ namespace Icm.TaskManager.Infrastructure.Migrations
                         Id = c.Int(nullable: false, identity: true),
                     })
                 .PrimaryKey(t => t.Id);
-            
         }
-        
+
         public override void Down()
         {
             DropTable("dbo.Tasks");

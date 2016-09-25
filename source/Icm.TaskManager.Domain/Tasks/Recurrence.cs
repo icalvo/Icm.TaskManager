@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NodaTime;
+﻿using NodaTime;
 
 namespace Icm.TaskManager.Domain.Tasks
 {
@@ -13,6 +8,19 @@ namespace Icm.TaskManager.Domain.Tasks
 
         public Duration RepeatInterval { get; internal set; }
 
-        public abstract Task CreateRecurringTask(Task task, ICurrentDateProvider currentDateProvider);
+        public abstract Task CreateRecurringTask(Task task, Instant now);
+
+        public static Recurrence FromType(string recurrenceType)
+        {
+            switch (recurrenceType)
+            {
+                case "DueDate":
+                    return new DueDateRecurrence();
+                case "FinishDate":
+                    return new FinishDateRecurrence();
+                default:
+                    return null;
+            }
+        }
     }
 }

@@ -23,7 +23,7 @@ namespace Icm.TaskManager.Rest.Formatters
 
         public override Task WriteToStreamAsync(Type type, object value, Stream stream, HttpContent content, TransportContext transportContext)
         {
-            string callback = this.Callback();
+            string callback = Callback();
 
             if (callback != null)
             {
@@ -43,7 +43,6 @@ namespace Icm.TaskManager.Rest.Formatters
             return base.WriteToStreamAsync(type, value, stream, content, transportContext);
         }
 
-
         private string Callback()
         {
             if (HttpContext.Current.Request.HttpMethod != "GET")
@@ -51,7 +50,7 @@ namespace Icm.TaskManager.Rest.Formatters
                 return null;
             }
 
-            string callback = HttpContext.Current.Request.QueryString[this.callbackQueryParameter];
+            string callback = HttpContext.Current.Request.QueryString[callbackQueryParameter];
 
             if (string.IsNullOrEmpty(callback))
             {

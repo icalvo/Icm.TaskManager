@@ -1,5 +1,4 @@
 ﻿using Icm.TaskManager.Rest.DTOs;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
@@ -15,6 +14,7 @@ namespace Icm.TaskManager.Web.Controllers
         {
             public IEnumerable<ApiMethodDto> Methods { get; set; }
         }
+
         // GET api/metadata
         [HttpGet]
         [ResponseType(typeof(MetadataDto))]

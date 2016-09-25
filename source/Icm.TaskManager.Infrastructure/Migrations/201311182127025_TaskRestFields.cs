@@ -1,8 +1,7 @@
 namespace Icm.TaskManager.Infrastructure.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class TaskRestFields : DbMigration
     {
         public override void Up()
@@ -18,7 +17,7 @@ namespace Icm.TaskManager.Infrastructure.Migrations
             AddColumn("dbo.Tasks", "Notes", c => c.String());
             AddColumn("dbo.Tasks", "Labels", c => c.String());
         }
-        
+
         public override void Down()
         {
             DropColumn("dbo.Tasks", "Labels");
