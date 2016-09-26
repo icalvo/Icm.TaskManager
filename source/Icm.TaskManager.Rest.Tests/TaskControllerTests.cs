@@ -1,12 +1,14 @@
-﻿using AutoMapper;
-using Icm.TaskManager.Domain.Tasks;
-using Icm.TaskManager.Domain.Tests.Fakes;
+﻿using Icm.TaskManager.Domain.Tasks;
 using Icm.TaskManager.Rest.DTOs;
 using Icm.TaskManager.Web.Controllers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Web.Http.Results;
+using Edument.CQRS;
+using Icm.TaskManager.Application;
 using NodaTime;
+using Icm.TaskManager.Domain.Tests.Fakes;
+using Icm.TaskManager.Infrastructure.Interfaces;
+using NodaTime.Testing;
 
 namespace Icm.TaskManager.Web.Tests
 {
@@ -16,10 +18,7 @@ namespace Icm.TaskManager.Web.Tests
         [TestMethod]
         public void GetTaskId_WhenNotFound_ReturnsNotFound()
         {
-            var repo = new FakeTaskRepository();
-            var currentDateProvider = new FakeCurrentDateProvider(new Instant(10000L * 3600L * 24L * 30L));
-            var controller = new TaskController(repo, new TaskService(currentDateProvider));
-
+            var controller = BuildController(new FakeTaskRepository());
             var result = controller.GetTask(1);
             Assert.IsInstanceOfType(result, typeof(NotFoundResult));
         }
@@ -27,13 +26,22 @@ namespace Icm.TaskManager.Web.Tests
         [TestMethod]
         public void GetTaskId_WhenFound_ReturnsOk()
         {
-            var repo = new FakeTaskRepository(new[] { new FakeTask(1) });
-            var currentDateProvider = new FakeCurrentDateProvider(new Instant(10000L * 3600L * 24L * 30L));
-            var controller = new TaskController(repo, new TaskService(currentDateProvider));
-
-            var result = controller.GetTask(1);
+            var repo = new FakeTaskRepository();
+            TaskId newTaskId = repo.Add(new Task());
+            var controller = BuildController(repo);
+            var result = controller.GetTask(newTaskId.Value);
             Assert.IsInstanceOfType(result, typeof(OkNegotiatedContentResult<TaskInfoDto>));
         }
 
+        private static TaskController BuildController(FakeTaskRepository repo)
+        {
+            var currentDateProvider = new FakeClock(new Instant(10000L * 3600L * 24L * 30L));
+            var controller = new TaskController(repo, new TaskApplicationService(
+                repo,
+                currentDateProvider, 
+                new MemoryEventBus(),
+                new MessageDispatcher(new InMemoryEventStore())));
+            return controller;
+        }
     }
 }

@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 
-namespace Icm.TaskManager.Web.Results
+namespace Icm.TaskManager.Rest.Results
 {
     public class ChallengeResult : IHttpActionResult
     {

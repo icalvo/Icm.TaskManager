@@ -4,7 +4,7 @@ namespace Icm.TaskManager.Domain.Tasks
 {
     public interface ITaskService
     {
-        Task CreateTask(string description, Instant? startDate, Instant dueDate, string recurrenceType, Duration? repeatInterval, int priority, string notes, string labels);
+        Task CreateTask(string description, Instant dueDate);
 
         Task Finish(Task task);
     }

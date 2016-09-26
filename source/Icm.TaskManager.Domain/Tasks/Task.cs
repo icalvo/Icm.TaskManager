@@ -56,9 +56,7 @@ namespace Icm.TaskManager.Domain.Tasks
             }
         }
 
-        public Recurrence Recurrence { get; private set; }
-
-        public Duration? RepeatInterval { get; internal set; }
+        public Recurrence Recurrence { get; set; }
 
         public int Priority { get; set; }
 
@@ -88,26 +86,15 @@ namespace Icm.TaskManager.Domain.Tasks
 
         public static Task Create(
             string description,
-            Instant? startDate,
             Instant dueDate,
-            Recurrence recurrenceType,
-            Duration? repeatInterval,
-            int priority,
-            string notes,
-            string labels,
             Instant now)
         {
             var newTask = new Task
             {
                 Description = description,
-                StartDate = startDate,
                 CreationDate = now,
                 DueDate = dueDate,
-                Recurrence = recurrenceType,
-                RepeatInterval = repeatInterval,
-                Priority = priority,
-                Notes = notes,
-                Labels = labels,
+                Priority = 1,
                 Reminders = new HashSet<Instant>()
             };
 

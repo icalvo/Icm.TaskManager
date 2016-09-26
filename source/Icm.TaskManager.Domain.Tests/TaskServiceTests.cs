@@ -45,13 +45,7 @@ namespace Icm.TaskManager.Domain.Tests
         {
             return sut.CreateTask(
                 "My description",
-                null,
-                CreateInstant(2016, 1, 10),
-                null,
-                null,
-                3,
-                "Notes",
-                "labels");
+                CreateInstant(2016, 1, 10));
         }
 
         private static Instant CreateInstant(int year, int month, int day)

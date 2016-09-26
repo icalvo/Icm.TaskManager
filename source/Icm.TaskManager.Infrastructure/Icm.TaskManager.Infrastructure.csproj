@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MessageDispatcher.cs" />
     <Compile Include="Migrations\201311132316350_FirstSchema.cs" />
     <Compile Include="Migrations\201311132316350_FirstSchema.Designer.cs">
       <DependentUpon>201311132316350_FirstSchema.cs</DependentUpon>
@@ -80,6 +81,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="NowCurrentDateProvider.cs" />
+    <Compile Include="SqlEventStore.cs" />
     <Compile Include="TaskRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TaskManagerContext.cs" />

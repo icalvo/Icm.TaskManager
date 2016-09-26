@@ -1,0 +1,11 @@
+﻿namespace Icm.TaskManager.Infrastructure.Interfaces
+{
+    /// <summary>
+    /// Implemented by an aggregate once for each event type it can apply.
+    /// </summary>
+    /// <typeparam name="TEvent"></typeparam>
+    public interface IApplyEvent<in TEvent>
+    {
+        void Apply(TEvent e);
+    }
+}

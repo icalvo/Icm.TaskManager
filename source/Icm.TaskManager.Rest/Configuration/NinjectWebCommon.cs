@@ -67,7 +67,7 @@ namespace Icm.TaskManager.Rest.Configuration
         {
             var repo = new FakeTaskRepository(new Dictionary<TaskId, Task>
             {
-                { new TaskId(1), Task.Create("Test task 1", null, Instant.FromUtc(2016, 1, 1, 1, 1), null, null, 1, "Notes", "Labels", SystemClock.Instance.Now) }
+                { new TaskId(1), Task.Create("Test task 1", Instant.FromUtc(2016, 1, 1, 1, 1), SystemClock.Instance.Now) }
             });
             kernel.Bind<ITaskRepository>().ToConstant(repo).InSingletonScope();
             ////kernel.Bind<ITaskRepository>().To<Infrastructure.TaskRepository>().InRequestScope();

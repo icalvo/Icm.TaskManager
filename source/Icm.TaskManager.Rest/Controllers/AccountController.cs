@@ -1,15 +1,4 @@
-﻿using Icm.TaskManager.Rest.Configuration;
-using Icm.TaskManager.Rest.Models.Account.BindingModels;
-using Icm.TaskManager.Web.Models.Account.BindingModels;
-using Icm.TaskManager.Web.Models.Account.ViewModels;
-using Icm.TaskManager.Web.Providers;
-using Icm.TaskManager.Web.Results;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.Owin.Security;
-using Microsoft.Owin.Security.Cookies;
-using Microsoft.Owin.Security.OAuth;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -19,8 +8,18 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using Icm.TaskManager.Rest.Configuration;
+using Icm.TaskManager.Rest.Models.Account.BindingModels;
+using Icm.TaskManager.Rest.Models.Account.ViewModels;
+using Icm.TaskManager.Rest.Providers;
+using Icm.TaskManager.Rest.Results;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Cookies;
+using Microsoft.Owin.Security.OAuth;
 
-namespace Icm.TaskManager.Web.Controllers
+namespace Icm.TaskManager.Rest.Controllers
 {
     /// <summary>
     /// REST controller for user account operations

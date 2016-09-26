@@ -48,9 +48,12 @@
     <Compile Include="MemoryRepoKeyRepository.cs" />
     <Compile Include="MemoryOwnKeyRepository.cs" />
     <Compile Include="Reminder\IReminderRepository.cs" />
+    <Compile Include="Tasks\ChangeTaskNotes.cs" />
+    <Compile Include="Tasks\CreateTask.cs" />
     <Compile Include="Tasks\DueDateRecurrence.cs" />
     <Compile Include="Tasks\EventBusExtensions.cs" />
     <Compile Include="Tasks\FinishDateRecurrence.cs" />
+    <Compile Include="Tasks\FinishTask.cs" />
     <Compile Include="Tasks\MonadicExtensions.cs" />
     <Compile Include="Tasks\Recurrence.cs" />
     <Compile Include="Tasks\ITaskRepository.cs" />
@@ -60,8 +63,11 @@
     <Compile Include="Tasks\ReminderElapsedEvent.cs" />
     <Compile Include="Tasks\Task.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tasks\TaskAggregate.cs" />
     <Compile Include="Tasks\TaskAlreadyDoneException.cs" />
+    <Compile Include="Tasks\TaskCreatedEvent.cs" />
     <Compile Include="Tasks\TaskId.cs" />
+    <Compile Include="Tasks\TaskNotesChangedEvent.cs" />
     <Compile Include="Tasks\TaskService.cs" />
   </ItemGroup>
   <ItemGroup>

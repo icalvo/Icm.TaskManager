@@ -13,5 +13,10 @@ namespace Icm.TaskManager.Domain.Tasks
         public int TaskId { get; }
 
         public Instant AlarmInstant { get; }
+
+        public override string ToString()
+        {
+            return $"{GetType().Name} {TaskId} {AlarmInstant}";
+        }
     }
 }

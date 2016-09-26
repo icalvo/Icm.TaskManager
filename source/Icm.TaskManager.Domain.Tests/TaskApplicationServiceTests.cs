@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
+using Edument.CQRS;
 using FluentAssertions;
 using Icm.TaskManager.Application;
 using Icm.TaskManager.Domain.Tasks;
@@ -19,17 +19,20 @@ namespace Icm.TaskManager.Domain.Tests
         public void GivenTaskWithDueDateRecurrence_WhenFinished_FinishDateEstablished()
         {
             var repo = new FakeTaskRepository();
-            var clock = new FakeClock(CreateInstant(2016, 5, 6), Duration.FromStandardDays(1));
+            var clock = new FakeClock(CreateInstant(2016, 5, 6));
             var eventBus = new MemoryEventBus();
             eventBus.Subscribe(new ReminderAddedEventHandler(clock, eventBus));
-            var sut = new TaskApplicationService(repo, clock, eventBus);
+            var sut = new TaskApplicationService(repo, clock, eventBus, new MessageDispatcher(new InMemoryEventStore()));
 
-            var taskId = sut.CreateSimpleTask(
+            var taskId = sut.CreateDueDateRecurringTask(
                 "My description",
                 CreateInstant(2016, 1, 10),
+                Duration.FromStandardDays(2),
                 3,
                 "Notes",
                 "labels");
+
+            clock.AdvanceDays(1);
 
             var secondTaskId = sut.FinishTask(taskId);
 
@@ -38,7 +41,7 @@ namespace Icm.TaskManager.Domain.Tests
 
             var task = repo.GetById(new TaskId(taskId));
             task.IsDone.Should().BeTrue();
-            task.FinishDate.Should().Be(CreateInstant(2016, 5, 6));
+            task.FinishDate.Should().Be(CreateInstant(2016, 5, 7));
         }
 
         [TestMethod]
@@ -48,7 +51,7 @@ namespace Icm.TaskManager.Domain.Tests
             var clock = new FakeClock(CreateInstant(2016, 5, 6), Duration.FromStandardDays(1));
             var eventBus = new MemoryEventBus();
             eventBus.Subscribe(new ReminderAddedEventHandler(clock, eventBus));
-            var sut = new TaskApplicationService(repo, clock, eventBus);
+            var sut = new TaskApplicationService(repo, clock, eventBus, new MessageDispatcher(new InMemoryEventStore()));
 
             var taskId = sut.CreateDueDateRecurringTask(
                 "My description",
@@ -88,9 +91,9 @@ namespace Icm.TaskManager.Domain.Tests
                     return System.Threading.Tasks.Task.FromResult(false);
                 });
 
-            var sut = new TaskApplicationService(repo, clock, eventBus);
+            var sut = new TaskApplicationService(repo, clock, eventBus, new MessageDispatcher(new InMemoryEventStore()));
 
-            var taskId = sut.CreateSimpleTask(
+            var taskId = sut.CreateTask(
                 "My description",
                 CreateInstant(2016, 1, 10),
                 3,

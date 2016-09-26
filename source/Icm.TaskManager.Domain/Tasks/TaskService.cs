@@ -11,17 +11,11 @@ namespace Icm.TaskManager.Domain.Tasks
             this.clock = clock;
         }
 
-        public Task CreateTask(string description, Instant? startDate, Instant dueDate, string recurrenceType, Duration? repeatInterval, int priority, string notes, string labels)
+        public Task CreateTask(string description, Instant dueDate)
         {
             return Task.Create(
                 description,
-                startDate,
                 dueDate,
-                Recurrence.FromType(recurrenceType),
-                repeatInterval,
-                priority,
-                notes,
-                labels,
                 clock.Now);
         }
 

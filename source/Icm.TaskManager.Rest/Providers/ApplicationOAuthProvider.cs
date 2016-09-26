@@ -8,7 +8,7 @@ using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 
-namespace Icm.TaskManager.Web.Providers
+namespace Icm.TaskManager.Rest.Providers
 {
     public class ApplicationOAuthProvider : OAuthAuthorizationServerProvider
     {

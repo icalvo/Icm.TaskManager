@@ -73,7 +73,7 @@ namespace Icm.TaskManager.Web.Controllers
                 return BadRequest(ModelState);
             }
 
-            var taskId = taskService.CreateTask(
+            var taskId = taskService.CreateTaskParsing(
                 taskInfo.Description,
                 taskInfo.DueDate,
                 taskInfo.RecurrenceType,

@@ -89,6 +89,10 @@
       <Project>{018FD1F2-2F5C-47EA-83DF-D6E5F4248346}</Project>
       <Name>Icm.TaskManager.Infrastructure.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Icm.TaskManager.Infrastructure\Icm.TaskManager.Infrastructure.csproj">
+      <Project>{88488A6A-8BAE-4F57-BB49-B5D1E35626EC}</Project>
+      <Name>Icm.TaskManager.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

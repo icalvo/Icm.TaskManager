@@ -1,4 +1,4 @@
-﻿namespace Icm.TaskManager.Web.Models.Account.ViewModels
+﻿namespace Icm.TaskManager.Rest.Models.Account.ViewModels
 {
     /// <summary>
     /// View model for external login

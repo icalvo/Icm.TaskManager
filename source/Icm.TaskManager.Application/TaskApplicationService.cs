@@ -1,4 +1,5 @@
-﻿using System.Timers;
+﻿using System;
+using Edument.CQRS;
 using Icm.TaskManager.Domain.Tasks;
 using Icm.TaskManager.Infrastructure.Interfaces;
 using NodaTime;
@@ -10,59 +11,42 @@ namespace Icm.TaskManager.Application
         private readonly ITaskRepository taskRepository;
         private readonly IClock clock;
         private readonly IEventBus eventBus;
+        private readonly IMessageDispatcher messageDispatcher;
 
-        public TaskApplicationService(ITaskRepository taskRepository, IClock clock, IEventBus eventBus)
+        public TaskApplicationService(ITaskRepository taskRepository, IClock clock, IEventBus eventBus, IMessageDispatcher messageDispatcher)
         {
             this.taskRepository = taskRepository;
             this.clock = clock;
             this.eventBus = eventBus;
+            this.messageDispatcher = messageDispatcher;
         }
 
-        public int CreateSimpleTask(
+        public int CreateTask(
             string description,
             Instant dueDate,
             int priority,
             string notes,
             string labels)
         {
-            var creationInstant = clock.Now;
-            var task = Task.Create(
-                description,
-                null,
-                dueDate,
-                null,
-                null,
-                priority,
-                notes,
-                labels,
-                creationInstant);
+            var id = CreateSimpleTask(description, dueDate);
 
-            var id = taskRepository.Add(task);
-
+            ChangeTaskPriority(id, priority);
+            ChangeTaskNotes(id, notes);
+            ChangeTaskLabels(id, labels);
             return id;
         }
 
         public int CreateDueDateRecurringTask(
             string description,
             Instant dueDate,
-            Duration? repeatInterval,
+            Duration repeatInterval,
             int priority,
             string notes,
             string labels)
         {
-            var creationInstant = clock.Now;
-            var task = Task.Create(
-                description,
-                null,
-                dueDate,
-                new DueDateRecurrence(),
-                repeatInterval,
-                priority,
-                notes,
-                labels,
-                creationInstant);
+            var id = CreateTask(description, dueDate, priority, notes, labels);
 
-            var id = taskRepository.Add(task);
+            ChangeRecurrenceToDueDate(id, repeatInterval);
 
             return id;
         }
@@ -70,29 +54,57 @@ namespace Icm.TaskManager.Application
         public int CreateFinishDateRecurringTask(
             string description,
             Instant dueDate,
-            Duration? repeatInterval,
+            Duration repeatInterval,
             int priority,
             string notes,
             string labels)
         {
-            var creationInstant = clock.Now;
-            var task = Task.Create(
-                description,
-                null,
-                dueDate,
-                new FinishDateRecurrence(),
-                repeatInterval,
-                priority,
-                notes,
-                labels,
-                creationInstant);
+            var id = CreateTask(description, dueDate, priority, notes, labels);
 
-            var id = taskRepository.Add(task);
+            ChangeRecurrenceToFinishDate(id, repeatInterval);
 
             return id;
         }
 
-        public int CreateTask(
+        public int CreateSimpleTask(string description, Instant dueDate)
+        {
+            var creationInstant = clock.Now;
+
+            messageDispatcher.SendCommand(new CreateTask());
+
+            var task = Task.Create(
+                description,
+                dueDate,
+                creationInstant);
+
+            var id = taskRepository.Add(task);
+
+            var id2 = Guid.NewGuid();
+            eventBus.Publish(new TaskCreatedEvent(id2, description, dueDate, creationInstant));
+            return id;
+        }
+
+        public void ChangeRecurrenceToFinishDate(int id, Duration repeatInterval)
+        {
+            var taskId = new TaskId(id);
+            var task = taskRepository.GetById(taskId);
+
+            task.Recurrence = new FinishDateRecurrence(repeatInterval);
+            taskRepository.Update(taskId, task);
+            taskRepository.Save();
+        }
+
+        public void ChangeRecurrenceToDueDate(int id, Duration repeatInterval)
+        {
+            var taskId = new TaskId(id);
+            var task = taskRepository.GetById(taskId);
+
+            task.Recurrence = new DueDateRecurrence(repeatInterval);
+            taskRepository.Update(taskId, task);
+            taskRepository.Save();
+        }
+
+        public int CreateTaskParsing(
             string description,
             Instant dueDate,
             string recurrenceType,
@@ -101,20 +113,18 @@ namespace Icm.TaskManager.Application
             string notes,
             string labels)
         {
-            var creationInstant = clock.Now;
-            var task = Task.Create(
-                description,
-                null,
-                dueDate,
-                Recurrence.FromType(recurrenceType),
-                repeatInterval,
-                priority,
-                notes,
-                labels,
-                creationInstant);
+            var id = CreateTask(description, dueDate, priority, notes, labels);
 
-            var id = taskRepository.Add(task);
+            var taskId = new TaskId(id);
+            var task = taskRepository.GetById(taskId);
 
+            if (recurrenceType != null && repeatInterval.HasValue)
+            {
+                task.Recurrence = Recurrence.FromType(recurrenceType, repeatInterval.Value);
+            }
+
+            taskRepository.Update(taskId, task);
+            taskRepository.Save();
             return id;
         }
 
@@ -186,6 +196,8 @@ namespace Icm.TaskManager.Application
             task.Notes = newNotes;
             taskRepository.Update(id, task);
             taskRepository.Save();
+
+            eventBus.Publish(new TaskNotesChangedEvent(taskId, newNotes));
         }
 
         public void AddTaskReminder(int taskId, Instant reminder)

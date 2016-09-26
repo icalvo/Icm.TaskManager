@@ -4,14 +4,18 @@ namespace Icm.TaskManager.Domain.Tasks
 {
     public class FinishDateRecurrence : Recurrence
     {
+        public FinishDateRecurrence(Duration repeatInterval)
+            : base(repeatInterval)
+        {
+        }
+
         public override Task CreateRecurringTask(Task task, Instant now)
         {
             return MonadicExtensions.Match(
                 task.FinishDate,
-                task.Recurrence,
-                (finishDate, recurrence) =>
+                finishDate =>
                 {
-                    Instant dueDate = finishDate + recurrence.RepeatInterval;
+                    Instant dueDate = finishDate + RepeatInterval;
                     return task.CopyWithNewDueDate(dueDate, now);
                 });
         }

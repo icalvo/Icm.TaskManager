@@ -7,7 +7,7 @@ using AutoMapper;
 using Icm.TaskManager.Domain.Tasks;
 using Icm.TaskManager.Rest.DTOs;
 
-namespace Icm.TaskManager.Web.Controllers
+namespace Icm.TaskManager.Rest.Controllers
 {
     [EnableCors("*", "*", "*")]
     public class ReminderController : ApiController

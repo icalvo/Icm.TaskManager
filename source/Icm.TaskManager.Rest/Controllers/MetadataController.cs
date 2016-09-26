@@ -1,11 +1,11 @@
-﻿using Icm.TaskManager.Rest.DTOs;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Cors;
 using System.Web.Http.Description;
+using Icm.TaskManager.Rest.DTOs;
 
-namespace Icm.TaskManager.Web.Controllers
+namespace Icm.TaskManager.Rest.Controllers
 {
     [EnableCors("*", "*", "*")]
     public class MetadataController : ApiController

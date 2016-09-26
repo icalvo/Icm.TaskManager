@@ -1,5 +1,5 @@
 ﻿using System;
-using Icm.TaskManager.Web.Providers;
+using Icm.TaskManager.Rest.Providers;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin;

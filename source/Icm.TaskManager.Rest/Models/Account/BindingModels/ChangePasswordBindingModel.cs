@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Icm.TaskManager.Web.Models.Account.BindingModels
+namespace Icm.TaskManager.Rest.Models.Account.BindingModels
 {
     /// <summary>
     /// Binding model for changing the user's password

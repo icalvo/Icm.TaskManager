@@ -60,13 +60,7 @@ namespace Icm.TaskManager.Domain.Tests
         {
             var task = Task.Create(
                 "My description",
-                null,
                 now.Plus(Duration.FromStandardDays(2)),
-                null,
-                null,
-                3,
-                "Notes",
-                "labels",
                 now);
             return task;
         }
