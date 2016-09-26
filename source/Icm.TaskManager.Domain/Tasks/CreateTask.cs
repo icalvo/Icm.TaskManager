@@ -1,4 +1,5 @@
-﻿using NodaTime;
+﻿using Icm.TaskManager.Infrastructure.Interfaces;
+using NodaTime;
 
 namespace Icm.TaskManager.Domain.Tasks
 {

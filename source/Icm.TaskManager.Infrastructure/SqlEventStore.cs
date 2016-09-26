@@ -1,13 +1,14 @@
-﻿namespace Edument.CQRS
-{
-    using System;
-    using System.Collections;
-    using System.Data;
-    using System.Data.SqlClient;
-    using System.IO;
-    using System.Text;
-    using System.Xml.Serialization;
+﻿using System;
+using System.Collections;
+using System.Data;
+using System.Data.SqlClient;
+using System.IO;
+using System.Text;
+using System.Xml.Serialization;
+using Icm.TaskManager.Infrastructure.Interfaces;
 
+namespace Icm.TaskManager.Infrastructure
+{
     /// <summary>
     /// This is a simple example implementation of an event store, using a SQL database
     /// to provide the storage. Tested and known to work with SQL Server.

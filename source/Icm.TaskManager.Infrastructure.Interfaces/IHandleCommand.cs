@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Icm.TaskManager.Domain.Tasks;
+﻿using System.Collections.Generic;
 
-namespace Edument.CQRS
+namespace Icm.TaskManager.Infrastructure.Interfaces
 {
     public interface IHandleCommand<in TCommand>
         where TCommand : Command

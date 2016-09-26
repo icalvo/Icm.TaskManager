@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
-using Edument.CQRS;
-using Icm.TaskManager.Application;
+using Icm.TaskManager.Infrastructure.Interfaces;
 using NodaTime;
 
 namespace Icm.TaskManager.Domain.Tasks

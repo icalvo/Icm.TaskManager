@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Icm.TaskManager.Domain.Tasks;
+using Icm.TaskManager.Infrastructure.Interfaces;
 
-namespace Edument.CQRS
+namespace Icm.TaskManager.Infrastructure
 {
     /// <summary>
     /// This implements a basic message dispatcher, driving the overall command handling

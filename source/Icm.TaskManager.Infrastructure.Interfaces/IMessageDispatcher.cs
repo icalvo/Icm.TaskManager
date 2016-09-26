@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
-using Icm.TaskManager.Domain.Tasks;
 
-namespace Edument.CQRS
+namespace Icm.TaskManager.Infrastructure.Interfaces
 {
     public interface IMessageDispatcher
     {

@@ -1,13 +1,13 @@
 ﻿using Icm.TaskManager.Domain.Tasks;
 using Icm.TaskManager.Rest.DTOs;
-using Icm.TaskManager.Web.Controllers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Web.Http.Results;
-using Edument.CQRS;
 using Icm.TaskManager.Application;
 using NodaTime;
 using Icm.TaskManager.Domain.Tests.Fakes;
+using Icm.TaskManager.Infrastructure;
 using Icm.TaskManager.Infrastructure.Interfaces;
+using Icm.TaskManager.Rest.Controllers;
 using NodaTime.Testing;
 
 namespace Icm.TaskManager.Web.Tests

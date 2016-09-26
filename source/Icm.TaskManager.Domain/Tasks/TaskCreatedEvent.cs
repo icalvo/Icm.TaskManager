@@ -1,7 +1,7 @@
 ﻿using System;
 using NodaTime;
 
-namespace Icm.TaskManager.Application
+namespace Icm.TaskManager.Domain.Tasks
 {
     public class TaskCreatedEvent
     {

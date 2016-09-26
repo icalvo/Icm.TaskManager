@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Threading;
-using Edument.CQRS;
 using FluentAssertions;
 using Icm.TaskManager.Application;
 using Icm.TaskManager.Domain.Tasks;
 using Icm.TaskManager.Domain.Tests.Fakes;
+using Icm.TaskManager.Infrastructure;
 using Icm.TaskManager.Infrastructure.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NodaTime;
