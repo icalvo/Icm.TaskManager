@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Icm.TaskManager.Infrastructure")]
+[assembly: AssemblyTitle("Icm.TaskManager.CommandLine")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Icm.TaskManager.Infrastructure")]
+[assembly: AssemblyProduct("Icm.TaskManager.CommandLine")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("812791bd-9863-442f-b95f-6efe20e450e5")]
+[assembly: Guid("983ca162-8613-412e-82da-2bae9c1e8c05")]
 
 // Version information for an assembly consists of the following four values:
 //

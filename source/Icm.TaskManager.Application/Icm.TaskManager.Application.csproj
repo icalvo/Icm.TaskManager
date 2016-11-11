@@ -61,10 +61,6 @@
       <Project>{9b2297cb-2def-4b8e-b147-4bad6046900f}</Project>
       <Name>Icm.TaskManager.Domain</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Icm.TaskManager.Infrastructure.Interfaces\Icm.TaskManager.Infrastructure.Interfaces.csproj">
-      <Project>{018fd1f2-2f5c-47ea-83df-d6e5f4248346}</Project>
-      <Name>Icm.TaskManager.Infrastructure.Interfaces</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

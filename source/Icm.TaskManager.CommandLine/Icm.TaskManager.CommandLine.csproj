@@ -1,19 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9B2297CB-2DEF-4B8E-B147-4BAD6046900F}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{983CA162-8613-412E-82DA-2BAE9C1E8C05}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Icm.TaskManager.Domain</RootNamespace>
-    <AssemblyName>Icm.TaskManager.Domain</AssemblyName>
+    <RootNamespace>Icm.TaskManager.CommandLine</RootNamespace>
+    <AssemblyName>Icm.TaskManager.CommandLine</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -21,9 +22,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\CodeAnalysisRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -42,32 +43,30 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IRepository.cs" />
-    <Compile Include="MemoryRepoKeyRepository.cs" />
-    <Compile Include="MemoryOwnKeyRepository.cs" />
-    <Compile Include="Reminder\IReminderRepository.cs" />
-    <Compile Include="Tasks\DueDateRecurrence.cs" />
-    <Compile Include="Tasks\FinishDateRecurrence.cs" />
-    <Compile Include="Tasks\MonadicExtensions.cs" />
-    <Compile Include="Tasks\Recurrence.cs" />
-    <Compile Include="Tasks\ITaskRepository.cs" />
-    <Compile Include="Tasks\ITaskService.cs" />
-    <Compile Include="Tasks\Task.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tasks\TaskAlreadyDoneException.cs" />
-    <Compile Include="Tasks\TaskId.cs" />
-    <Compile Include="Tasks\TaskService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\Newtonsoft.Json.dll" />
-    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
-    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+    <ProjectReference Include="..\Icm.TaskManager.Application\Icm.TaskManager.Application.csproj">
+      <Project>{369939ad-df75-4dca-9366-d8b3cbdc58b0}</Project>
+      <Name>Icm.TaskManager.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Icm.TaskManager.Domain\Icm.TaskManager.Domain.csproj">
+      <Project>{9b2297cb-2def-4b8e-b147-4bad6046900f}</Project>
+      <Name>Icm.TaskManager.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Icm.TaskManager.Infrastructure\Icm.TaskManager.Infrastructure.csproj">
+      <Project>{812791BD-9863-442F-B95F-6EFE20E450E5}</Project>
+      <Name>Icm.TaskManager.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

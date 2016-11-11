@@ -20,9 +20,7 @@ namespace Icm.TaskManager.Domain.Tests
         {
             var repo = new FakeTaskRepository();
             var clock = new FakeClock(CreateInstant(2016, 5, 6));
-            var eventBus = new MemoryEventBus();
-            eventBus.Subscribe(new ReminderAddedEventHandler(clock, eventBus));
-            var sut = new TaskApplicationService(repo, clock, eventBus, new MessageDispatcher(new InMemoryEventStore()));
+            var sut = new TaskApplicationService(repo, clock);
 
             var taskId = sut.CreateDueDateRecurringTask(
                 "My description",
@@ -49,9 +47,7 @@ namespace Icm.TaskManager.Domain.Tests
         {
             var repo = new FakeTaskRepository();
             var clock = new FakeClock(CreateInstant(2016, 5, 6), Duration.FromStandardDays(1));
-            var eventBus = new MemoryEventBus();
-            eventBus.Subscribe(new ReminderAddedEventHandler(clock, eventBus));
-            var sut = new TaskApplicationService(repo, clock, eventBus, new MessageDispatcher(new InMemoryEventStore()));
+            var sut = new TaskApplicationService(repo, clock);
 
             var taskId = sut.CreateDueDateRecurringTask(
                 "My description",
@@ -72,41 +68,6 @@ namespace Icm.TaskManager.Domain.Tests
             var recurringTask = repo.GetById(new TaskId(secondTaskId.Value));
             recurringTask.IsDone.Should().BeFalse();
             recurringTask.DueDate = task.DueDate + Duration.FromStandardDays(3);
-        }
-
-        [TestMethod]
-        public void GivenTaskWithReminder_ReminderFires()
-        {
-            var repo = new FakeTaskRepository();
-            var clock = new FakeClock(CreateInstant(2016, 5, 6));
-            var eventBus = new MemoryEventBus();
-            eventBus.Subscribe(new ReminderAddedEventHandler(clock, eventBus));
-
-            var events = new List<object>();
-            eventBus.Subscribe(
-                ev => true,
-                ev =>
-                {
-                    events.Add(ev);
-                    return System.Threading.Tasks.Task.FromResult(false);
-                });
-
-            var sut = new TaskApplicationService(repo, clock, eventBus, new MessageDispatcher(new InMemoryEventStore()));
-
-            var taskId = sut.CreateTask(
-                "My description",
-                CreateInstant(2016, 1, 10),
-                3,
-                "Notes",
-                "labels");
-
-            sut.AddTaskReminderRelativeToNow(taskId, Duration.FromMilliseconds(5));
-
-            Thread.Sleep(15);
-
-            events.Should().BeEquivalentTo(
-                new ReminderAddedEvent(taskId, CreateInstant(2016, 5, 6).Plus(Duration.FromMilliseconds(5))),
-                new ReminderElapsedEvent(taskId));
         }
 
         private static Instant CreateInstant(int year, int month, int day)

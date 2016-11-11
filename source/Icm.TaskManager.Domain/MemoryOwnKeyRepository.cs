@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Icm.TaskManager.Infrastructure.Interfaces;
 
 namespace Icm.TaskManager.Domain

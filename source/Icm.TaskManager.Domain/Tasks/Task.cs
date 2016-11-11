@@ -94,7 +94,7 @@ namespace Icm.TaskManager.Domain.Tasks
                 Description = description,
                 CreationDate = now,
                 DueDate = dueDate,
-                Priority = 1,
+                Priority = 3,
                 Reminders = new HashSet<Instant>()
             };
 

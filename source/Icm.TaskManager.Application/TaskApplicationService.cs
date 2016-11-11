@@ -1,6 +1,4 @@
-﻿using System;
-using Icm.TaskManager.Domain.Tasks;
-using Icm.TaskManager.Infrastructure.Interfaces;
+﻿using Icm.TaskManager.Domain.Tasks;
 using NodaTime;
 
 namespace Icm.TaskManager.Application
@@ -9,15 +7,11 @@ namespace Icm.TaskManager.Application
     {
         private readonly ITaskRepository taskRepository;
         private readonly IClock clock;
-        private readonly IEventBus eventBus;
-        private readonly IMessageDispatcher messageDispatcher;
 
-        public TaskApplicationService(ITaskRepository taskRepository, IClock clock, IEventBus eventBus, IMessageDispatcher messageDispatcher)
+        public TaskApplicationService(ITaskRepository taskRepository, IClock clock)
         {
             this.taskRepository = taskRepository;
             this.clock = clock;
-            this.eventBus = eventBus;
-            this.messageDispatcher = messageDispatcher;
         }
 
         public int CreateTask(
@@ -69,8 +63,6 @@ namespace Icm.TaskManager.Application
         {
             var creationInstant = clock.Now;
 
-            messageDispatcher.SendCommand(new CreateTask());
-
             var task = Task.Create(
                 description,
                 dueDate,
@@ -78,8 +70,6 @@ namespace Icm.TaskManager.Application
 
             var id = taskRepository.Add(task);
 
-            var id2 = Guid.NewGuid();
-            eventBus.Publish(new TaskCreatedEvent(id2, description, dueDate, creationInstant));
             return id;
         }
 
@@ -195,8 +185,6 @@ namespace Icm.TaskManager.Application
             task.Notes = newNotes;
             taskRepository.Update(id, task);
             taskRepository.Save();
-
-            eventBus.Publish(new TaskNotesChangedEvent(taskId, newNotes));
         }
 
         public void AddTaskReminder(int taskId, Instant reminder)
@@ -207,8 +195,6 @@ namespace Icm.TaskManager.Application
             task.Reminders.Add(reminder);
             taskRepository.Update(id, task);
             taskRepository.Save();
-
-            eventBus.Publish(new ReminderAddedEvent(taskId, reminder));
         }
 
         public void AddTaskReminderRelativeToNow(int taskId, Duration offset)
