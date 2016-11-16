@@ -22,8 +22,6 @@ namespace Icm.TaskManager.CommandLine
             var repo = new InMemoryTaskRepository();
             ITaskApplicationService svc = new TaskApplicationService(repo, SystemClock.Instance);
 
-            IClock clock = SystemClock.Instance;
-
             ICommand[] commands =
             {
                 new CreateTaskCommand(svc), 

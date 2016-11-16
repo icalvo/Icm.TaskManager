@@ -10,7 +10,7 @@ namespace Icm.TaskManager.CommandLine
             return line.StartsWith("quit");
         }
 
-        public void Process(IObserver<string> observer, string line)
+        public void Process(IObserver<string> output, string line)
         {
         }
     }

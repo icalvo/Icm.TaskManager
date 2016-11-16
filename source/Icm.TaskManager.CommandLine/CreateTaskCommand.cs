@@ -19,14 +19,17 @@ namespace Icm.TaskManager.CommandLine
             return line.StartsWith("create");
         }
 
-        public void Process(IObserver<string> observer, string line)
+        public void Process(IObserver<string> output, string line)
         {
-            observer.OnNext("Creating task...");
+            output.OnNext("Creating task...");
             var tokens = line.Split(new []{ ' ' }, StringSplitOptions.RemoveEmptyEntries);
             var dueDate = ZonedDateTimePattern.CreateWithInvariantCulture("yyyy-MM-dd", DateTimeZoneProviders.Tzdb).Parse(tokens[1]).Value.ToInstant();
             var description = tokens[1];
-            var id = taskApplicationService.CreateSimpleTask(description, dueDate);
-            observer.OnNext($"Task {id} created");
+            var id = taskApplicationService.CreateTask(description, dueDate);
+            output.OnNext($"Task {id} created");
+            var dto = taskApplicationService.GetTaskById(id);
+            output.OnNext($"  Description: {dto.Description}");
+            output.OnNext($"  Due date: {dto.DueDate}");
         }
     }
 }

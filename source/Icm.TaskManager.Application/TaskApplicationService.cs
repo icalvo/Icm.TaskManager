@@ -1,4 +1,6 @@
-﻿using Icm.TaskManager.Domain.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using Icm.TaskManager.Domain.Tasks;
 using NodaTime;
 
 namespace Icm.TaskManager.Application
@@ -21,7 +23,7 @@ namespace Icm.TaskManager.Application
             string notes,
             string labels)
         {
-            var id = CreateSimpleTask(description, dueDate);
+            var id = CreateTask(description, dueDate);
 
             ChangeTaskPriority(id, priority);
             ChangeTaskNotes(id, notes);
@@ -59,7 +61,7 @@ namespace Icm.TaskManager.Application
             return id;
         }
 
-        public int CreateSimpleTask(string description, Instant dueDate)
+        public int CreateTask(string description, Instant dueDate)
         {
             var creationInstant = clock.GetCurrentInstant();
 
@@ -71,6 +73,16 @@ namespace Icm.TaskManager.Application
             var id = taskRepository.Add(task);
 
             return id;
+        }
+
+        public TaskDto GetTaskById(int taskId)
+        {
+            return taskRepository.GetById(taskId).ToDto();
+        }
+
+        public IEnumerable<TaskDto> GetTasks()
+        {
+            throw new NotImplementedException();
         }
 
         public void ChangeRecurrenceToFinishDate(int id, Duration repeatInterval)

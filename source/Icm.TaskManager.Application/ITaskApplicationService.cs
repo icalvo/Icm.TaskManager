@@ -1,4 +1,5 @@
-﻿using NodaTime;
+﻿using System.Collections.Generic;
+using NodaTime;
 
 namespace Icm.TaskManager.Application
 {
@@ -20,13 +21,11 @@ namespace Icm.TaskManager.Application
 
         void ChangeTaskPriority(int taskId, int newPriority);
 
-        int CreateDueDateRecurringTask(string description, Instant dueDate, Duration repeatInterval, int priority, string notes, string labels);
+        int CreateTask(string description, Instant dueDate);
 
-        int CreateFinishDateRecurringTask(string description, Instant dueDate, Duration repeatInterval, int priority, string notes, string labels);
+        TaskDto GetTaskById(int taskId);
 
-        int CreateSimpleTask(string description, Instant dueDate);
-
-        int CreateTaskParsing(string description, Instant dueDate, string recurrenceType, Duration? repeatInterval, int priority, string notes, string labels);
+        IEnumerable<TaskDto> GetTasks();
 
         int? FinishTask(int taskId);
 
