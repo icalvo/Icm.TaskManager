@@ -14,7 +14,7 @@ namespace Icm.TaskManager.Domain.Tests
 
         public TaskServiceTests()
         {
-            clock = new FakeClock(CreateInstant(2016, 1, 1), Duration.FromStandardDays(1));
+            clock = new FakeClock(CreateInstant(2016, 1, 1), Duration.FromDays(1));
         }
 
         [TestMethod]

@@ -3,7 +3,7 @@ using NodaTime;
 
 namespace Icm.TaskManager.Application
 {
-    public class TaskApplicationService
+    public class TaskApplicationService : ITaskApplicationService
     {
         private readonly ITaskRepository taskRepository;
         private readonly IClock clock;
@@ -61,7 +61,7 @@ namespace Icm.TaskManager.Application
 
         public int CreateSimpleTask(string description, Instant dueDate)
         {
-            var creationInstant = clock.Now;
+            var creationInstant = clock.GetCurrentInstant();
 
             var task = Task.Create(
                 description,
@@ -75,11 +75,10 @@ namespace Icm.TaskManager.Application
 
         public void ChangeRecurrenceToFinishDate(int id, Duration repeatInterval)
         {
-            var taskId = new TaskId(id);
-            var task = taskRepository.GetById(taskId);
+            var task = taskRepository.GetById(id);
 
             task.Recurrence = new FinishDateRecurrence(repeatInterval);
-            taskRepository.Update(taskId, task);
+            taskRepository.Update(id, task);
             taskRepository.Save();
         }
 
@@ -121,14 +120,14 @@ namespace Icm.TaskManager.Application
         {
             var id = new TaskId(taskId);
             var task = taskRepository.GetById(id);
-            task.StartDate = clock.Now;
+            task.StartDate = clock.GetCurrentInstant();
             taskRepository.Update(id, task);
             taskRepository.Save();
         }
 
         public int? FinishTask(int taskId)
         {
-            Instant finishInstant = clock.Now;
+            Instant finishInstant = clock.GetCurrentInstant();
             var id = new TaskId(taskId);
             var task = taskRepository.GetById(id);
 
@@ -199,7 +198,7 @@ namespace Icm.TaskManager.Application
 
         public void AddTaskReminderRelativeToNow(int taskId, Duration offset)
         {
-            AddTaskReminder(taskId, clock.Now.Plus(offset));
+            AddTaskReminder(taskId, clock.GetCurrentInstant().Plus(offset));
         }
     }
 }

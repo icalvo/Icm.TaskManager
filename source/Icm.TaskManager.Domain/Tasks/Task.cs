@@ -101,9 +101,43 @@ namespace Icm.TaskManager.Domain.Tasks
             return newTask;
         }
 
+        public TaskMemento Save()
+        {
+            return new TaskMemento
+            {
+                CreationDate = CreationDate,
+                Description = Description,
+                DueDate = DueDate,
+                FinishDate = FinishDate,
+                Labels = Labels,
+                Notes = Notes,
+                Recurrence = Recurrence,
+                Reminders = new List<Instant>(Reminders),
+                Priority = Priority,
+                StartDate = StartDate
+            };
+        }
+
+        public static Task FromMemento(TaskMemento memento)
+        {
+            return new Task
+            {
+                CreationDate = memento.CreationDate,
+                Description = memento.Description,
+                DueDate = memento.DueDate,
+                FinishDate = memento.FinishDate,
+                Labels = memento.Labels,
+                Notes = memento.Notes,
+                Recurrence = memento.Recurrence,
+                Reminders = new List<Instant>(memento.Reminders),
+                Priority = memento.Priority,
+                StartDate = memento.StartDate
+            };
+        }
+
         public override string ToString()
         {
-            return $"{StartDate:yyyy-MM-dd} {Description}";
+            return $"{DueDate:yyyy-MM-dd} {Description}";
         }
     }
 }

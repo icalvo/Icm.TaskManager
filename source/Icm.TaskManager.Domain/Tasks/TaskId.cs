@@ -13,5 +13,10 @@
         {
             return id.Value;
         }
+
+        public static implicit operator TaskId(int id)
+        {
+            return new TaskId(id);
+        }
     }
 }

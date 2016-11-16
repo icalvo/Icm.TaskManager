@@ -16,12 +16,12 @@ namespace Icm.TaskManager.Domain.Tasks
             return Task.Create(
                 description,
                 dueDate,
-                clock.Now);
+                clock.GetCurrentInstant());
         }
 
         public Task Finish(Task task)
         {
-            return Finish(task, clock.Now);
+            return Finish(task, clock.GetCurrentInstant());
         }
 
         public Task Finish(Task task, Instant finishDate)

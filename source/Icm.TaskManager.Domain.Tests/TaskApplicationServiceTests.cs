@@ -25,7 +25,7 @@ namespace Icm.TaskManager.Domain.Tests
             var taskId = sut.CreateDueDateRecurringTask(
                 "My description",
                 CreateInstant(2016, 1, 10),
-                Duration.FromStandardDays(2),
+                Duration.FromDays(2),
                 3,
                 "Notes",
                 "labels");
@@ -46,13 +46,13 @@ namespace Icm.TaskManager.Domain.Tests
         public void GivenTaskWithDueDateRecurrence_WhenFinished_DueDateRecurrentTaskAdded()
         {
             var repo = new FakeTaskRepository();
-            var clock = new FakeClock(CreateInstant(2016, 5, 6), Duration.FromStandardDays(1));
+            var clock = new FakeClock(CreateInstant(2016, 5, 6), Duration.FromDays(1));
             var sut = new TaskApplicationService(repo, clock);
 
             var taskId = sut.CreateDueDateRecurringTask(
                 "My description",
                 CreateInstant(2016, 1, 10),
-                Duration.FromStandardDays(3),
+                Duration.FromDays(3),
                 3,
                 "Notes",
                 "labels");
@@ -67,7 +67,7 @@ namespace Icm.TaskManager.Domain.Tests
 
             var recurringTask = repo.GetById(new TaskId(secondTaskId.Value));
             recurringTask.IsDone.Should().BeFalse();
-            recurringTask.DueDate = task.DueDate + Duration.FromStandardDays(3);
+            recurringTask.DueDate = task.DueDate + Duration.FromDays(3);
         }
 
         private static Instant CreateInstant(int year, int month, int day)
