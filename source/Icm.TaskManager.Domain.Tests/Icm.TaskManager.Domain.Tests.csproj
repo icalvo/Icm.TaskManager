@@ -78,7 +78,7 @@
     <Compile Include="TaskApplicationServiceTests.cs" />
     <Compile Include="TaskServiceTests.cs" />
     <Compile Include="TaskTests.cs" />
-    <Compile Include="TokenizerTests.cs" />
+    <Compile Include="CommandLineTokenizerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Icm.TaskManager.Application\Icm.TaskManager.Application.csproj">

@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Threading;
 using FluentAssertions;
 using Icm.TaskManager.Application;
 using Icm.TaskManager.Domain.Tasks;

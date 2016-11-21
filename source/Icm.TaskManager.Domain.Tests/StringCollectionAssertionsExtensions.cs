@@ -10,7 +10,7 @@ namespace Icm.TaskManager.Domain.Tests
         public static AndConstraint<StringCollectionAssertions> ShouldParseTo(
             this string line, params string[] expected)
         {
-            return Tokenizer.Tokenize(line).Should().BeEquivalentTo(expected, $"it's the expected parse of [{line}]");
+            return CommandLineTokenizer.Tokenize(line).Should().BeEquivalentTo(expected, $"it's the expected parse of [{line}]");
         }
     }
 }

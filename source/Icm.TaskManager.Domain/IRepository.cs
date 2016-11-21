@@ -1,6 +1,6 @@
 ﻿using Icm.TaskManager.Domain.Tasks;
 
-namespace Icm.TaskManager.Infrastructure.Interfaces
+namespace Icm.TaskManager.Domain
 {
     public interface IRepository<TKey, TItem>
     {

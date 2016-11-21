@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reactive.Subjects;
+using Icm.TaskManager.CommandLine.Commands;
 
 namespace Icm.TaskManager.CommandLine
 {

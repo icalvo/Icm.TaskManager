@@ -1,8 +1,7 @@
 using System;
 using System.Linq;
-using Icm.TaskManager.CommandLine.Commands;
 
-namespace Icm.TaskManager.CommandLine
+namespace Icm.TaskManager.CommandLine.Commands
 {
     internal abstract class BaseCommand : ICommand
     {
@@ -10,7 +9,7 @@ namespace Icm.TaskManager.CommandLine
 
         public void Process(IObserver<string> output, string line)
         {
-            Process(output, Tokenizer.Tokenize(line).ToArray());
+            Process(output, CommandLineTokenizer.Tokenize(line).ToArray());
         }
 
         protected abstract void Process(IObserver<string> output, string[] tokens);

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Icm.TaskManager.CommandLine
 {
@@ -42,33 +43,14 @@ namespace Icm.TaskManager.CommandLine
             }
         }
 
-
-        public static IEnumerable<Tuple<TInput, TState, TOutput>> StateMachine<TInput, TState, TOutput>(
-            this IEnumerable<TInput> source,
-            TState initial,
-            Func<TState, TInput, Tuple<TOutput, TState>> transition)
+        public static string JoinStr<T>(this IEnumerable<T> source, string separator)
         {
-            var state = initial;
-            foreach (var input in source)
-            {
-                var result = transition(state, input);
-                var output = result.Item1;
-                state = result.Item2;
-                yield return Tuple.Create(input, state, output);
-            }
+            return string.Join(separator, source.Select(x => x.ToString()));
         }
 
-        public static IEnumerable<Tuple<TInput, TState, TOutput>> StateMachine<TInput, TState, TOutput>(
-            this IEnumerable<TInput> source,
-            TState initial,
-            Func<TState, TInput, TOutput> outputfunc,
-            Func<TState, TInput, TState> transition)
+        public static string JoinStr<T>(this IEnumerable<T> source, string separator, Func<T, string> toString)
         {
-            return source.StateMachine(
-                initial,
-                (state, input) => Tuple.Create(
-                    outputfunc(state, input),
-                    transition(state, input)));
+            return string.Join(separator, source.Select(toString));
         }
     }
 }

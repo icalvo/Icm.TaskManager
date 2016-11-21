@@ -2,14 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using Icm.TaskManager.Domain.Tasks;
-using Icm.TaskManager.Infrastructure.Interfaces;
 
 namespace Icm.TaskManager.Domain
 {
     public class MemoryOwnKeyRepository<TKey, TItem> : IRepository<TKey, TItem>, IEnumerable<TItem>
     {
         private readonly Func<TItem, TKey> keyFunction;
-        private TKey lastKey;
 
         protected IDictionary<TKey, TItem> Store { get; }
 

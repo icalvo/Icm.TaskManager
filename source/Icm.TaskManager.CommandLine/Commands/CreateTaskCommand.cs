@@ -3,7 +3,7 @@ using Icm.TaskManager.Application;
 using NodaTime;
 using NodaTime.Text;
 
-namespace Icm.TaskManager.CommandLine
+namespace Icm.TaskManager.CommandLine.Commands
 {
     public class CreateTaskCommand : ICommand
     {

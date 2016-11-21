@@ -1,7 +1,6 @@
 using System;
-using System.Reactive.Linq;
 
-namespace Icm.TaskManager.CommandLine
+namespace Icm.TaskManager.CommandLine.Commands
 {
     internal class QuitCommand : ICommand
     {

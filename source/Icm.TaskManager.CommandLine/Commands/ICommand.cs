@@ -1,7 +1,6 @@
 using System;
-using System.Text;
 
-namespace Icm.TaskManager.CommandLine
+namespace Icm.TaskManager.CommandLine.Commands
 {
     internal interface ICommand
     {

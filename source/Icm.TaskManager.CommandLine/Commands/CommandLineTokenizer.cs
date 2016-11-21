@@ -1,62 +1,30 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Icm.TaskManager.CommandLine.StateMachines;
 
 namespace Icm.TaskManager.CommandLine.Commands
 {
-    public static class Tokenizer
+    public static class CommandLineTokenizer
     {
         public static IEnumerable<string> Tokenize(string line)
         {
+            var stateMachineSpec = new[]
+            {
+                MealyItem('\\',              BackslashOutput,  BackslashTransition),
+                MealyItem('"',               QuoteOutput,      QuoteTransition),
+                MealyItem(char.IsWhiteSpace, WhitespaceOutput, WhitespaceTransition),
+                MealyItem(Any<char>(),       NormalOutput,     NormalTransition),
+            };
+
             return
-                TokenizeAux(line)
+                line.RunStateMachine(stateMachineSpec)
+                .Pipe(t => Console.WriteLine(
+                    $"[{t.Input}] => {t.State} & {t.Output.JoinStr(", ")}"))
+                .SelectMany(x => x.Output)
                 .GroupBy(result => result.TokenNumber)
                 .Select(x => string.Concat(x.Select(y => y.Output)))
                 .ToArray();
-        }
-
-        private static IEnumerable<CharResult> TokenizeAux(string line)
-        {
-            return line
-                .StateMachine(
-                new State(),
-                (state, ch) =>
-                {
-                    switch (ch)
-                    {
-                        case '\\':
-                            return BackslashOutput(state, ch);
-                        case '"':
-                            return QuoteOutput(state);
-                        default:
-                            return char.IsWhiteSpace(ch)
-                                ? WhitespaceOutput(state, ch)
-                                : NormalOutput(state, ch);
-                    }
-                },
-                (state, ch) =>
-                {
-                    State result;
-                    switch (ch)
-                    {
-                        case '\\':
-                            result = BackslashTransition(state);
-                            break;
-                        case '"':
-                            result = QuoteTransition(state);
-                            break;
-                        default:
-                            result = char.IsWhiteSpace(ch)
-                                ? WhitespaceTransition(state)
-                                : NormalTransition(state);
-                            break;
-                    }
-
-                    return result.WithPrevChar(ch);
-                })
-                .Pipe(t => Console.WriteLine(
-                    $"[{t.Item1}] => {t.Item2} & {string.Join(", ", t.Item3.Select(x => x.ToString()))}"))
-                .SelectMany(x => x.Item3);
         }
 
         private static IEnumerable<CharResult> NormalOutput(State state, char ch)
@@ -103,7 +71,6 @@ namespace Icm.TaskManager.CommandLine.Commands
 
             return state
                 .WithLastCharWasEscape(false)
-                .WithHadQuote(false)
                 .WithTokenNumberIf(true, state.TokenNumber + 1);
         }
 
@@ -144,11 +111,42 @@ namespace Icm.TaskManager.CommandLine.Commands
             return state.WithLastCharWasEscape(!state.LastCharWasEscape);
         }
 
+        private static MealyItem<State, char, IEnumerable<CharResult>> MealyItem(
+            char input,
+            Func<State, IEnumerable<CharResult>> output,
+            Func<State, State> trans)
+        {
+            return MealyItems.Create<State, char, IEnumerable<CharResult>>(
+                input,
+                (st, ch) => output(st),
+                (st, ch) => trans(st));
+        }
+
+        private static MealyItem<State, char, IEnumerable<CharResult>> MealyItem(
+            char input,
+            Func<State, char, IEnumerable<CharResult>> output,
+            Func<State, State> trans)
+        {
+            return MealyItems.Create(input, output, (st, ch) => trans(st));
+        }
+
+        private static MealyItem<State, char, IEnumerable<CharResult>> MealyItem(
+            Func<char, bool> input,
+            Func<State, char, IEnumerable<CharResult>> output,
+            Func<State, State> trans)
+        {
+            return MealyItems.Create(input, output, (st, ch) => trans(st));
+        }
+
+        private static Func<T, bool> Any<T>()
+        {
+            return _ => true;
+        }
+
         private class State
         {
             public readonly bool LastCharWasEscape;
             public readonly bool InQuote;
-            public readonly bool HadQuote;
             public readonly char PrevChar;
             public readonly int TokenNumber;
 
@@ -156,16 +154,14 @@ namespace Icm.TaskManager.CommandLine.Commands
             {
                 LastCharWasEscape = false;
                 InQuote = false;
-                HadQuote = false;
                 PrevChar = '\0';
                 TokenNumber = 1;
             }
 
-            private State(bool lastCharWasEscape, bool inQuote, bool hadQuote, char prevChar, int tokenNumber)
+            private State(bool lastCharWasEscape, bool inQuote, char prevChar, int tokenNumber)
             {
                 LastCharWasEscape = lastCharWasEscape;
                 InQuote = inQuote;
-                HadQuote = hadQuote;
                 PrevChar = prevChar;
                 TokenNumber = tokenNumber;
             }
@@ -175,7 +171,6 @@ namespace Icm.TaskManager.CommandLine.Commands
                 return new State(
                     value,
                     InQuote,
-                    HadQuote,
                     PrevChar,
                     TokenNumber);
             }
@@ -185,33 +180,9 @@ namespace Icm.TaskManager.CommandLine.Commands
                 return new State(
                     LastCharWasEscape,
                     value,
-                    HadQuote,
                     PrevChar,
                     TokenNumber);
             }
-
-
-            public State WithHadQuote(bool value)
-            {
-                return new State(
-                    LastCharWasEscape,
-                    InQuote,
-                    value,
-                    PrevChar,
-                    TokenNumber);
-            }
-
-
-            public State WithPrevChar(char value)
-            {
-                return new State(
-                    LastCharWasEscape,
-                    InQuote,
-                    HadQuote,
-                    value,
-                    TokenNumber);
-            }
-
 
             public State WithTokenNumberIf(bool condition, int value)
             {
@@ -219,7 +190,6 @@ namespace Icm.TaskManager.CommandLine.Commands
                     ? new State(
                         LastCharWasEscape,
                         InQuote,
-                        HadQuote,
                         PrevChar,
                         value)
                     : this;
@@ -228,7 +198,7 @@ namespace Icm.TaskManager.CommandLine.Commands
             public override string ToString()
             {
                 return
-                    $"[{PrevChar}] {TokenNumber:000} {(LastCharWasEscape ? "ESC" : "---")} {(InQuote ? "QUO" : "---")} {(HadQuote ? "HQU" : "---")}";
+                    $"[{PrevChar}] {TokenNumber:000} {(LastCharWasEscape ? "ESC" : "---")} {(InQuote ? "QUO" : "---")}";
             }
         }
 
