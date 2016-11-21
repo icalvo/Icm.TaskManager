@@ -2,14 +2,14 @@ using System;
 
 namespace Icm.TaskManager.CommandLine.Commands
 {
-    internal class UnknownCommand : ICommand
+    internal class UnknownCommand : BaseCommand
     {
-        public bool Matches(IObserver<string> output, string line)
+        protected override bool Matches(string[] tokens)
         {
             return false;
         }
 
-        public void Process(IObserver<string> output, string line)
+        protected override void Process(IObserver<string> output, string[] tokens)
         {
             output.OnNext("Unknown command");
         }

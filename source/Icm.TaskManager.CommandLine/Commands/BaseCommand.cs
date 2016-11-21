@@ -1,5 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using System.Threading.Tasks;
 
 namespace Icm.TaskManager.CommandLine.Commands
 {
@@ -15,17 +20,27 @@ namespace Icm.TaskManager.CommandLine.Commands
 
         protected abstract bool Matches(string[] tokens);
 
-        protected virtual bool Validates(IObserver<string> output, string[] tokens)
+        protected virtual IEnumerable<string> Validates(string[] tokens)
         {
-            return true;
+            return Enumerable.Empty<string>();
         }
 
-        public void Process(IObserver<string> output, string line)
+        public IObservable<string> Process(string line)
         {
-            if (Validates(output, tokens))
-            {
-                Process(output, tokens);
-            }
+            return Observable.Create<string>(observer =>
+                    TaskPoolScheduler.Default.Schedule(() =>
+                    {
+                        var validation = Validates(tokens).ToArray();
+                        if (validation.Any())
+                        {
+                            foreach (var s in validation)
+                            {
+                                observer.OnNext(s);
+                            }
+                        }
+                        Process(observer, tokens);
+                        observer.OnCompleted();
+                    }));
         }
 
         protected abstract void Process(IObserver<string> output, string[] tokens);

@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Reactive.Subjects;
 using Icm.TaskManager.Application;
 using NodaTime;
 using NodaTime.Text;
@@ -21,22 +23,18 @@ namespace Icm.TaskManager.CommandLine.Commands
         }
 
 
-        protected override bool Validates(IObserver<string> output, string[] tokens)
+        protected override IEnumerable<string> Validates(string[] tokens)
         {
             DateTime d;
             if (tokens.Length != 3)
             {
-                output.OnNext("I need 2 arguments (due date and description) to create a task");
-                return false;
+                yield return "I need 2 arguments (due date and description) to create a task";
             }
 
             if (!DateTime.TryParseExact(tokens[1], "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out d))
             {
-                output.OnNext("Date is not valid");
-                return false;
+                yield return "Date is not valid";
             }
-
-            return true;
         }
 
         protected override void Process(IObserver<string> output, string[] tokens)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Icm.TaskManager.CommandLine.Commands;
 
@@ -37,10 +38,9 @@ namespace Icm.TaskManager.CommandLine
                     return new { line, command = commands.FirstOrDefault(cmd => cmd.Matches(o, line)) ?? unknownCommand };
                 })
                 .TakeWhile(cmd => !(cmd.command is QuitCommand))
-                .Execute(cmd =>
-                {
-                    cmd.command.Process(o, cmd.line);
-                });
+                .ToObservable()
+                .SelectMany(cmd => cmd.command.Process(cmd.line))
+                .Subscribe(Console.WriteLine);
         }
 
         [SuppressMessage("ReSharper", "IteratorNeverReturns",

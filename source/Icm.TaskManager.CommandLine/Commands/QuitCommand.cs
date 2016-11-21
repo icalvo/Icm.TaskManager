@@ -1,4 +1,5 @@
 using System;
+using System.Reactive.Linq;
 
 namespace Icm.TaskManager.CommandLine.Commands
 {
@@ -9,8 +10,9 @@ namespace Icm.TaskManager.CommandLine.Commands
             return line.StartsWith("quit");
         }
 
-        public void Process(IObserver<string> output, string line)
+        public IObservable<string> Process(string line)
         {
+            return Observable.Empty<string>();
         }
     }
 }
