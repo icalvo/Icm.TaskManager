@@ -6,10 +6,12 @@ namespace Icm.TaskManager.Application
 {
     internal static class TaskExtensions
     {
-        internal static TaskDto ToDto(this Task task)
+        internal static TaskDto ToDto(this Identified<TaskId, Task> idtask)
         {
+            var task = idtask.Value;
             return new TaskDto
             {
+                Id = idtask.Id,
                 CreationDate = task.CreationDate,
                 Description = task.Description,
                 DueDate = task.DueDate,

@@ -1,12 +1,14 @@
-﻿namespace Icm.TaskManager.Infrastructure.Interfaces
+﻿using Icm.TaskManager.Domain.Tasks;
+
+namespace Icm.TaskManager.Infrastructure.Interfaces
 {
     public interface IRepository<TKey, TItem>
     {
         TKey Add(TItem item);
 
-        TItem GetById(TKey id);
+        Identified<TKey, TItem> GetById(TKey id);
 
-        void Update(TKey key, TItem item);
+        void Update(Identified<TKey, TItem> value);
 
         void Delete(TKey key);
 

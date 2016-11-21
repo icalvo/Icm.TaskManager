@@ -18,14 +18,14 @@ namespace Icm.TaskManager.Infrastructure
             return newId;
         }
 
-        public Task GetById(TaskId id)
+        public Identified<TaskId, Task> GetById(TaskId id)
         {
-            return Task.FromMemento(Storage[id]);
+            return IdentifiedTools.Identified(id, Task.FromMemento(Storage[id]));
         }
 
-        public void Update(TaskId key, Task item)
+        public void Update(Identified<TaskId, Task> value)
         {
-            Storage[key] = item.Save();
+            Storage[value.Id] = value.Value.Save();
         }
 
         public void Delete(TaskId key)

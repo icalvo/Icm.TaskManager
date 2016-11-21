@@ -51,8 +51,8 @@
       <HintPath>..\packages\NodaTime.2.0.0-alpha20160729\lib\net45\NodaTime.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NodaTime.Testing, Version=1.3.0.0, Culture=neutral, PublicKeyToken=4226afe0d9b296d1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NodaTime.Testing.1.3.2\lib\net35-Client\NodaTime.Testing.dll</HintPath>
+    <Reference Include="NodaTime.Testing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=4226afe0d9b296d1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NodaTime.Testing.2.0.0-alpha20160729\lib\net45\NodaTime.Testing.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -74,14 +74,20 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Fakes\FakeTaskRepository.cs" />
+    <Compile Include="StringCollectionAssertionsExtensions.cs" />
     <Compile Include="TaskApplicationServiceTests.cs" />
     <Compile Include="TaskServiceTests.cs" />
     <Compile Include="TaskTests.cs" />
+    <Compile Include="TokenizerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Icm.TaskManager.Application\Icm.TaskManager.Application.csproj">
       <Project>{369939ad-df75-4dca-9366-d8b3cbdc58b0}</Project>
       <Name>Icm.TaskManager.Application</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Icm.TaskManager.CommandLine\Icm.TaskManager.CommandLine.csproj">
+      <Project>{983CA162-8613-412E-82DA-2BAE9C1E8C05}</Project>
+      <Name>Icm.TaskManager.CommandLine</Name>
     </ProjectReference>
     <ProjectReference Include="..\Icm.TaskManager.Domain\Icm.TaskManager.Domain.csproj">
       <Project>{9b2297cb-2def-4b8e-b147-4bad6046900f}</Project>

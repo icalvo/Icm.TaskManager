@@ -16,7 +16,6 @@ namespace Icm.TaskManager.Domain.Tests
 
             task.Description.Should().Be("My description");
             task.Priority.Should().Be(3);
-            task.Notes.Should().Be("Notes");
             task.IsDone.Should().BeFalse();
         }
 

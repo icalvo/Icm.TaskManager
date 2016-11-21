@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Icm.TaskManager.Domain.Tasks;
 using Icm.TaskManager.Infrastructure.Interfaces;
 
 namespace Icm.TaskManager.Domain
@@ -26,19 +27,16 @@ namespace Icm.TaskManager.Domain
             return newKey;
         }
 
-        public TItem GetById(TKey id)
+        public Identified<TKey, TItem> GetById(TKey id)
         {
-            if (Store.ContainsKey(id))
-            {
-                return Store[id];
-            }
-
-            return default(TItem);
+            return Store.ContainsKey(id)
+                ? IdentifiedTools.Identified(id, Store[id])
+                : null;
         }
 
-        public void Update(TKey key, TItem item)
+        public void Update(Identified<TKey, TItem> value)
         {
-            Store[key] = item;
+            Store[value.Id] = value.Value;
         }
 
         public void Delete(TKey key)

@@ -4,8 +4,6 @@ using FluentAssertions;
 using Icm.TaskManager.Application;
 using Icm.TaskManager.Domain.Tasks;
 using Icm.TaskManager.Domain.Tests.Fakes;
-using Icm.TaskManager.Infrastructure;
-using Icm.TaskManager.Infrastructure.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NodaTime;
 using NodaTime.Testing;
@@ -20,15 +18,13 @@ namespace Icm.TaskManager.Domain.Tests
         {
             var repo = new FakeTaskRepository();
             var clock = new FakeClock(CreateInstant(2016, 5, 6));
-            var sut = new TaskApplicationService(repo, clock);
+            ITaskApplicationService sut = new TaskApplicationService(repo, clock);
 
-            var taskId = sut.CreateDueDateRecurringTask(
+            var taskId = sut.CreateTask(
                 "My description",
-                CreateInstant(2016, 1, 10),
-                Duration.FromDays(2),
-                3,
-                "Notes",
-                "labels");
+                CreateInstant(2016, 1, 10));
+
+            sut.ChangeRecurrenceToDueDate(taskId, Duration.FromDays(2));
 
             clock.AdvanceDays(1);
 
@@ -37,7 +33,7 @@ namespace Icm.TaskManager.Domain.Tests
             secondTaskId.Should().HaveValue();
             repo.Should().HaveCount(2);
 
-            var task = repo.GetById(new TaskId(taskId));
+            var task = repo.GetById(new TaskId(taskId)).Value;
             task.IsDone.Should().BeTrue();
             task.FinishDate.Should().Be(CreateInstant(2016, 5, 7));
         }
@@ -47,25 +43,23 @@ namespace Icm.TaskManager.Domain.Tests
         {
             var repo = new FakeTaskRepository();
             var clock = new FakeClock(CreateInstant(2016, 5, 6), Duration.FromDays(1));
-            var sut = new TaskApplicationService(repo, clock);
+            ITaskApplicationService sut = new TaskApplicationService(repo, clock);
 
-            var taskId = sut.CreateDueDateRecurringTask(
+            var taskId = sut.CreateTask(
                 "My description",
-                CreateInstant(2016, 1, 10),
-                Duration.FromDays(3),
-                3,
-                "Notes",
-                "labels");
+                CreateInstant(2016, 1, 10));
+
+            sut.ChangeRecurrenceToDueDate(taskId, Duration.FromDays(3));
 
             var secondTaskId = sut.FinishTask(taskId);
 
             secondTaskId.Should().HaveValue();
             repo.Should().HaveCount(2);
 
-            var task = repo.GetById(new TaskId(taskId));
+            var task = repo.GetById(new TaskId(taskId)).Value;
             task.IsDone.Should().BeTrue();
 
-            var recurringTask = repo.GetById(new TaskId(secondTaskId.Value));
+            var recurringTask = repo.GetById(new TaskId(secondTaskId.Value)).Value;
             recurringTask.IsDone.Should().BeFalse();
             recurringTask.DueDate = task.DueDate + Duration.FromDays(3);
         }

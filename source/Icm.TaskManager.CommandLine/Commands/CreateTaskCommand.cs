@@ -28,6 +28,7 @@ namespace Icm.TaskManager.CommandLine
             var id = taskApplicationService.CreateTask(description, dueDate);
             output.OnNext($"Task {id} created");
             var dto = taskApplicationService.GetTaskById(id);
+
             output.OnNext($"  Description: {dto.Description}");
             output.OnNext($"  Due date: {dto.DueDate}");
         }
