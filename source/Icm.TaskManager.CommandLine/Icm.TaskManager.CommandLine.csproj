@@ -141,6 +141,7 @@
     <Compile Include="Commands\BaseCommand.cs" />
     <Compile Include="Commands\CreateTaskCommand.cs" />
     <Compile Include="Commands\CommandLineTokenizer.cs" />
+    <Compile Include="Commands\ShowTaskCommand.cs" />
     <Compile Include="Commands\UnknownCommand.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="EnumerableExtensions.cs" />

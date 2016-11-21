@@ -4,7 +4,7 @@ namespace Icm.TaskManager.CommandLine.Commands
 {
     internal class UnknownCommand : ICommand
     {
-        public bool Matches(string line)
+        public bool Matches(IObserver<string> output, string line)
         {
             return false;
         }

@@ -15,6 +15,7 @@ namespace Icm.TaskManager.CommandLine
             ITaskApplicationService svc = new TaskApplicationService(repo, SystemClock.Instance);
             var runner = new CommandRunner(
                 new CreateTaskCommand(svc),
+                new ShowTaskCommand(svc),
                 new QuitCommand());
 
             runner.Run();

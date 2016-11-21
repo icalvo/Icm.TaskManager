@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
+using Icm.TaskManager.Application;
 using Icm.TaskManager.Domain.Tasks;
 
 namespace Icm.TaskManager.CommandLine
 {
     internal static class OutputExtensions
     {
-        internal static void ShowDetails(this IObserver<string> output, TaskId taskId, Task task)
+        internal static void ShowDetails(this IObserver<string> output, TaskId taskId, TaskDto task)
         {
             output.OnNext($"Task {taskId}: {task.Description}");
             output.OnNext($"  Start: {task.StartDate}");

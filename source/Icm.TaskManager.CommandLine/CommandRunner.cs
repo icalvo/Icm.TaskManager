@@ -29,16 +29,16 @@ namespace Icm.TaskManager.CommandLine
 
         public void Run()
         {
+            var o = new Subject<string>();
+            o.Subscribe(Console.WriteLine);
             ConsoleInput()
-                .Select(x =>
+                .Select(line =>
                 {
-                    return new { line = x, command = commands.FirstOrDefault(cmd => cmd.Matches(x)) ?? unknownCommand };
+                    return new { line, command = commands.FirstOrDefault(cmd => cmd.Matches(o, line)) ?? unknownCommand };
                 })
                 .TakeWhile(cmd => !(cmd.command is QuitCommand))
                 .Execute(cmd =>
                 {
-                    var o = new Subject<string>();
-                    o.Subscribe(Console.WriteLine);
                     cmd.command.Process(o, cmd.line);
                 });
         }

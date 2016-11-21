@@ -7,7 +7,7 @@ namespace Icm.TaskManager.CommandLine.Commands
 {
     public static class CommandLineTokenizer
     {
-        public static IEnumerable<string> Tokenize(string line)
+        public static IEnumerable<string> Tokenize(string line, IObserver<string> output)
         {
             var stateMachineSpec = new[]
             {
@@ -19,8 +19,8 @@ namespace Icm.TaskManager.CommandLine.Commands
 
             return
                 line.RunStateMachine(stateMachineSpec)
-                .Pipe(t => Console.WriteLine(
-                    $"[{t.Input}] => {t.State} & {t.Output.JoinStr(", ")}"))
+                //.Pipe(t => output.OnNext(
+                //    $"[{t.Input}] => {t.State} & {t.Output.JoinStr(", ")}"))
                 .SelectMany(x => x.Output)
                 .GroupBy(result => result.TokenNumber)
                 .Select(x => string.Concat(x.Select(y => y.Output)))
