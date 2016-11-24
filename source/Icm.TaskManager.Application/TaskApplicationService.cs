@@ -46,21 +46,6 @@ namespace Icm.TaskManager.Application
             return id;
         }
 
-        public int CreateFinishDateRecurringTask(
-            string description,
-            Instant dueDate,
-            Duration repeatInterval,
-            int priority,
-            string notes,
-            string labels)
-        {
-            var id = CreateTask(description, dueDate, priority, notes, labels);
-
-            ChangeRecurrenceToFinishDate(id, repeatInterval);
-
-            return id;
-        }
-
         public int CreateTask(string description, Instant dueDate)
         {
             var creationInstant = clock.GetCurrentInstant();
@@ -87,20 +72,20 @@ namespace Icm.TaskManager.Application
 
         public void ChangeRecurrenceToFinishDate(int id, Duration repeatInterval)
         {
-            var task = taskRepository.GetById(id);
+            var idtask = taskRepository.GetById(id);
 
-            task.Recurrence = new FinishDateRecurrence(repeatInterval);
-            taskRepository.Update(id, task);
+            idtask.Value.Recurrence = new FinishDateRecurrence(repeatInterval);
+            taskRepository.Update(idtask);
             taskRepository.Save();
         }
 
         public void ChangeRecurrenceToDueDate(int id, Duration repeatInterval)
         {
             var taskId = new TaskId(id);
-            var task = taskRepository.GetById(taskId);
+            var idtask = taskRepository.GetById(taskId);
 
-            task.Recurrence = new DueDateRecurrence(repeatInterval);
-            taskRepository.Update(taskId, task);
+            idtask.Value.Recurrence = new DueDateRecurrence(repeatInterval);
+            taskRepository.Update(idtask);
             taskRepository.Save();
         }
 
@@ -116,14 +101,14 @@ namespace Icm.TaskManager.Application
             var id = CreateTask(description, dueDate, priority, notes, labels);
 
             var taskId = new TaskId(id);
-            var task = taskRepository.GetById(taskId);
+            var idtask = taskRepository.GetById(taskId);
 
             if (recurrenceType != null && repeatInterval.HasValue)
             {
-                task.Recurrence = Recurrence.FromType(recurrenceType, repeatInterval.Value);
+                idtask.Value.Recurrence = Recurrence.FromType(recurrenceType, repeatInterval.Value);
             }
 
-            taskRepository.Update(taskId, task);
+            taskRepository.Update(idtask);
             taskRepository.Save();
             return id;
         }
@@ -131,9 +116,9 @@ namespace Icm.TaskManager.Application
         public void StartTask(int taskId)
         {
             var id = new TaskId(taskId);
-            var task = taskRepository.GetById(id);
-            task.StartDate = clock.GetCurrentInstant();
-            taskRepository.Update(id, task);
+            var idtask = taskRepository.GetById(id);
+            idtask.Value.StartDate = clock.GetCurrentInstant();
+            taskRepository.Update(idtask);
             taskRepository.Save();
         }
 
@@ -141,13 +126,13 @@ namespace Icm.TaskManager.Application
         {
             Instant finishInstant = clock.GetCurrentInstant();
             var id = new TaskId(taskId);
-            var task = taskRepository.GetById(id);
+            var idtask = taskRepository.GetById(id);
 
-            task.FinishDate = finishInstant;
-            var recurringTask = task.Recurrence.Match(
-                recurrence => recurrence.CreateRecurringTask(task, finishInstant));
+            idtask.Value.FinishDate = finishInstant;
+            var recurringTask = idtask.Value.Recurrence.Match(
+                recurrence => recurrence.CreateRecurringTask(idtask.Value, finishInstant));
 
-            taskRepository.Update(id, task);
+            taskRepository.Update(idtask);
             if (recurringTask == null)
             {
                 return null;
@@ -161,50 +146,50 @@ namespace Icm.TaskManager.Application
         public void ChangeTaskDescription(int taskId, string newDescription)
         {
             var id = new TaskId(taskId);
-            var task = taskRepository.GetById(id);
+            var idtask = taskRepository.GetById(id);
 
-            task.Description = newDescription;
-            taskRepository.Update(id, task);
+            idtask.Value.Description = newDescription;
+            taskRepository.Update(idtask);
             taskRepository.Save();
         }
 
         public void ChangeTaskPriority(int taskId, int newPriority)
         {
             var id = new TaskId(taskId);
-            var task = taskRepository.GetById(id);
+            var idtask = taskRepository.GetById(id);
 
-            task.Priority = newPriority;
-            taskRepository.Update(id, task);
+            idtask.Value.Priority = newPriority;
+            taskRepository.Update(idtask);
             taskRepository.Save();
         }
 
         public void ChangeTaskLabels(int taskId, string newLabels)
         {
             var id = new TaskId(taskId);
-            var task = taskRepository.GetById(id);
+            var idtask = taskRepository.GetById(id);
 
-            task.Labels = newLabels;
-            taskRepository.Update(id, task);
+            idtask.Value.Labels = newLabels;
+            taskRepository.Update(idtask);
             taskRepository.Save();
         }
 
         public void ChangeTaskNotes(int taskId, string newNotes)
         {
             var id = new TaskId(taskId);
-            var task = taskRepository.GetById(id);
+            var idtask = taskRepository.GetById(id);
 
-            task.Notes = newNotes;
-            taskRepository.Update(id, task);
+            idtask.Value.Notes = newNotes;
+            taskRepository.Update(idtask);
             taskRepository.Save();
         }
 
         public void AddTaskReminder(int taskId, Instant reminder)
         {
             var id = new TaskId(taskId);
-            var task = taskRepository.GetById(id);
+            var idtask = taskRepository.GetById(id);
 
-            task.Reminders.Add(reminder);
-            taskRepository.Update(id, task);
+            idtask.Value.Reminders.Add(reminder);
+            taskRepository.Update(idtask);
             taskRepository.Save();
         }
 

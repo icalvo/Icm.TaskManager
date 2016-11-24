@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Icm.TaskManager.Infrastructure.Interfaces;
+using Icm.TaskManager.Domain.Tasks;
 
 namespace Icm.TaskManager.Domain
 {
     public class MemoryOwnKeyRepository<TKey, TItem> : IRepository<TKey, TItem>, IEnumerable<TItem>
     {
         private readonly Func<TItem, TKey> keyFunction;
-        private TKey lastKey;
 
         protected IDictionary<TKey, TItem> Store { get; }
 
@@ -26,19 +25,16 @@ namespace Icm.TaskManager.Domain
             return newKey;
         }
 
-        public TItem GetById(TKey id)
+        public Identified<TKey, TItem> GetById(TKey id)
         {
-            if (Store.ContainsKey(id))
-            {
-                return Store[id];
-            }
-
-            return default(TItem);
+            return Store.ContainsKey(id)
+                ? IdentifiedTools.Identified(id, Store[id])
+                : null;
         }
 
-        public void Update(TKey key, TItem item)
+        public void Update(Identified<TKey, TItem> value)
         {
-            Store[key] = item;
+            Store[value.Id] = value.Value;
         }
 
         public void Delete(TKey key)

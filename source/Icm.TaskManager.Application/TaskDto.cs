@@ -6,6 +6,8 @@ namespace Icm.TaskManager.Application
 {
     public class TaskDto
     {
+        public int Id { get; set; }
+
         public string Description { get; set; }
 
         public Instant CreationDate { get; set; }

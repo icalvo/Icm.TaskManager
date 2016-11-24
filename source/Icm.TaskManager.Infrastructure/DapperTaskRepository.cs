@@ -25,14 +25,14 @@ namespace Icm.TaskManager.Infrastructure
             throw new NotImplementedException();
         }
 
-        public Task GetById(TaskId id)
+        public Identified<TaskId, Task> GetById(TaskId id)
         {
             var row = connection.QuerySingleOrDefault("SELECT * FROM Tasks", id.Value, transaction);
 
             throw new NotImplementedException();
         }
 
-        public void Update(TaskId key, Task item)
+        public void Update(Identified<TaskId, Task> value)
         {
             throw new NotImplementedException();
         }

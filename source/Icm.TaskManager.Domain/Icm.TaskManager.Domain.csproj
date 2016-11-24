@@ -54,6 +54,8 @@
     <Compile Include="Reminder\IReminderRepository.cs" />
     <Compile Include="Tasks\DueDateRecurrence.cs" />
     <Compile Include="Tasks\FinishDateRecurrence.cs" />
+    <Compile Include="Tasks\Identified.cs" />
+    <Compile Include="Tasks\IdentifiedTools.cs" />
     <Compile Include="Tasks\MonadicExtensions.cs" />
     <Compile Include="Tasks\Recurrence.cs" />
     <Compile Include="Tasks\ITaskRepository.cs" />
