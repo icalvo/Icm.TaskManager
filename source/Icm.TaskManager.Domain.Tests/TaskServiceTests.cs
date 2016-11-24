@@ -26,7 +26,6 @@ namespace Icm.TaskManager.Domain.Tests
             task.CreationDate.Should().Be(CreateInstant(2016, 1, 1));
             task.Description.Should().Be("My description");
             task.Priority.Should().Be(3);
-            task.Notes.Should().Be("Notes");
             task.IsDone.Should().BeFalse();
         }
 
