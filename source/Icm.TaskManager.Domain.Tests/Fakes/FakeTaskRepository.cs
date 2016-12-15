@@ -12,7 +12,7 @@ namespace Icm.TaskManager.Domain.Tests.Fakes
         {
         }
 
-        public IEnumerable<Instant> GetActiveReminders()
+        public IEnumerable<Tuple<Instant, TimeKind>> GetActiveReminders()
         {
             throw new NotImplementedException();
         }

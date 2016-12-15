@@ -20,12 +20,12 @@ namespace Icm.TaskManager.CommandLine
                 throw new ArgumentNullException(nameof(commands));
             }
 
-            if (!commands.Any(cmd => cmd is QuitCommand))
-            {
-                throw new ArgumentException("There's no QuitCommand, you won't be able to exit the command application.");
-            }
 
-            this.commands = commands;
+            this.commands = commands.Concat(new ICommand[]
+            {
+                new HelpCommand(commands),
+                new QuitCommand()
+            }).ToArray();
         }
 
         public void Run()
@@ -52,6 +52,24 @@ namespace Icm.TaskManager.CommandLine
                 Console.Write("> ");
                 yield return Console.ReadLine();
             }
+        }
+    }
+
+    internal class HelpCommand : ICommand
+    {
+        public HelpCommand(params ICommand[] commands)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Matches(IObserver<string> output, string line)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IObservable<string> Process(string line)
+        {
+            throw new NotImplementedException();
         }
     }
 }

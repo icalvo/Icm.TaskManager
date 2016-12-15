@@ -66,6 +66,7 @@
     <Compile Include="Tasks\TaskId.cs" />
     <Compile Include="Tasks\TaskMemento.cs" />
     <Compile Include="Tasks\TaskService.cs" />
+    <Compile Include="TimeKind.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Icm.TaskManager.Domain;
 using Icm.TaskManager.Domain.Tasks;
 using NodaTime;
 
@@ -37,9 +38,30 @@ namespace Icm.TaskManager.Infrastructure
         {
         }
 
-        public IEnumerable<Instant> GetActiveReminders()
+        public IEnumerable<Tuple<Instant, TimeKind>> GetActiveReminders()
         {
-            throw new NotImplementedException();
+            return Storage.Values
+                .SelectMany(GetActiveTimes);
+        }
+
+        private static IEnumerable<Tuple<Instant, TimeKind>> GetActiveTimes(TaskMemento task)
+        {
+            if (task.StartDate.HasValue)
+            {
+                yield return Tuple.Create(task.StartDate.Value, TimeKind.StartDate);
+            }
+
+            yield return Tuple.Create(task.DueDate, TimeKind.DueDate);
+
+            if (task.FinishDate.HasValue)
+            {
+                yield return Tuple.Create(task.FinishDate.Value, TimeKind.FinishDate);
+            }
+
+            foreach (var reminder in task.Reminders)
+            {
+                yield return Tuple.Create(reminder, TimeKind.Reminder);
+            }
         }
     }
 }

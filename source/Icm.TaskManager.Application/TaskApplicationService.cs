@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Icm.TaskManager.Domain.Tasks;
 using NodaTime;
 
@@ -44,6 +45,11 @@ namespace Icm.TaskManager.Application
             ChangeRecurrenceToDueDate(id, repeatInterval);
 
             return id;
+        }
+
+        public void ChangeTaskStartDate(int taskId, Instant newStartDate)
+        {
+            throw new NotImplementedException();
         }
 
         public int CreateTask(string description, Instant dueDate)
@@ -163,6 +169,16 @@ namespace Icm.TaskManager.Application
             taskRepository.Save();
         }
 
+        public void ChangeTaskDueDate(int taskId, Instant newDueDate)
+        {
+            var id = new TaskId(taskId);
+            var idtask = taskRepository.GetById(id);
+
+            idtask.Value.DueDate = newDueDate;
+            taskRepository.Update(idtask);
+            taskRepository.Save();
+        }
+
         public void ChangeTaskLabels(int taskId, string newLabels)
         {
             var id = new TaskId(taskId);
@@ -193,9 +209,10 @@ namespace Icm.TaskManager.Application
             taskRepository.Save();
         }
 
-        public void AddTaskReminderRelativeToNow(int taskId, Duration offset)
+        public IEnumerable<TimeDto> PendingTimes()
         {
-            AddTaskReminder(taskId, clock.GetCurrentInstant().Plus(offset));
+            return taskRepository.GetActiveReminders()
+                .Select(t => new TimeDto(t.Item1, t.Item2));
         }
     }
 }

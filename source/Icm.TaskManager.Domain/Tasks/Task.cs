@@ -31,7 +31,7 @@ namespace Icm.TaskManager.Domain.Tasks
             }
         }
 
-        public Instant DueDate { get; internal set; }
+        public Instant DueDate { get; set; }
 
         public Instant? FinishDate
         {

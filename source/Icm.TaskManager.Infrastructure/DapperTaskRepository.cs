@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using Dapper;
+using Icm.TaskManager.Domain;
 using Icm.TaskManager.Domain.Tasks;
 using Task = Icm.TaskManager.Domain.Tasks.Task;
 using NodaTime;
@@ -47,7 +48,7 @@ namespace Icm.TaskManager.Infrastructure
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Instant> GetActiveReminders()
+        public IEnumerable<Tuple<Instant, TimeKind>> GetActiveReminders()
         {
             throw new NotImplementedException();
         }

@@ -153,6 +153,7 @@
     <Compile Include="StateMachines\StateMachineResult.cs" />
     <Compile Include="StateMachines\MealyItem.cs" />
     <Compile Include="StateMachines\MealyItems.cs" />
+    <Compile Include="TaskApplicationServiceSchedulingAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

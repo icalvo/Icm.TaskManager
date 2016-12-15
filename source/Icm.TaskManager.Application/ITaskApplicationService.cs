@@ -7,8 +7,6 @@ namespace Icm.TaskManager.Application
     {
         void AddTaskReminder(int taskId, Instant reminder);
 
-        void AddTaskReminderRelativeToNow(int taskId, Duration offset);
-
         void ChangeRecurrenceToDueDate(int id, Duration repeatInterval);
 
         void ChangeRecurrenceToFinishDate(int id, Duration repeatInterval);
@@ -21,6 +19,8 @@ namespace Icm.TaskManager.Application
 
         void ChangeTaskPriority(int taskId, int newPriority);
 
+        void ChangeTaskDueDate(int taskId, Instant newDueDate);
+
         int CreateTask(string description, Instant dueDate);
 
         TaskDto GetTaskById(int taskId);
@@ -30,5 +30,7 @@ namespace Icm.TaskManager.Application
         int? FinishTask(int taskId);
 
         void StartTask(int taskId);
+
+        IEnumerable<TimeDto> PendingTimes();
     }
 }

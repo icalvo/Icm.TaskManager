@@ -25,12 +25,12 @@ namespace Icm.TaskManager.CommandLine.Commands
 
         protected override IEnumerable<string> Validates(string[] tokens)
         {
-            DateTime d;
             if (tokens.Length != 3)
             {
                 yield return "I need 2 arguments (due date and description) to create a task";
             }
 
+            DateTime d;
             if (!DateTime.TryParseExact(tokens[1], "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out d))
             {
                 yield return "Date is not valid";
