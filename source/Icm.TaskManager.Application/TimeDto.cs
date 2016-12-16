@@ -14,5 +14,10 @@ namespace Icm.TaskManager.Application
         public Instant Time { get; }
 
         public TimeKind Kind { get; }
+
+        public override string ToString()
+        {
+            return $"{Kind} {Time}";
+        }
     }
 }

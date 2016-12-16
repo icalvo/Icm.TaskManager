@@ -52,5 +52,11 @@ namespace Icm.TaskManager.CommandLine
         {
             return string.Join(separator, source.Select(toString));
         }
+
+        public static bool VerbIs(this string[] tokens, string verb)
+        {
+            return string.Equals(verb, tokens.ElementAtOrDefault(0), StringComparison.InvariantCultureIgnoreCase);
+        }
+
     }
 }

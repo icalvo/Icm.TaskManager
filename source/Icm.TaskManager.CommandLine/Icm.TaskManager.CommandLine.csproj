@@ -35,6 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="JetBrains.Annotations, Version=10.2.1.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.10.2.1\lib\net\JetBrains.Annotations.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Win32.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Win32.Primitives.4.0.1\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
       <Private>True</Private>
@@ -138,17 +142,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandRunner.cs" />
-    <Compile Include="Commands\BaseCommand.cs" />
-    <Compile Include="Commands\CreateTaskCommand.cs" />
     <Compile Include="Commands\CommandLineTokenizer.cs" />
-    <Compile Include="Commands\ShowTaskCommand.cs" />
-    <Compile Include="Commands\UnknownCommand.cs" />
+    <Compile Include="Commands\Parameter.cs" />
+    <Compile Include="Commands\Command.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="EnumerableExtensions.cs" />
-    <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Commands\QuitCommand.cs" />
     <Compile Include="StateMachines\StateMachineExtensions.cs" />
     <Compile Include="StateMachines\StateMachineResult.cs" />
     <Compile Include="StateMachines\MealyItem.cs" />

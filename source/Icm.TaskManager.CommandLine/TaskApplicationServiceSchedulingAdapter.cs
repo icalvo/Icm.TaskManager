@@ -12,7 +12,8 @@ namespace Icm.TaskManager.CommandLine
     {
         private readonly ITaskApplicationService impl;
         private readonly IScheduler scheduler;
-        private readonly Subject<TimeDto> timeChanges;
+        private readonly Subject<TimeDto> timerStarts;
+        private readonly Subject<TimeDto> timerExpirations;
         private readonly IDictionary<Instant, IDisposable> pending;
 
         public TaskApplicationServiceSchedulingAdapter(
@@ -21,17 +22,20 @@ namespace Icm.TaskManager.CommandLine
         {
             this.impl = impl;
             this.scheduler = scheduler;
-            timeChanges = new Subject<TimeDto>();
+            timerExpirations = new Subject<TimeDto>();
+            timerStarts = new Subject<TimeDto>();
             pending = new Dictionary<Instant, IDisposable>();
 
             impl.PendingTimes().Execute(Schedule);
         }
 
-        public IObservable<TimeDto> TimeChanges => timeChanges;
+        public IObservable<TimeDto> TimerStarts => timerStarts;
+        public IObservable<TimeDto> TimerExpirations => timerExpirations;
 
         private void Schedule(TimeDto pendingTime)
         {
-            pending.Add(pendingTime.Time, scheduler.Schedule(pendingTime.Time.ToDateTimeOffset(), () => timeChanges.OnNext(pendingTime)));
+            pending.Add(pendingTime.Time, scheduler.Schedule(pendingTime.Time.ToDateTimeOffset(), () => timerExpirations.OnNext(pendingTime)));
+            timerStarts.OnNext(pendingTime);
         }
 
         private void Unschedule(Instant instant)
@@ -88,7 +92,6 @@ namespace Icm.TaskManager.CommandLine
             var taskId = impl.CreateTask(description, dueDate);
             var dto = impl.GetTaskById(taskId);
             Schedule(new TimeDto(dto.DueDate, TimeKind.DueDate));
-            dto.Reminders.Execute(reminder => Schedule(new TimeDto(reminder, TimeKind.Reminder)));
             return taskId;
         }
 

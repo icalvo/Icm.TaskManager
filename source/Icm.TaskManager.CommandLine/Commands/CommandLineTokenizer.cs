@@ -2,13 +2,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Icm.TaskManager.CommandLine.StateMachines;
+using JetBrains.Annotations;
 
 namespace Icm.TaskManager.CommandLine.Commands
 {
     public static class CommandLineTokenizer
     {
-        public static IEnumerable<string> Tokenize(string line, IObserver<string> output)
+        [NotNull]
+        public static IEnumerable<string> Tokenize(string line)
         {
+            if (string.IsNullOrEmpty(line))
+            {
+                return Enumerable.Empty<string>();
+            }
+
             var stateMachineSpec = new[]
             {
                 MealyItem('\\',              BackslashOutput,  BackslashTransition),
@@ -27,6 +34,7 @@ namespace Icm.TaskManager.CommandLine.Commands
                 .ToArray();
         }
 
+        [NotNull]
         private static IEnumerable<CharResult> NormalOutput(State state, char ch)
         {
             if (state.LastCharWasEscape)
@@ -44,6 +52,7 @@ namespace Icm.TaskManager.CommandLine.Commands
             return state.WithLastCharWasEscape(false);
         }
 
+        [NotNull]
         private static IEnumerable<CharResult> WhitespaceOutput(State state, char ch)
         {
             if (state.InQuote)
@@ -62,6 +71,7 @@ namespace Icm.TaskManager.CommandLine.Commands
             }
         }
 
+        [NotNull]
         private static State WhitespaceTransition(State state)
         {
             if (state.InQuote)
@@ -74,6 +84,7 @@ namespace Icm.TaskManager.CommandLine.Commands
                 .WithTokenNumberIf(true, state.TokenNumber + 1);
         }
 
+        [NotNull]
         private static IEnumerable<CharResult> QuoteOutput(State state)
         {
             if (state.LastCharWasEscape)
