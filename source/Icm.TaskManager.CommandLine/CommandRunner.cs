@@ -49,7 +49,6 @@ namespace Icm.TaskManager.CommandLine
 
         public IEnumerable<Command> Commands
         {
-            get { return commands; }
             set
             {
                 if (value == null)
@@ -57,25 +56,29 @@ namespace Icm.TaskManager.CommandLine
                     throw new ArgumentNullException(nameof(commands));
                 }
 
-                var query =
-                    from command in value
-                    from verb in command.Verbs
-                    group command by verb into g
-                    where g.Count() > 1
-                    select g;
-
-                if (query.Any())
-                {
-                    var groupsOutput = query.JoinStr("\r\n", g =>
-                    {
-                        var commandsWithDuplicateVerb = g.JoinStr(", ", command => command.Name);
-                        return $"Verb {g.Key} is shared by commands {commandsWithDuplicateVerb}";
-                    });
-                    throw new ArgumentException($"There are duplicate verbs: {groupsOutput}", nameof(commands));
-                }
-
-
+                Validate(value);
                 commands = value;
+            }
+        }
+
+        private void Validate(IEnumerable<Command> value)
+        {
+            var query =
+                from command in value
+                from verb in command.Verbs
+                group command by verb
+                into g
+                where g.Count() > 1
+                select g;
+
+            if (query.Any())
+            {
+                var groupsOutput = query.JoinStr("\r\n", g =>
+                {
+                    var commandsWithDuplicateVerb = g.JoinStr(", ", command => command.Name);
+                    return $"Verb {g.Key} is shared by commands {commandsWithDuplicateVerb}";
+                });
+                throw new ArgumentException($"There are duplicate verbs: {groupsOutput}", nameof(commands));
             }
         }
 

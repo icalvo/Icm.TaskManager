@@ -13,11 +13,6 @@ namespace Icm.TaskManager.CommandLine.Commands
 
         private readonly Action<string[]> process;
         private readonly string help;
-        private string v1;
-        private string[] v2;
-        private Parameter[] parameter;
-        private string v3;
-        private Action<string[]> p;
 
         public Command(
             string name,

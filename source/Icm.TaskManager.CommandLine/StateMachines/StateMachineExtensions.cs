@@ -19,7 +19,7 @@ namespace Icm.TaskManager.CommandLine.StateMachines
         public static StateMachineResult<TInput, TState, TOutput> Mealy<TInput, TState, TOutput>(
             this TInput input,
             TState state,
-            Func<TState, TInput, Tuple<TState, TOutput>> coalesced)
+            Func<TState, TInput, (TState, TOutput)> coalesced)
         {
             var result = coalesced(state, input);
             var output = result.Item2;
@@ -62,7 +62,7 @@ namespace Icm.TaskManager.CommandLine.StateMachines
         public static IEnumerable<StateMachineResult<TInput, TState, TOutput>> RunStateMachine<TInput, TState, TOutput>(
             this IEnumerable<TInput> source,
             TState initial,
-            Func<TState, TInput, Tuple<TState, TOutput>> coalesced)
+            Func<TState, TInput, (TState, TOutput)> coalesced)
         {
             return source.Scan(
                 new StateMachineResult<TInput, TState, TOutput>(default(TInput), initial, default(TOutput)),

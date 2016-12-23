@@ -41,15 +41,17 @@ namespace Icm.TaskManager.CommandLine.Commands
 
         public static bool DateParses(string arg, string format)
         {
-            DateTime d;
-            return DateTime.TryParseExact(arg, format, CultureInfo.InvariantCulture, DateTimeStyles.None,
-                out d);
+            return DateTime.TryParseExact(
+                arg,
+                format,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out DateTime d);
         }
 
         public static bool IntParses(string arg)
         {
-            int i;
-            return int.TryParse(arg, out i);
+            return int.TryParse(arg, out int i);
         }
     }
 }

@@ -38,29 +38,29 @@ namespace Icm.TaskManager.Infrastructure
         {
         }
 
-        public IEnumerable<Tuple<Instant, TimeKind>> GetActiveReminders()
+        public IEnumerable<(Instant Time, TimeKind Kind)> GetActiveReminders()
         {
             return Storage.Values
                 .SelectMany(GetActiveTimes);
         }
 
-        private static IEnumerable<Tuple<Instant, TimeKind>> GetActiveTimes(TaskMemento task)
+        private static IEnumerable<(Instant Time, TimeKind Kind)> GetActiveTimes(TaskMemento task)
         {
             if (task.StartDate.HasValue)
             {
-                yield return Tuple.Create(task.StartDate.Value, TimeKind.StartDate);
+                yield return (task.StartDate.Value, TimeKind.StartDate);
             }
 
-            yield return Tuple.Create(task.DueDate, TimeKind.DueDate);
+            yield return (task.DueDate, TimeKind.DueDate);
 
             if (task.FinishDate.HasValue)
             {
-                yield return Tuple.Create(task.FinishDate.Value, TimeKind.FinishDate);
+                yield return (task.FinishDate.Value, TimeKind.FinishDate);
             }
 
             foreach (var reminder in task.Reminders)
             {
-                yield return Tuple.Create(reminder, TimeKind.Reminder);
+                yield return (reminder, TimeKind.Reminder);
             }
         }
     }

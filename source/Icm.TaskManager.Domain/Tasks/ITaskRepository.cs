@@ -6,6 +6,6 @@ namespace Icm.TaskManager.Domain.Tasks
 {
     public interface ITaskRepository : IRepository<TaskId, Task>
     {
-        IEnumerable<Tuple<Instant, TimeKind>> GetActiveReminders();
+        IEnumerable<(Instant Time, TimeKind Kind)> GetActiveReminders();
     }
 }

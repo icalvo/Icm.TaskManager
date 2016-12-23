@@ -48,7 +48,7 @@ namespace Icm.TaskManager.Infrastructure
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Tuple<Instant, TimeKind>> GetActiveReminders()
+        public IEnumerable<(Instant Time, TimeKind Kind)> GetActiveReminders()
         {
             throw new NotImplementedException();
         }
