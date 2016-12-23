@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Icm.TaskManager.CommandLine
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Icm.TaskManager.Infrastructure", "Icm.TaskManager.Infrastructure\Icm.TaskManager.Infrastructure.csproj", "{812791BD-9863-442F-B95F-6EFE20E450E5}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Icm.TaskManager.Domain.Fs", "Icm.TaskManager.Domain.Fs\Icm.TaskManager.Domain.Fs.fsproj", "{BB36D038-6C8C-4DBC-9A1E-C3589A08FC92}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{812791BD-9863-442F-B95F-6EFE20E450E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{812791BD-9863-442F-B95F-6EFE20E450E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{812791BD-9863-442F-B95F-6EFE20E450E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB36D038-6C8C-4DBC-9A1E-C3589A08FC92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB36D038-6C8C-4DBC-9A1E-C3589A08FC92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB36D038-6C8C-4DBC-9A1E-C3589A08FC92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB36D038-6C8C-4DBC-9A1E-C3589A08FC92}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
