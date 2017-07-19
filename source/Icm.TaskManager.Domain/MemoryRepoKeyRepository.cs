@@ -1,7 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Icm.TaskManager.Domain.Tasks;
+using Icm.TaskManager.Domain.Tasks.Icm.TaskManager.Domain.Tasks;
+using static System.Threading.Tasks.Task;
+using Task = System.Threading.Tasks.Task;
 
 namespace Icm.TaskManager.Domain
 {
@@ -29,36 +33,39 @@ namespace Icm.TaskManager.Domain
             this.keyGenerator = keyGenerator;
         }
 
-        public TKey Add(TItem item)
+        public Task<TKey> Add(TItem item)
         {
             lastKey = keyGenerator(lastKey);
             Store.Add(lastKey, item);
 
-            return lastKey;
+            return FromResult(lastKey);
         }
 
-        public Identified<TKey, TItem> GetById(TKey id)
+        public Task<Identified<TKey, TItem>> GetByIdAsync(TKey id)
         {
             if (Store.ContainsKey(id))
             {
-                return IdentifiedTools.Identified(id, Store[id]);
+                return FromResult(Identified.Create(id, Store[id]));
             }
 
-            return null;
+            return FromResult<Identified<TKey, TItem>>(null);
         }
 
-        public void Update(Identified<TKey, TItem> value)
+        public Task Update(Identified<TKey, TItem> identifiedChore)
         {
-            Store[value.Id] = value.Value;
+            Store[identifiedChore.Id] = identifiedChore.Value;
+            return CompletedTask;
         }
 
-        public void Delete(TKey key)
+        public Task Delete(TKey key)
         {
             Store.Remove(key);
+            return CompletedTask;
         }
 
-        public virtual void Save()
+        public virtual Task Save()
         {
+            return CompletedTask;
         }
 
         public IEnumerator<TItem> GetEnumerator()

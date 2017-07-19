@@ -1,17 +1,19 @@
-﻿using Icm.TaskManager.Domain.Tasks;
+﻿using System.Threading.Tasks;
+using Icm.TaskManager.Domain.Tasks;
+using Task = System.Threading.Tasks.Task;
 
 namespace Icm.TaskManager.Domain
 {
     public interface IRepository<TKey, TItem>
     {
-        TKey Add(TItem item);
+        Task<TKey> Add(TItem item);
 
-        Identified<TKey, TItem> GetById(TKey id);
+        Task<Identified<TKey, TItem>> GetByIdAsync(TKey id);
 
-        void Update(Identified<TKey, TItem> value);
+        Task Update(Identified<TKey, TItem> identifiedChore);
 
-        void Delete(TKey key);
+        Task Delete(TKey key);
 
-        void Save();
+        Task Save();
     }
 }

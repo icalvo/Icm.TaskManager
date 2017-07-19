@@ -9,10 +9,10 @@ namespace Icm.TaskManager.Domain.Tasks
         {
         }
 
-        public override Task CreateRecurringTask(Task task, Instant now)
+        public override Chore CreateRecurringTask(Chore chore, Instant now)
         {
-            Instant dueDate = task.DueDate + RepeatInterval;
-            return task.CopyWithNewDueDate(dueDate, now);
+            Instant dueDate = chore.DueDate + RepeatInterval;
+            return chore.CopyWithNewDueDate(dueDate, now);
         }
     }
 }

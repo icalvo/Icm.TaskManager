@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading.Tasks;
 using Icm.TaskManager.CommandLine.Commands;
 using JetBrains.Annotations;
+using static System.Threading.Tasks.Task;
 
 namespace Icm.TaskManager.CommandLine
 {
@@ -13,18 +15,18 @@ namespace Icm.TaskManager.CommandLine
         private static readonly Command UnknownCommand = Command.WithoutVerb(
             "UnknownCommand",
             "Unknown command",
-            _ => Console.Error.WriteLine("Unknown command!"));
+            async _ => await Console.Error.WriteLineAsync("Unknown command!"));
 
         private static readonly Command NullCommand = Command.WithoutVerb(
             "NullCommand",
             "Null command",
-            _ => {});
+            _ => CompletedTask);
 
         public static readonly Command QuitCommand = new Command(
             "QuitApplication",
             new[] { "quit", "q", "exit" },
             "quits the manager",
-            _ => { });
+            _ => CompletedTask);
 
         public CommandRunner(params Command[] commands)
         {
@@ -32,11 +34,11 @@ namespace Icm.TaskManager.CommandLine
                 "ShowHelp",
                 "help",
                 "shows help",
-                tokens =>
+                async tokens =>
                 {
                     foreach (var command in this.commands)
                     {
-                        Console.Out.WriteLine(command.Help);
+                        await Console.Out.WriteLineAsync(command.Help);
                     }
                 });
 
@@ -82,9 +84,10 @@ namespace Icm.TaskManager.CommandLine
             }
         }
 
-        public void Run()
+        public Task Run()
         {
-            ConsoleInput()
+            return 
+                ConsoleInput()
                 .Select(line =>
                 {
                     var tokens = CommandLineTokenizer.Tokenize(line).ToArray();
@@ -93,11 +96,11 @@ namespace Icm.TaskManager.CommandLine
                     return new { tokens, command = result };
                 })
                 .TakeWhile(cmd => cmd.command != QuitCommand)
-                .Execute(cmd =>
+                .ExecuteAsync(async cmd =>
                 {
                     try
                     {
-                        cmd.command.Process(cmd.tokens);
+                        await cmd.command.Process(cmd.tokens);
                     }
                     catch (Exception ex)
                     {

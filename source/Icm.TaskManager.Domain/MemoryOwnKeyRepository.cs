@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Icm.TaskManager.Domain.Tasks;
+using Icm.TaskManager.Domain.Tasks.Icm.TaskManager.Domain.Tasks;
+using static System.Threading.Tasks.Task;
+using Task = System.Threading.Tasks.Task;
 
 namespace Icm.TaskManager.Domain
 {
@@ -9,51 +13,55 @@ namespace Icm.TaskManager.Domain
     {
         private readonly Func<TItem, TKey> keyFunction;
 
-        protected IDictionary<TKey, TItem> Store { get; }
+        private readonly IDictionary<TKey, TItem> store;
 
         public MemoryOwnKeyRepository(Func<TItem, TKey> keyFunction)
         {
-            Store = new Dictionary<TKey, TItem>();
+            store = new Dictionary<TKey, TItem>();
             this.keyFunction = keyFunction;
         }
 
-        public TKey Add(TItem item)
+        public Task<TKey> Add(TItem item)
         {
             var newKey = keyFunction(item);
-            Store.Add(newKey, item);
+            store.Add(newKey, item);
 
-            return newKey;
+            return FromResult(newKey);
         }
 
-        public Identified<TKey, TItem> GetById(TKey id)
+        public Task<Identified<TKey, TItem>> GetByIdAsync(TKey id)
         {
-            return Store.ContainsKey(id)
-                ? IdentifiedTools.Identified(id, Store[id])
-                : null;
+            return FromResult(
+                store.ContainsKey(id)
+                ? Identified.Create(id, store[id])
+                : null);
         }
 
-        public void Update(Identified<TKey, TItem> value)
+        public Task Update(Identified<TKey, TItem> identifiedChore)
         {
-            Store[value.Id] = value.Value;
+            store[identifiedChore.Id] = identifiedChore.Value;
+            return CompletedTask;
         }
 
-        public void Delete(TKey key)
+        public Task Delete(TKey key)
         {
-            Store.Remove(key);
+            store.Remove(key);
+            return CompletedTask;
         }
 
-        public virtual void Save()
+        public virtual Task Save()
         {
+            return CompletedTask;
         }
 
         public IEnumerator<TItem> GetEnumerator()
         {
-            return Store.Values.GetEnumerator();
+            return store.Values.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return Store.Values.GetEnumerator();
+            return store.Values.GetEnumerator();
         }
     }
 }

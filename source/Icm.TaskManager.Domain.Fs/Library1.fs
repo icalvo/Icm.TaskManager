@@ -36,7 +36,8 @@ type Task with
 
     member t.isDone = t.FinishDate.IsSome
 
-    member t.recur recurrence newDueDate now =
-        match recurrence with
-        | DueDate d -> { t with DueDate = newDueDate; CreationDate = now }
-        | FinishDate d -> { t with DueDate = newDueDate; CreationDate = now }
+    member t.recur now =
+        match (t.Recurrence, t.FinishDate) with
+        | (Some (DueDate duration), _) -> Some { t with DueDate = t.DueDate + duration; CreationDate = now }
+        | (Some (FinishDate duration), Some finishDate) -> Some { t with DueDate = finishDate + duration; CreationDate = now }
+        | _ -> None

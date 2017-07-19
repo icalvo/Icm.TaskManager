@@ -7,15 +7,15 @@ namespace Icm.TaskManager.CommandLine
 {
     internal static class OutputExtensions
     {
-        internal static void ShowDetails(this TextWriter output, TaskId taskId, TaskDto task)
+        internal static async System.Threading.Tasks.Task ShowDetails(this TextWriter output, ChoreId choreId, TaskDto task)
         {
-            output.WriteLine($"Task {taskId}: {task.Description}");
-            output.WriteLine($"  Start: {task.StartDate}");
-            output.WriteLine($"  Due: {task.DueDate}");
-            output.WriteLine($"  Finish: {task.FinishDate}");
-            output.WriteLine($"  Priority: {task.Priority}");
-            output.WriteLine($"  Labels: {task.Labels}");
-            output.WriteLine($"  Notes: {task.Notes}");
+            await output.WriteLineAsync($"Task {choreId}: {task.Description}");
+            await output.WriteLineAsync($"  Start: {task.StartDate}");
+            await output.WriteLineAsync($"  Due: {task.DueDate}");
+            await output.WriteLineAsync($"  Finish: {task.FinishDate}");
+            await output.WriteLineAsync($"  Priority: {task.Priority}");
+            await output.WriteLineAsync($"  Labels: {task.Labels}");
+            await output.WriteLineAsync($"  Notes: {task.Notes}");
             if (task.Reminders.Any())
             {
                 output.WriteLine("  Reminders:");
@@ -30,32 +30,32 @@ namespace Icm.TaskManager.CommandLine
             }
         }
 
-        internal static void ShowDetailsBrief(this TextWriter output, TaskId taskId, TaskDto task)
+        internal static async System.Threading.Tasks.Task ShowDetailsBrief(this TextWriter output, ChoreId choreId, TaskDto task)
         {
-            output.WriteLine($"Task {taskId}: {task.Description}");
-            output.WriteLnIf($"  Start: {task.StartDate}", task.StartDate.HasValue);
-            output.WriteLine($"  Due: {task.DueDate}");
-            output.WriteLnIf($"  Finish: {task.FinishDate}", task.FinishDate.HasValue);
-            output.WriteLine($"  Priority: {task.Priority}");
-            output.WriteLnIf($"  Labels: {task.Labels}", !string.IsNullOrEmpty(task.Labels));
-            output.WriteLnIf($"  Notes: {task.Notes}", !string.IsNullOrEmpty(task.Notes));
+            await output.WriteLineAsync($"Task {choreId}: {task.Description}");
+            await output.WriteLnIfAsync($"  Start: {task.StartDate}", task.StartDate.HasValue);
+            await output.WriteLineAsync($"  Due: {task.DueDate}");
+            await output.WriteLnIfAsync($"  Finish: {task.FinishDate}", task.FinishDate.HasValue);
+            await output.WriteLineAsync($"  Priority: {task.Priority}");
+            await output.WriteLnIfAsync($"  Labels: {task.Labels}", !string.IsNullOrEmpty(task.Labels));
+            await output.WriteLnIfAsync($"  Notes: {task.Notes}", !string.IsNullOrEmpty(task.Notes));
             if (!task.Reminders.Any())
             {
                 return;
             }
 
-            output.WriteLine("  Reminders:");
+            await output.WriteLineAsync("  Reminders:");
             foreach (var reminder in task.Reminders)
             {
-                output.WriteLine($"  - {reminder}");
+                await output.WriteLineAsync($"  - {reminder}");
             }
         }
 
-        private static void WriteLnIf(this TextWriter output, string message, bool condition)
+        private static async System.Threading.Tasks.Task WriteLnIfAsync(this TextWriter output, string message, bool condition)
         {
             if (condition)
             {
-                output.WriteLine(message);
+                await output.WriteLineAsync(message);
             }
         }
     }

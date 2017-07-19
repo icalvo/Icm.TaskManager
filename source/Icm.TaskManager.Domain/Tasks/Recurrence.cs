@@ -11,7 +11,7 @@ namespace Icm.TaskManager.Domain.Tasks
 
         public Duration RepeatInterval { get; }
 
-        public abstract Task CreateRecurringTask(Task task, Instant now);
+        public abstract Chore CreateRecurringTask(Chore chore, Instant now);
 
         public static Recurrence FromType(string recurrenceType, Duration repeatInterval)
         {

@@ -9,14 +9,14 @@ namespace Icm.TaskManager.Domain.Tasks
         {
         }
 
-        public override Task CreateRecurringTask(Task task, Instant now)
+        public override Chore CreateRecurringTask(Chore chore, Instant now)
         {
             return MonadicExtensions.Match(
-                task.FinishDate,
+                chore.FinishDate,
                 finishDate =>
                 {
                     Instant dueDate = finishDate + RepeatInterval;
-                    return task.CopyWithNewDueDate(dueDate, now);
+                    return chore.CopyWithNewDueDate(dueDate, now);
                 });
         }
     }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Icm.TaskManager.CommandLine
 {
@@ -30,6 +31,14 @@ namespace Icm.TaskManager.CommandLine
             }
         }
 
+        public static async Task ExecuteAsync<T>(this IEnumerable<T> source, Func<T, Task> action)
+        {
+            foreach (var item in source)
+            {
+                await action(item);
+            }
+        }
+
         public static IEnumerable<TOutput> Scan<TInput, TOutput>(
             this IEnumerable<TInput> source,
             TOutput seed,
@@ -55,7 +64,7 @@ namespace Icm.TaskManager.CommandLine
 
         public static bool VerbIs(this string[] tokens, string verb)
         {
-            return string.Equals(verb, tokens.ElementAtOrDefault(0), StringComparison.InvariantCultureIgnoreCase);
+            return string.Equals(verb, tokens.ElementAtOrDefault(0), StringComparison.OrdinalIgnoreCase);
         }
 
     }

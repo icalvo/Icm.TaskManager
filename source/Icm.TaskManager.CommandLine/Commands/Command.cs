@@ -1,17 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Icm.TaskManager.CommandLine.Commands
 {
     internal class Command
     {
-        public static Command WithoutVerb(string name, string help, Action<string[]> process)
+        public static Command WithoutVerb(string name, string help, Func<string[], Task> process)
         {
             return new Command(name, help, process);
         }
 
-        private readonly Action<string[]> process;
+        private readonly Func<string[], Task> process;
         private readonly string help;
 
         public Command(
@@ -19,7 +20,7 @@ namespace Icm.TaskManager.CommandLine.Commands
             IEnumerable<string> verbs,
             IEnumerable<Parameter> parameters,
             string help,
-            Action<string[]> process)
+            Func<string[], Task> process)
         {
             Name = name;
             this.process = process;
@@ -33,7 +34,7 @@ namespace Icm.TaskManager.CommandLine.Commands
             string verb,
             IEnumerable<Parameter> parameters,
             string help,
-            Action<string[]> process)
+            Func<string[], Task> process)
             : this(name, new[] { verb }, parameters, help, process)
         {
         }
@@ -42,7 +43,7 @@ namespace Icm.TaskManager.CommandLine.Commands
             string name,
             string verb,
             string help,
-            Action<string[]> process)
+            Func<string[], Task> process)
         {
             Name = name;
             this.process = process;
@@ -55,7 +56,7 @@ namespace Icm.TaskManager.CommandLine.Commands
             string name,
             IEnumerable<string> verbs,
             string help,
-            Action<string[]> process)
+            Func<string[], Task> process)
         {
             Name = name;
             this.process = process;
@@ -67,7 +68,7 @@ namespace Icm.TaskManager.CommandLine.Commands
         private Command(
             string name,
             string help,
-            Action<string[]> process)
+            Func<string[], Task> process)
         {
             Name = name;
             this.process = process;
@@ -104,11 +105,13 @@ namespace Icm.TaskManager.CommandLine.Commands
                 yield return error;
             }
         }
+
         public string Name { get; }
+
         public string Help => $"{help}\r\nUsage: {Verbs.JoinStr("/")} {Parameters.JoinStr(" ", p => p.Name.Replace(" ", "_"))}\r\n";
 
 
-        public void Process(string[] tokens)
+        public async Task Process(string[] tokens)
         {
             var errors = ArgumentErrors(tokens).ToArray();
             if (errors.Any())
@@ -120,7 +123,7 @@ namespace Icm.TaskManager.CommandLine.Commands
             }
             else
             {
-                process(tokens);
+                await process(tokens);
             }
         }
 

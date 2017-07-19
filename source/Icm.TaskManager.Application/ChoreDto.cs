@@ -3,9 +3,9 @@ using NodaTime;
 
 namespace Icm.TaskManager.Application
 {
-    public class TimeDto
+    public class ChoreDto
     {
-        public TimeDto(Instant time, TimeKind kind)
+        public ChoreDto(Instant time, TimeKind kind)
         {
             Time = time;
             Kind = kind;

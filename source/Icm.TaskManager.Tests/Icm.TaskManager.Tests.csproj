@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>    
+    <TargetFramework>netstandard1.6</TargetFramework>
+    <LangVersion>7</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="4.19.3" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
+    <PackageReference Include="NodaTime" Version="2.2.0" />
+    <PackageReference Include="NodaTime.Testing" Version="2.2.0" />
+    <PackageReference Include="System.Reactive" Version="3.1.1" />
+    <PackageReference Include="System.ValueTuple" Version="4.3.1" />
+    <PackageReference Include="xunit" Version="2.2.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Icm.TaskManager.Application\Icm.TaskManager.Application.csproj" />
+    <ProjectReference Include="..\Icm.TaskManager.CommandLine\Icm.TaskManager.CommandLine.csproj" />
+    <ProjectReference Include="..\Icm.TaskManager.Domain\Icm.TaskManager.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

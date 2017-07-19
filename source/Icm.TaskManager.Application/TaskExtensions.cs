@@ -6,7 +6,7 @@ namespace Icm.TaskManager.Application
 {
     internal static class TaskExtensions
     {
-        internal static TaskDto ToDto(this Identified<TaskId, Task> idtask)
+        internal static TaskDto ToDto(this Identified<ChoreId, Chore> idtask)
         {
             var task = idtask.Value;
             return new TaskDto
