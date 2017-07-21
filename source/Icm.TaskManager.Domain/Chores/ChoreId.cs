@@ -1,20 +1,22 @@
-﻿namespace Icm.TaskManager.Domain.Tasks
+﻿using System;
+
+namespace Icm.TaskManager.Domain.Chores
 {
     public struct ChoreId
     {
-        public int Value { get; }
+        public Guid Value { get; }
 
-        public ChoreId(int id)
+        public ChoreId(Guid id)
         {
             Value = id;
         }
 
-        public static implicit operator int(ChoreId id)
+        public static implicit operator Guid(ChoreId id)
         {
             return id.Value;
         }
 
-        public static implicit operator ChoreId(int id)
+        public static implicit operator ChoreId(Guid id)
         {
             return new ChoreId(id);
         }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using NodaTime;
 
@@ -6,32 +7,34 @@ namespace Icm.TaskManager.Application
 {
     public interface IChoreApplicationService
     {
-        Task AddReminder(int taskId, Instant reminder);
+        Task<Guid> Create(string description, Instant dueDate);
 
-        Task ChangeRecurrenceToDueDate(int id, Duration repeatInterval);
+        Task AddReminder(Guid choreId, Instant reminder);
 
-        Task ChangeRecurrenceToFinishDate(int id, Duration repeatInterval);
+        Task ChangeRecurrenceToDueDate(Guid choreId, Duration repeatInterval);
 
-        Task ChangeDescription(int taskId, string newDescription);
+        Task ChangeRecurrenceToFinishDate(Guid choreId, Duration repeatInterval);
 
-        Task ChangeLabels(int taskId, string newLabels);
+        Task ChangeDescription(Guid choreId, string newDescription);
 
-        Task ChangeNotes(int taskId, string newNotes);
+        Task ChangeLabels(Guid choreId, string newLabels);
 
-        Task ChangePriority(int taskId, int newPriority);
+        Task ChangeNotes(Guid choreId, string newNotes);
 
-        Task ChangeDueDate(int taskId, Instant newDueDate);
+        Task ChangePriority(Guid choreId, int newPriority);
 
-        Task<int> Create(string description, Instant dueDate);
+        Task ChangeStartDate(Guid choreId, Instant newStartDate);
 
-        Task<TaskDto> GetById(int taskId);
+        Task ChangeDueDate(Guid choreId, Instant newDueDate);
 
-        Task<IEnumerable<TaskDto>> GetTasks(int taskIdFrom);
+        Task<ChoreDto> GetById(Guid choreId);
 
-        Task<int?> Finish(int taskId);
+        Task<IEnumerable<ChoreDto>> GetChoresFrom(Guid choreId);
 
-        Task Start(int taskId);
+        Task<Guid?> Finish(Guid choreId);
 
-        Task<IEnumerable<ChoreDto>> PendingTimes();
+        Task Start(Guid choreId);
+
+        Task<IEnumerable<TimeDto>> PendingTimes();
     }
 }

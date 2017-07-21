@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using NodaTime;
 
-namespace Icm.TaskManager.Domain.Tasks
+namespace Icm.TaskManager.Domain.Chores
 {
     public interface IChoreRepository : IRepository<ChoreId, Chore>
     {

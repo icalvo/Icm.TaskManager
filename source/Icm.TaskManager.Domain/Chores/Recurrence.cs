@@ -1,6 +1,6 @@
 ﻿using NodaTime;
 
-namespace Icm.TaskManager.Domain.Tasks
+namespace Icm.TaskManager.Domain.Chores
 {
     public abstract class Recurrence
     {

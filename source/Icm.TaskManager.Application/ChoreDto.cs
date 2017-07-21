@@ -1,23 +1,32 @@
-﻿using Icm.TaskManager.Domain;
+﻿using System;
+using System.Collections.Generic;
+using Icm.TaskManager.Domain.Chores;
 using NodaTime;
 
 namespace Icm.TaskManager.Application
 {
     public class ChoreDto
     {
-        public ChoreDto(Instant time, TimeKind kind)
-        {
-            Time = time;
-            Kind = kind;
-        }
+        public Guid Id { get; set; }
 
-        public Instant Time { get; }
+        public string Description { get; set; }
 
-        public TimeKind Kind { get; }
+        public Instant CreationDate { get; set; }
 
-        public override string ToString()
-        {
-            return $"{Kind} {Time}";
-        }
+        public Instant? StartDate { get; set; }
+
+        public Instant DueDate { get; set; }
+
+        public Instant? FinishDate { get; set; }
+
+        public Recurrence Recurrence { get; set; }
+
+        public int Priority { get; set; }
+
+        public string Notes { get; set; }
+
+        public string Labels { get; set; }
+
+        public ICollection<Instant> Reminders { get; set; }
     }
 }

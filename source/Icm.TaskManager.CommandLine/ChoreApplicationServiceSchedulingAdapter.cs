@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reactive.Concurrency;
-using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using Icm.TaskManager.Application;
 using Icm.TaskManager.Domain;
@@ -13,15 +12,15 @@ namespace Icm.TaskManager.CommandLine
     {
         private readonly IChoreApplicationService impl;
         private readonly IScheduler scheduler;
-        private readonly IObserver<ChoreDto> timerStarts;
-        private readonly IObserver<ChoreDto> timerExpirations;
+        private readonly IObserver<TimeDto> timerStarts;
+        private readonly IObserver<TimeDto> timerExpirations;
         private readonly IDictionary<Instant, IDisposable> pending;
 
         public ChoreApplicationServiceSchedulingAdapter(
             IChoreApplicationService impl,
             IScheduler scheduler,
-            IObserver<ChoreDto> timerStarts,
-            IObserver<ChoreDto> timerExpirations)
+            IObserver<TimeDto> timerStarts,
+            IObserver<TimeDto> timerExpirations)
         {
             this.impl = impl;
             this.scheduler = scheduler;
@@ -30,19 +29,25 @@ namespace Icm.TaskManager.CommandLine
             pending = new Dictionary<Instant, IDisposable>();
         }
 
+        public void Complete()
+        {
+            timerStarts.OnCompleted();
+            timerExpirations.OnCompleted();
+        }
+
         public async Task ScheduleExisting()
         {
             var pendingTimes = await impl.PendingTimes();
             pendingTimes.Execute(Schedule);
         }
 
-        private void Schedule(ChoreDto pendingChore)
+        private void Schedule(TimeDto pendingTime)
         {
             var scheduleHandler = scheduler.Schedule(
-                pendingChore.Time.ToDateTimeOffset(),
-                () => timerExpirations.OnNext(pendingChore));
-            pending.Add(pendingChore.Time, scheduleHandler);
-            timerStarts.OnNext(pendingChore);
+                pendingTime.Time.ToDateTimeOffset(),
+                () => timerExpirations.OnNext(pendingTime));
+            pending.Add(pendingTime.Time, scheduleHandler);
+            timerStarts.OnNext(pendingTime);
         }
 
         private void Unschedule(Instant instant)
@@ -51,81 +56,52 @@ namespace Icm.TaskManager.CommandLine
             scheduleHandler.Dispose();
         }
 
-        async Task IChoreApplicationService.AddReminder(int taskId, Instant reminder)
+        async Task IChoreApplicationService.AddReminder(Guid choreId, Instant reminder)
         {
-            await impl.AddReminder(taskId, reminder);
-            Schedule(new ChoreDto(reminder, TimeKind.Reminder));
+            await impl.AddReminder(choreId, reminder);
+            Schedule(new TimeDto(reminder, TimeKind.Reminder));
         }
 
-        Task IChoreApplicationService.ChangeRecurrenceToDueDate(int id, Duration repeatInterval)
-        {
-            return impl.ChangeRecurrenceToDueDate(id, repeatInterval);
-        }
-
-        Task IChoreApplicationService.ChangeRecurrenceToFinishDate(int id, Duration repeatInterval)
-        {
-            return impl.ChangeRecurrenceToFinishDate(id, repeatInterval);
-        }
-
-        Task IChoreApplicationService.ChangeDescription(int taskId, string newDescription)
-        {
-            return impl.ChangeDescription(taskId, newDescription);
-        }
-
-        Task IChoreApplicationService.ChangeLabels(int taskId, string newLabels)
-        {
-            return impl.ChangeLabels(taskId, newLabels);
-        }
-
-        Task IChoreApplicationService.ChangeNotes(int taskId, string newNotes)
-        {
-            return impl.ChangeNotes(taskId, newNotes);
-        }
-
-        Task IChoreApplicationService.ChangePriority(int taskId, int newPriority)
-        {
-            return impl.ChangePriority(taskId, newPriority);
-        }
-
-        public async Task ChangeDueDate(int taskId, Instant newDueDate)
+        public async Task ChangeDueDate(Guid taskId, Instant newDueDate)
         {
             var dto = await impl.GetById(taskId);
             await impl.ChangeDueDate(taskId, newDueDate);
             Unschedule(dto.DueDate);
-            Schedule(new ChoreDto(newDueDate, TimeKind.DueDate));
+            Schedule(new TimeDto(newDueDate, TimeKind.DueDate));
         }
 
-        async Task<int> IChoreApplicationService.Create(string description, Instant dueDate)
+        async Task<Guid> IChoreApplicationService.Create(string description, Instant dueDate)
         {
             var taskId = await impl.Create(description, dueDate);
             var dto = await impl.GetById(taskId);
-            Schedule(new ChoreDto(dto.DueDate, TimeKind.DueDate));
+            Schedule(new TimeDto(dto.DueDate, TimeKind.DueDate));
             return taskId;
         }
 
-        Task<TaskDto> IChoreApplicationService.GetById(int taskId)
-        {
-            return impl.GetById(taskId);
-        }
 
-        Task<IEnumerable<TaskDto>> IChoreApplicationService.GetTasks(int taskIdFrom)
-        {
-            return impl.GetTasks(taskIdFrom);
-        }
+        Task IChoreApplicationService.ChangeRecurrenceToDueDate(Guid id, Duration repeatInterval) => impl.ChangeRecurrenceToDueDate(id, repeatInterval);
 
-        Task<int?> IChoreApplicationService.Finish(int taskId)
-        {
-            return impl.Finish(taskId);
-        }
+        Task IChoreApplicationService.ChangeStartDate(Guid taskId, Instant newStartDate) => impl.ChangeStartDate(taskId, newStartDate);
 
-        Task IChoreApplicationService.Start(int taskId)
-        {
-            return impl.Start(taskId);
-        }
+        Task IChoreApplicationService.ChangeRecurrenceToFinishDate(Guid id, Duration repeatInterval) => impl.ChangeRecurrenceToFinishDate(id, repeatInterval);
 
-        Task<IEnumerable<ChoreDto>> IChoreApplicationService.PendingTimes()
-        {
-            return impl.PendingTimes();
-        }
+        Task IChoreApplicationService.ChangeDescription(Guid taskId, string newDescription) => impl.ChangeDescription(taskId, newDescription);
+
+        Task IChoreApplicationService.ChangeLabels(Guid taskId, string newLabels) => impl.ChangeLabels(taskId, newLabels);
+
+        Task IChoreApplicationService.ChangeNotes(Guid taskId, string newNotes) => impl.ChangeNotes(taskId, newNotes);
+
+
+        Task IChoreApplicationService.ChangePriority(Guid taskId, int newPriority) => impl.ChangePriority(taskId, newPriority);
+
+        Task<ChoreDto> IChoreApplicationService.GetById(Guid choreId) => impl.GetById(choreId);
+
+        Task<IEnumerable<ChoreDto>> IChoreApplicationService.GetChoresFrom(Guid choreId) => impl.GetChoresFrom(choreId);
+
+        Task<Guid?> IChoreApplicationService.Finish(Guid taskId) => impl.Finish(taskId);
+
+        Task IChoreApplicationService.Start(Guid taskId) => impl.Start(taskId);
+
+        Task<IEnumerable<TimeDto>> IChoreApplicationService.PendingTimes() => impl.PendingTimes();
     }
 }

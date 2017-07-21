@@ -2,8 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Icm.TaskManager.Domain.Tasks;
-using Icm.TaskManager.Domain.Tasks.Icm.TaskManager.Domain.Tasks;
+using Icm.TaskManager.Domain.Chores;
+using Icm.TaskManager.Domain.Chores.Icm.TaskManager.Domain.Tasks;
 using static System.Threading.Tasks.Task;
 using Task = System.Threading.Tasks.Task;
 
@@ -76,6 +76,10 @@ namespace Icm.TaskManager.Domain
         IEnumerator IEnumerable.GetEnumerator()
         {
             return Store.Values.GetEnumerator();
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

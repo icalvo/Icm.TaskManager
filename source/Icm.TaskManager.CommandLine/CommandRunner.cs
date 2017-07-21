@@ -106,6 +106,7 @@ namespace Icm.TaskManager.CommandLine
                     {
                         Console.Error.WriteLine($"ERROR: {ex.Message}");
                         Console.Out.WriteLine("Use the 'stack' command to see the stack trace.");
+                        throw;
                     }
                 });
         }

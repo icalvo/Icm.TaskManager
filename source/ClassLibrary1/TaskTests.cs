@@ -1,10 +1,10 @@
 ﻿using System;
 using FluentAssertions;
-using Icm.TaskManager.Domain.Tasks;
+using Icm.TaskManager.Domain.Chores;
 using NodaTime;
 using Xunit;
 
-namespace Icm.TaskManager.Tests
+namespace Icm.ChoreManager.Tests
 {
     public class TaskTests
     {

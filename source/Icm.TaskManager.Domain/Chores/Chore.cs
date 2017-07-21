@@ -2,12 +2,36 @@
 using System.Collections.Generic;
 using NodaTime;
 
-namespace Icm.TaskManager.Domain.Tasks
+namespace Icm.TaskManager.Domain.Chores
 {
     public class Chore
     {
         private Instant? startDate;
         private Instant? finishDate;
+
+        private Chore(
+            string description,
+            Instant creationDate,
+            Instant dueDate,
+            Instant? finishDate,
+            Recurrence recurrence,
+            int priority,
+            string notes,
+            string labels,
+            ICollection<Instant> reminders,
+            Instant? startDate)
+        {
+            Description = description;
+            CreationDate = creationDate;
+            DueDate = dueDate;
+            FinishDate = finishDate;
+            Recurrence = recurrence;
+            Priority = priority;
+            Notes = notes;
+            Labels = labels;
+            Reminders = reminders;
+            StartDate = startDate;
+        }
 
         public string Description { get; set; }
 
@@ -15,10 +39,7 @@ namespace Icm.TaskManager.Domain.Tasks
 
         public Instant? StartDate
         {
-            get
-            {
-                return startDate;
-            }
+            get => startDate;
 
             set
             {
@@ -35,10 +56,7 @@ namespace Icm.TaskManager.Domain.Tasks
 
         public Instant? FinishDate
         {
-            get
-            {
-                return finishDate;
-            }
+            get => finishDate;
 
             set
             {
@@ -68,38 +86,34 @@ namespace Icm.TaskManager.Domain.Tasks
 
         public bool IsDone => FinishDate.HasValue;
 
-        public Chore CopyWithNewDueDate(Instant newDueDate, Instant now)
-        {
-            var newTask = new Chore
-            {
-                Description = Description,
-                CreationDate = now,
-                DueDate = newDueDate,
-                Recurrence = Recurrence,
-                Priority = Priority,
-                Notes = Notes,
-                Labels = Labels
-            };
-
-            return newTask;
-        }
+        public Chore CopyWithNewDueDate(Instant newDueDate, Instant now) =>
+            new Chore(
+                description: Description,
+                creationDate: now,
+                dueDate: newDueDate,
+                finishDate: null,
+                recurrence: Recurrence,
+                priority: Priority,
+                notes: Notes,
+                labels: Labels,
+                reminders: Reminders,
+                startDate: null);
 
         public static Chore Create(
             string description,
             Instant dueDate,
-            Instant now)
-        {
-            var newTask = new Chore
-            {
-                Description = description,
-                CreationDate = now,
-                DueDate = dueDate,
-                Priority = 3,
-                Reminders = new HashSet<Instant>()
-            };
-
-            return newTask;
-        }
+            Instant now) =>
+        new Chore(
+            description: description,
+            creationDate: now,
+            dueDate: dueDate,
+            finishDate: null,
+            recurrence: null,
+            priority: 3,
+            notes: null,
+            labels: null,
+            reminders: new HashSet<Instant>(),
+            startDate: null);
 
         public ChoreMemento ToMemento(ChoreId id)
         {
@@ -121,19 +135,17 @@ namespace Icm.TaskManager.Domain.Tasks
 
         public static Chore FromMemento(ChoreMemento memento)
         {
-            return new Chore
-            {
-                CreationDate = memento.CreationDate,
-                Description = memento.Description,
-                DueDate = memento.DueDate,
-                FinishDate = memento.FinishDate,
-                Labels = memento.Labels,
-                Notes = memento.Notes,
-                Recurrence = memento.Recurrence,
-                Reminders = new List<Instant>(memento.Reminders),
-                Priority = memento.Priority,
-                StartDate = memento.StartDate
-            };
+            return new Chore(
+                description: memento.Description,
+                creationDate: memento.CreationDate,
+                dueDate: memento.DueDate,
+                finishDate: memento.FinishDate,
+                labels: memento.Labels,
+                notes: memento.Notes,
+                recurrence: memento.Recurrence,
+                reminders: memento.Reminders == null? new List<Instant>() : new List<Instant>(memento.Reminders),
+                priority: memento.Priority,
+                startDate: memento.StartDate);
         }
 
         public override string ToString()

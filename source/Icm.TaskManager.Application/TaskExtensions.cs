@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
-using Icm.TaskManager.Domain.Tasks;
+using Icm.TaskManager.Domain.Chores;
 using NodaTime;
 
 namespace Icm.TaskManager.Application
 {
     internal static class TaskExtensions
     {
-        internal static TaskDto ToDto(this Identified<ChoreId, Chore> idtask)
+        internal static ChoreDto ToDto(this Identified<ChoreId, Chore> idtask)
         {
             var task = idtask.Value;
-            return new TaskDto
+            return new ChoreDto
             {
                 Id = idtask.Id,
                 CreationDate = task.CreationDate,

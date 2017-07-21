@@ -1,25 +1,25 @@
 ﻿using System.IO;
 using System.Linq;
 using Icm.TaskManager.Application;
-using Icm.TaskManager.Domain.Tasks;
+using Icm.TaskManager.Domain.Chores;
 
 namespace Icm.TaskManager.CommandLine
 {
     internal static class OutputExtensions
     {
-        internal static async System.Threading.Tasks.Task ShowDetails(this TextWriter output, ChoreId choreId, TaskDto task)
+        internal static async System.Threading.Tasks.Task ShowDetails(this TextWriter output, ChoreId choreId, ChoreDto chore)
         {
-            await output.WriteLineAsync($"Task {choreId}: {task.Description}");
-            await output.WriteLineAsync($"  Start: {task.StartDate}");
-            await output.WriteLineAsync($"  Due: {task.DueDate}");
-            await output.WriteLineAsync($"  Finish: {task.FinishDate}");
-            await output.WriteLineAsync($"  Priority: {task.Priority}");
-            await output.WriteLineAsync($"  Labels: {task.Labels}");
-            await output.WriteLineAsync($"  Notes: {task.Notes}");
-            if (task.Reminders.Any())
+            await output.WriteLineAsync($"Task {choreId}: {chore.Description}");
+            await output.WriteLineAsync($"  Start: {chore.StartDate}");
+            await output.WriteLineAsync($"  Due: {chore.DueDate}");
+            await output.WriteLineAsync($"  Finish: {chore.FinishDate}");
+            await output.WriteLineAsync($"  Priority: {chore.Priority}");
+            await output.WriteLineAsync($"  Labels: {chore.Labels}");
+            await output.WriteLineAsync($"  Notes: {chore.Notes}");
+            if (chore.Reminders.Any())
             {
                 output.WriteLine("  Reminders:");
-                foreach (var reminder in task.Reminders)
+                foreach (var reminder in chore.Reminders)
                 {
                     output.WriteLine($"  - {reminder}");
                 }
@@ -30,22 +30,22 @@ namespace Icm.TaskManager.CommandLine
             }
         }
 
-        internal static async System.Threading.Tasks.Task ShowDetailsBrief(this TextWriter output, ChoreId choreId, TaskDto task)
+        internal static async System.Threading.Tasks.Task ShowDetailsBrief(this TextWriter output, ChoreId choreId, ChoreDto chore)
         {
-            await output.WriteLineAsync($"Task {choreId}: {task.Description}");
-            await output.WriteLnIfAsync($"  Start: {task.StartDate}", task.StartDate.HasValue);
-            await output.WriteLineAsync($"  Due: {task.DueDate}");
-            await output.WriteLnIfAsync($"  Finish: {task.FinishDate}", task.FinishDate.HasValue);
-            await output.WriteLineAsync($"  Priority: {task.Priority}");
-            await output.WriteLnIfAsync($"  Labels: {task.Labels}", !string.IsNullOrEmpty(task.Labels));
-            await output.WriteLnIfAsync($"  Notes: {task.Notes}", !string.IsNullOrEmpty(task.Notes));
-            if (!task.Reminders.Any())
+            await output.WriteLineAsync($"Task {choreId}: {chore.Description}");
+            await output.WriteLnIfAsync($"  Start: {chore.StartDate}", chore.StartDate.HasValue);
+            await output.WriteLineAsync($"  Due: {chore.DueDate}");
+            await output.WriteLnIfAsync($"  Finish: {chore.FinishDate}", chore.FinishDate.HasValue);
+            await output.WriteLineAsync($"  Priority: {chore.Priority}");
+            await output.WriteLnIfAsync($"  Labels: {chore.Labels}", !string.IsNullOrEmpty(chore.Labels));
+            await output.WriteLnIfAsync($"  Notes: {chore.Notes}", !string.IsNullOrEmpty(chore.Notes));
+            if (!chore.Reminders.Any())
             {
                 return;
             }
 
             await output.WriteLineAsync("  Reminders:");
-            foreach (var reminder in task.Reminders)
+            foreach (var reminder in chore.Reminders)
             {
                 await output.WriteLineAsync($"  - {reminder}");
             }

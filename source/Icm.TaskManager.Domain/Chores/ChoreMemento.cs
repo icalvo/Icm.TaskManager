@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using NodaTime;
 
-namespace Icm.TaskManager.Domain.Tasks
+namespace Icm.TaskManager.Domain.Chores
 {
     public class ChoreMemento
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public string Description { get; set; }
 

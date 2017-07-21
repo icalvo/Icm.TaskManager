@@ -1,4 +1,4 @@
-﻿namespace Icm.TaskManager.Domain.Tasks
+﻿namespace Icm.TaskManager.Domain.Chores
 {
     public class Identified<TKey, TValue>
     {

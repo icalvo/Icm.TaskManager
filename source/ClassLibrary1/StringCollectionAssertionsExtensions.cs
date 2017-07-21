@@ -1,17 +1,17 @@
-﻿using System.Reactive.Subjects;
-using FluentAssertions;
+﻿using FluentAssertions;
 using FluentAssertions.Collections;
+using FluentAssertions.Primitives;
 using Icm.TaskManager.CommandLine.Commands;
 
-namespace Icm.TaskManager.Tests
+namespace Icm.ChoreManager.Tests
 {
     internal static class StringCollectionAssertionsExtensions
     {
-        public static AndConstraint<StringCollectionAssertions> ShouldParseTo(
-            this string line, params string[] expected)
+        public static AndConstraint<StringCollectionAssertions> ParseTo(
+            this StringAssertions line, params string[] expected)
         {
-            var output = new Subject<string>();
-            return CommandLineTokenizer.Tokenize(line).Should().BeEquivalentTo(expected, $"it's the expected parse of [{line}]");
+            
+            return CommandLineTokenizer.Tokenize(line.Subject).Should().BeEquivalentTo(expected, $"it's the expected parse of [{line}]");
         }
     }
 }

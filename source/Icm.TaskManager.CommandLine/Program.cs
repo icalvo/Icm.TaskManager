@@ -5,6 +5,7 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Icm.TaskManager.Application;
 using Icm.TaskManager.CommandLine.Commands;
+using Icm.TaskManager.Domain.Chores;
 using Icm.TaskManager.Infrastructure;
 using NodaTime;
 using NodaTime.Text;
@@ -39,12 +40,12 @@ namespace Icm.TaskManager.CommandLine
             "show",
             new []
             {
-                new Parameter("chore id", Parameter.IntParses), 
+                new Parameter("chore id", Parameter.GuidParses), 
             },
             "shows chore details",
             async tokens =>
             {
-                int id = int.Parse(tokens[1]);
+                Guid id = Guid.Parse(tokens[1]);
                 var dto = await _svc.GetById(id);
                 await Console.Out.ShowDetailsBrief(id, dto);
             });
@@ -59,8 +60,8 @@ namespace Icm.TaskManager.CommandLine
             "finishes a chore",
             async tokens =>
             {
-                int id = int.Parse(tokens[1]);
-                int? newid = await _svc.Finish(id);
+                Guid id = Guid.Parse(tokens[1]);
+                Guid? newid = await _svc.Finish(id);
                 var dto = await _svc.GetById(id);
                 await Console.Out.ShowDetailsBrief(id, dto);
                 if (newid.HasValue)
@@ -73,13 +74,14 @@ namespace Icm.TaskManager.CommandLine
 
         internal static void Main()
         {
-            // var repo = new DapperChoreRepository(ConnectionStrings.ByName("Trolo"));
+            //// IChoreRepository RepoBuilder() => new DapperChoreRepository(ConnectionStrings.ByName("Trolo"));
+            //// IChoreRepository RepoBuilder() => InMemoryChoreRepository.WithStaticStorage();
+            IChoreRepository RepoBuilder() => new AzureChoreRepository();
 
-            var repo = new InMemoryChoreRepository();
-            IChoreApplicationService basicSvc = new ChoreApplicationService(repo, SystemClock.Instance);
+            IChoreApplicationService basicSvc = new ChoreApplicationService(RepoBuilder, SystemClock.Instance);
 
-            var timerExpirations = new Subject<ChoreDto>();
-            var timerStarts = new Subject<ChoreDto>();
+            var timerExpirations = new Subject<TimeDto>();
+            var timerStarts = new Subject<TimeDto>();
             var sched = new ChoreApplicationServiceSchedulingAdapter(basicSvc, TaskPoolScheduler.Default,
                 timerStarts,
                 timerExpirations);
@@ -100,7 +102,7 @@ namespace Icm.TaskManager.CommandLine
                 FinishChoreCommand);
 
             CommandRunner.QuitCommand.Verbs = new List<string> {"quit"};
-            runner.Run().Wait();
+            runner.Run().GetAwaiter().GetResult();
         }
     }
 }

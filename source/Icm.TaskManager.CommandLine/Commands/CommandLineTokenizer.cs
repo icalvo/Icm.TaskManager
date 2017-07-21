@@ -55,7 +55,7 @@ namespace Icm.TaskManager.CommandLine.Commands
         [NotNull]
         private static IEnumerable<CharResult> WhitespaceOutput(State state, char ch)
         {
-            if (state.InQuote)
+            if (state.InsideQuotes)
             {
                 foreach (var result in NormalOutput(state, ch))
                 {
@@ -74,7 +74,7 @@ namespace Icm.TaskManager.CommandLine.Commands
         [NotNull]
         private static State WhitespaceTransition(State state)
         {
-            if (state.InQuote)
+            if (state.InsideQuotes)
             {
                 return state;
             }
@@ -94,7 +94,7 @@ namespace Icm.TaskManager.CommandLine.Commands
             }
             else
             {
-                if (state.InQuote && state.PrevChar == '"')
+                if (state.InsideQuotes && state.PrevChar == '"')
                 {
                     // Doubled quote within a quoted range is like escaping
                     yield return new CharResult(' ', state.TokenNumber);
@@ -105,7 +105,7 @@ namespace Icm.TaskManager.CommandLine.Commands
         private static State QuoteTransition(State state)
         {
             return state
-                .WithInQuote(state.LastCharWasEscape == state.InQuote)
+                .WithInQuote(state.LastCharWasEscape == state.InsideQuotes)
                 .WithLastCharWasEscape(false);
         }
 
@@ -157,22 +157,22 @@ namespace Icm.TaskManager.CommandLine.Commands
         private class State
         {
             public readonly bool LastCharWasEscape;
-            public readonly bool InQuote;
-            public readonly char PrevChar;
+            public readonly bool InsideQuotes;
+            public readonly char? PrevChar;
             public readonly int TokenNumber;
 
             public State()
             {
                 LastCharWasEscape = false;
-                InQuote = false;
-                PrevChar = '\0';
+                InsideQuotes = false;
+                PrevChar = null;
                 TokenNumber = 1;
             }
 
-            private State(bool lastCharWasEscape, bool inQuote, char prevChar, int tokenNumber)
+            private State(bool lastCharWasEscape, bool insideQuotes, char? prevChar, int tokenNumber)
             {
                 LastCharWasEscape = lastCharWasEscape;
-                InQuote = inQuote;
+                InsideQuotes = insideQuotes;
                 PrevChar = prevChar;
                 TokenNumber = tokenNumber;
             }
@@ -181,7 +181,7 @@ namespace Icm.TaskManager.CommandLine.Commands
             {
                 return new State(
                     value,
-                    InQuote,
+                    InsideQuotes,
                     PrevChar,
                     TokenNumber);
             }
@@ -200,7 +200,7 @@ namespace Icm.TaskManager.CommandLine.Commands
                 return condition
                     ? new State(
                         LastCharWasEscape,
-                        InQuote,
+                        InsideQuotes,
                         PrevChar,
                         value)
                     : this;
@@ -209,7 +209,7 @@ namespace Icm.TaskManager.CommandLine.Commands
             public override string ToString()
             {
                 return
-                    $"[{PrevChar}] {TokenNumber:000} {(LastCharWasEscape ? "ESC" : "---")} {(InQuote ? "QUO" : "---")}";
+                    $"[{PrevChar}] {TokenNumber:000} {(LastCharWasEscape ? "ESC" : "---")} {(InsideQuotes ? "QUO" : "---")}";
             }
         }
 

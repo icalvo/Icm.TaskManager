@@ -1,10 +1,11 @@
-﻿using System.Threading.Tasks;
-using Icm.TaskManager.Domain.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Icm.TaskManager.Domain.Chores;
 using Task = System.Threading.Tasks.Task;
 
 namespace Icm.TaskManager.Domain
 {
-    public interface IRepository<TKey, TItem>
+    public interface IRepository<TKey, TItem> : IDisposable
     {
         Task<TKey> Add(TItem item);
 

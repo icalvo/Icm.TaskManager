@@ -51,7 +51,12 @@ namespace Icm.TaskManager.CommandLine.Commands
 
         public static bool IntParses(string arg)
         {
-            return int.TryParse(arg, out int i);
+            return int.TryParse(arg, out int _);
+        }
+
+        public static bool GuidParses(string arg)
+        {
+            return Guid.TryParse(arg, out Guid _);
         }
     }
 }
