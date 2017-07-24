@@ -35,6 +35,6 @@ namespace Icm.TaskManager.Application
 
         Task Start(Guid choreId);
 
-        Task<IEnumerable<TimeDto>> PendingTimes();
+        Task<IEnumerable<TimeDto>> PendingTimesAsync();
     }
 }

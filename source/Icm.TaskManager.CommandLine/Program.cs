@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Threading.Tasks;
 using Icm.TaskManager.Application;
 using Icm.TaskManager.CommandLine.Commands;
 using Icm.TaskManager.Domain.Chores;
@@ -14,7 +15,7 @@ namespace Icm.TaskManager.CommandLine
 {
     internal static class Program
     {
-        private static IChoreApplicationService _svc;
+        private static IChoreApplicationServiceSchedulingAdapter _svc;
 
         private static readonly Command CreateChoreCommand = new Command(
             "CreateChore",
@@ -74,6 +75,11 @@ namespace Icm.TaskManager.CommandLine
 
         internal static void Main()
         {
+            MainAsync().GetAwaiter().GetResult();
+        }
+
+        private static async Task MainAsync()
+        {
             //// IChoreRepository RepoBuilder() => new DapperChoreRepository(ConnectionStrings.ByName("Trolo"));
             //// IChoreRepository RepoBuilder() => InMemoryChoreRepository.WithStaticStorage();
             IChoreRepository RepoBuilder() => new AzureChoreRepository();
@@ -82,7 +88,7 @@ namespace Icm.TaskManager.CommandLine
 
             var timerExpirations = new Subject<TimeDto>();
             var timerStarts = new Subject<TimeDto>();
-            var sched = new ChoreApplicationServiceSchedulingAdapter(basicSvc, TaskPoolScheduler.Default,
+            _svc = new SchedulingAdapter(basicSvc, TaskPoolScheduler.Default,
                 timerStarts,
                 timerExpirations);
 
@@ -94,7 +100,7 @@ namespace Icm.TaskManager.CommandLine
                 .Select(dto => dto.ToString())
                 .Subscribe(x => Console.WriteLine($"Timer expired"));
 
-            _svc = sched;
+            await _svc.ScheduleExistingAsync();
 
             var runner = new CommandRunner(
                 CreateChoreCommand,
@@ -102,7 +108,7 @@ namespace Icm.TaskManager.CommandLine
                 FinishChoreCommand);
 
             CommandRunner.QuitCommand.Verbs = new List<string> {"quit"};
-            runner.Run().GetAwaiter().GetResult();
+            await runner.Run();
         }
     }
 }

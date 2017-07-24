@@ -120,7 +120,7 @@ namespace Icm.ChoreManager.Tests
 
             var repo = InMemoryChoreRepository.WithInstanceStorage();
 
-            IChoreApplicationService sut = new ChoreApplicationServiceSchedulingAdapter(
+            IChoreApplicationService sut = new SchedulingAdapter(
                 new ChoreApplicationService(() => repo, clock),
                 scheduler, 
                 timerStarts, 

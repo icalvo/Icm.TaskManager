@@ -8,7 +8,7 @@ using NodaTime;
 
 namespace Icm.TaskManager.CommandLine
 {
-    public class ChoreApplicationServiceSchedulingAdapter : IChoreApplicationService
+    public class SchedulingAdapter : IChoreApplicationServiceSchedulingAdapter
     {
         private readonly IChoreApplicationService impl;
         private readonly IScheduler scheduler;
@@ -16,7 +16,7 @@ namespace Icm.TaskManager.CommandLine
         private readonly IObserver<TimeDto> timerExpirations;
         private readonly IDictionary<Instant, IDisposable> pending;
 
-        public ChoreApplicationServiceSchedulingAdapter(
+        public SchedulingAdapter(
             IChoreApplicationService impl,
             IScheduler scheduler,
             IObserver<TimeDto> timerStarts,
@@ -35,9 +35,9 @@ namespace Icm.TaskManager.CommandLine
             timerExpirations.OnCompleted();
         }
 
-        public async Task ScheduleExisting()
+        public async Task ScheduleExistingAsync()
         {
-            var pendingTimes = await impl.PendingTimes();
+            var pendingTimes = await impl.PendingTimesAsync();
             pendingTimes.Execute(Schedule);
         }
 
@@ -102,6 +102,6 @@ namespace Icm.TaskManager.CommandLine
 
         Task IChoreApplicationService.Start(Guid taskId) => impl.Start(taskId);
 
-        Task<IEnumerable<TimeDto>> IChoreApplicationService.PendingTimes() => impl.PendingTimes();
+        Task<IEnumerable<TimeDto>> IChoreApplicationService.PendingTimesAsync() => impl.PendingTimesAsync();
     }
 }

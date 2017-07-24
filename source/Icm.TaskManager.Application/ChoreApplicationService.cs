@@ -222,7 +222,7 @@ namespace Icm.TaskManager.Application
             }
         }
 
-        public async Task<IEnumerable<TimeDto>> PendingTimes()
+        public async Task<IEnumerable<TimeDto>> PendingTimesAsync()
         {
             using (var choreRepository = buildChoreRepository())
             {
