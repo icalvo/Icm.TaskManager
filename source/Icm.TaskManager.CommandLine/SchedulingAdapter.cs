@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Reactive.Concurrency;
 using System.Threading.Tasks;
-using Icm.TaskManager.Application;
-using Icm.TaskManager.Domain;
+using Icm.ChoreManager.Application;
+using Icm.ChoreManager.Domain;
 using NodaTime;
 
-namespace Icm.TaskManager.CommandLine
+namespace Icm.ChoreManager.CommandLine
 {
     public class SchedulingAdapter : IChoreApplicationServiceSchedulingAdapter
     {
@@ -56,51 +56,51 @@ namespace Icm.TaskManager.CommandLine
             scheduleHandler.Dispose();
         }
 
-        async Task IChoreApplicationService.AddReminder(Guid choreId, Instant reminder)
+        async Task IChoreApplicationService.AddReminderAsync(Guid choreId, Instant reminder)
         {
-            await impl.AddReminder(choreId, reminder);
+            await impl.AddReminderAsync(choreId, reminder);
             Schedule(new TimeDto(reminder, TimeKind.Reminder));
         }
 
-        public async Task ChangeDueDate(Guid taskId, Instant newDueDate)
+        async Task IChoreApplicationService.ChangeDueDateAsync(Guid choreId, Instant newDueDate)
         {
-            var dto = await impl.GetById(taskId);
-            await impl.ChangeDueDate(taskId, newDueDate);
+            var dto = await impl.GetByIdAsync(choreId);
+            await impl.ChangeDueDateAsync(choreId, newDueDate);
             Unschedule(dto.DueDate);
             Schedule(new TimeDto(newDueDate, TimeKind.DueDate));
         }
 
-        async Task<Guid> IChoreApplicationService.Create(string description, Instant dueDate)
+        async Task<Guid> IChoreApplicationService.CreateAsync(string description, Instant dueDate)
         {
-            var taskId = await impl.Create(description, dueDate);
-            var dto = await impl.GetById(taskId);
+            var choreId = await impl.CreateAsync(description, dueDate);
+            var dto = await impl.GetByIdAsync(choreId);
             Schedule(new TimeDto(dto.DueDate, TimeKind.DueDate));
-            return taskId;
+            return choreId;
         }
 
 
-        Task IChoreApplicationService.ChangeRecurrenceToDueDate(Guid id, Duration repeatInterval) => impl.ChangeRecurrenceToDueDate(id, repeatInterval);
+        Task IChoreApplicationService.ChangeRecurrenceToDueDateAsync(Guid choreId, Duration repeatInterval) => impl.ChangeRecurrenceToDueDateAsync(choreId, repeatInterval);
 
-        Task IChoreApplicationService.ChangeStartDate(Guid taskId, Instant newStartDate) => impl.ChangeStartDate(taskId, newStartDate);
+        Task IChoreApplicationService.ChangeStartDateAsync(Guid choreId, Instant newStartDate) => impl.ChangeStartDateAsync(choreId, newStartDate);
 
-        Task IChoreApplicationService.ChangeRecurrenceToFinishDate(Guid id, Duration repeatInterval) => impl.ChangeRecurrenceToFinishDate(id, repeatInterval);
+        Task IChoreApplicationService.ChangeRecurrenceToFinishDateAsync(Guid choreId, Duration repeatInterval) => impl.ChangeRecurrenceToFinishDateAsync(choreId, repeatInterval);
 
-        Task IChoreApplicationService.ChangeDescription(Guid taskId, string newDescription) => impl.ChangeDescription(taskId, newDescription);
+        Task IChoreApplicationService.ChangeDescriptionAsync(Guid choreId, string newDescription) => impl.ChangeDescriptionAsync(choreId, newDescription);
 
-        Task IChoreApplicationService.ChangeLabels(Guid taskId, string newLabels) => impl.ChangeLabels(taskId, newLabels);
+        Task IChoreApplicationService.ChangeLabelsAsync(Guid choreId, string newLabels) => impl.ChangeLabelsAsync(choreId, newLabels);
 
-        Task IChoreApplicationService.ChangeNotes(Guid taskId, string newNotes) => impl.ChangeNotes(taskId, newNotes);
+        Task IChoreApplicationService.ChangeNotesAsync(Guid choreId, string newNotes) => impl.ChangeNotesAsync(choreId, newNotes);
 
 
-        Task IChoreApplicationService.ChangePriority(Guid taskId, int newPriority) => impl.ChangePriority(taskId, newPriority);
+        Task IChoreApplicationService.ChangePriorityAsync(Guid choreId, int newPriority) => impl.ChangePriorityAsync(choreId, newPriority);
 
-        Task<ChoreDto> IChoreApplicationService.GetById(Guid choreId) => impl.GetById(choreId);
+        Task<ChoreDto> IChoreApplicationService.GetByIdAsync(Guid choreId) => impl.GetByIdAsync(choreId);
 
-        Task<IEnumerable<ChoreDto>> IChoreApplicationService.GetChoresFrom(Guid choreId) => impl.GetChoresFrom(choreId);
+        Task<IEnumerable<ChoreDto>> IChoreApplicationService.GetChoresFromAsync(Guid choreId) => impl.GetChoresFromAsync(choreId);
 
-        Task<Guid?> IChoreApplicationService.Finish(Guid taskId) => impl.Finish(taskId);
+        Task<Guid?> IChoreApplicationService.FinishAsync(Guid choreId) => impl.FinishAsync(choreId);
 
-        Task IChoreApplicationService.Start(Guid taskId) => impl.Start(taskId);
+        Task IChoreApplicationService.StartAsync(Guid choreId) => impl.StartAsync(choreId);
 
         Task<IEnumerable<TimeDto>> IChoreApplicationService.PendingTimesAsync() => impl.PendingTimesAsync();
     }

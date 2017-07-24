@@ -1,7 +1,7 @@
-﻿using Icm.TaskManager.Domain;
+﻿using Icm.ChoreManager.Domain;
 using NodaTime;
 
-namespace Icm.TaskManager.Application
+namespace Icm.ChoreManager.Application
 {
     public class TimeDto
     {

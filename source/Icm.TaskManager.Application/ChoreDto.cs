@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Icm.TaskManager.Domain.Chores;
+using Icm.ChoreManager.Domain.Chores;
 using NodaTime;
 
-namespace Icm.TaskManager.Application
+namespace Icm.ChoreManager.Application
 {
     public class ChoreDto
     {

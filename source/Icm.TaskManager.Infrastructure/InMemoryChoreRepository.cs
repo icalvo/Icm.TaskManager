@@ -3,13 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Icm.TaskManager.Domain;
-using Icm.TaskManager.Domain.Chores;
-using Icm.TaskManager.Domain.Chores.Icm.TaskManager.Domain.Tasks;
+using Icm.ChoreManager.Domain;
+using Icm.ChoreManager.Domain.Chores;
 using NodaTime;
 using static System.Threading.Tasks.Task;
 
-namespace Icm.TaskManager.Infrastructure
+namespace Icm.ChoreManager.Infrastructure
 {
     public class InMemoryChoreRepository : IChoreRepository, IEnumerable<ChoreMemento>
     {
@@ -34,7 +33,7 @@ namespace Icm.TaskManager.Infrastructure
 
         private readonly List<Operation> transactionLog = new List<Operation>();
 
-        public Task<ChoreId> Add(Chore item)
+        public Task<ChoreId> AddAsync(Chore item)
         {
             var newId = Guid.NewGuid();
             transactionLog.Add(new AddOperation(item.ToMemento(newId)));
@@ -46,19 +45,19 @@ namespace Icm.TaskManager.Infrastructure
             return FromResult(Identified.Create(id, Chore.FromMemento(storage[id])));
         }
 
-        public Task Update(Identified<ChoreId, Chore> identifiedChore)
+        public Task UpdateAsync(Identified<ChoreId, Chore> identifiedChore)
         {
             transactionLog.Add(new UpdateOperation(identifiedChore.Id, identifiedChore.ToMemento()));
             return CompletedTask;
         }
 
-        public Task Delete(ChoreId key)
+        public Task DeleteAsync(ChoreId key)
         {
             transactionLog.Add(new DeleteOperation(key));
             return CompletedTask;
         }
 
-        public Task Save()
+        public Task SaveAsync()
         {
             lock (StorageLock)
             {
@@ -72,7 +71,7 @@ namespace Icm.TaskManager.Infrastructure
             return CompletedTask;
         }
 
-        public Task<IEnumerable<(Instant Time, TimeKind Kind)>> GetActiveReminders()
+        public Task<IEnumerable<(Instant Time, TimeKind Kind)>> GetActiveRemindersAsync()
         {
             return FromResult(
                 storage.Values

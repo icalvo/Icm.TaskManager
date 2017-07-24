@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using FluentAssertions.Collections;
 using FluentAssertions.Primitives;
-using Icm.TaskManager.CommandLine.Commands;
+using Icm.ChoreManager.CommandLine.Commands;
 
 namespace Icm.ChoreManager.Tests
 {

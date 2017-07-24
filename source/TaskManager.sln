@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Icm.TaskManager.Domain", "Icm.TaskManager.Domain\Icm.TaskManager.Domain.csproj", "{51E9020E-FCE5-480A-A3EB-1F22AD97B418}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Icm.ChoreManager.Domain", "Icm.TaskManager.Domain\Icm.ChoreManager.Domain.csproj", "{51E9020E-FCE5-480A-A3EB-1F22AD97B418}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Icm.TaskManager.Application", "Icm.TaskManager.Application\Icm.TaskManager.Application.csproj", "{3B083D48-6AC5-4A52-9C65-6C2D72269359}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Icm.ChoreManager.Application", "Icm.TaskManager.Application\Icm.ChoreManager.Application.csproj", "{3B083D48-6AC5-4A52-9C65-6C2D72269359}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Icm.TaskManager.Infrastructure", "Icm.TaskManager.Infrastructure\Icm.TaskManager.Infrastructure.csproj", "{35829DDB-1783-483E-9C7E-D0B342BFBF12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Icm.ChoreManager.Infrastructure", "Icm.TaskManager.Infrastructure\Icm.ChoreManager.Infrastructure.csproj", "{35829DDB-1783-483E-9C7E-D0B342BFBF12}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Icm.TaskManager.CommandLine", "Icm.TaskManager.CommandLine\Icm.TaskManager.CommandLine.csproj", "{56B63163-8029-47C1-A265-22639C145EC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Icm.ChoreManager.CommandLine", "Icm.TaskManager.CommandLine\Icm.ChoreManager.CommandLine.csproj", "{56B63163-8029-47C1-A265-22639C145EC6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Icm.ChoreManager.Tests", "ClassLibrary1\Icm.ChoreManager.Tests.csproj", "{4F60A3FE-9600-4238-8AE3-FE2BA863F82D}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Icm.TaskManager.Domain.Fs", "Icm.TaskManager.Domain.Fs\Icm.TaskManager.Domain.Fs.fsproj", "{BB36D038-6C8C-4DBC-9A1E-C3589A08FC92}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Icm.ChoreManager.Domain.Fs", "Icm.TaskManager.Domain.Fs\Icm.ChoreManager.Domain.Fs.fsproj", "{BB36D038-6C8C-4DBC-9A1E-C3589A08FC92}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

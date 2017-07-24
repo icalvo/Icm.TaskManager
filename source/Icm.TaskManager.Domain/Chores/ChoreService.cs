@@ -1,6 +1,6 @@
 ﻿using NodaTime;
 
-namespace Icm.TaskManager.Domain.Chores
+namespace Icm.ChoreManager.Domain.Chores
 {
     public class ChoreService : IChoreService
     {
@@ -11,7 +11,7 @@ namespace Icm.TaskManager.Domain.Chores
             this.clock = clock;
         }
 
-        public Chore CreateTask(string description, Instant dueDate)
+        public Chore CreateChore(string description, Instant dueDate)
         {
             return Chore.Create(
                 description,
@@ -21,14 +21,10 @@ namespace Icm.TaskManager.Domain.Chores
 
         public Chore Finish(Chore chore)
         {
-            return Finish(chore, clock.GetCurrentInstant());
-        }
-
-        public Chore Finish(Chore chore, Instant finishDate)
-        {
+            var finishDate = clock.GetCurrentInstant();
             chore.FinishDate = finishDate;
             return chore.Recurrence.Match(
-                recurrence => recurrence.CreateRecurringTask(chore, finishDate));
+                recurrence => recurrence.CreateRecurringChore(chore, finishDate));
         }
     }
 }

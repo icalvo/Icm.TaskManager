@@ -1,6 +1,6 @@
 ﻿using NodaTime;
 
-namespace Icm.TaskManager.Domain.Chores
+namespace Icm.ChoreManager.Domain.Chores
 {
     public abstract class Recurrence
     {
@@ -11,7 +11,7 @@ namespace Icm.TaskManager.Domain.Chores
 
         public Duration RepeatInterval { get; }
 
-        public abstract Chore CreateRecurringTask(Chore chore, Instant now);
+        public abstract Chore CreateRecurringChore(Chore chore, Instant now);
 
         public static Recurrence FromType(string recurrenceType, Duration repeatInterval)
         {

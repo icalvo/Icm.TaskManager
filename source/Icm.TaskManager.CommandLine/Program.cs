@@ -4,14 +4,14 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
-using Icm.TaskManager.Application;
-using Icm.TaskManager.CommandLine.Commands;
-using Icm.TaskManager.Domain.Chores;
-using Icm.TaskManager.Infrastructure;
+using Icm.ChoreManager.Application;
+using Icm.ChoreManager.CommandLine.Commands;
+using Icm.ChoreManager.Domain.Chores;
+using Icm.ChoreManager.Infrastructure;
 using NodaTime;
 using NodaTime.Text;
 
-namespace Icm.TaskManager.CommandLine
+namespace Icm.ChoreManager.CommandLine
 {
     internal static class Program
     {
@@ -26,13 +26,13 @@ namespace Icm.TaskManager.CommandLine
             "creates a chore",
             async tokens =>
             {
-                await Console.Out.WriteLineAsync("Creating task...");
+                await Console.Out.WriteLineAsync("Creating chore...");
 
                 var description = tokens[1];
                 var dueDate = ZonedDateTimePattern.CreateWithInvariantCulture("yyyy-MM-dd", DateTimeZoneProviders.Tzdb).Parse(tokens[2]).Value.ToInstant();
-                var id = await _svc.Create(description, dueDate);
+                var id = await _svc.CreateAsync(description, dueDate);
                 await Console.Out.WriteLineAsync($"Task {id} created");
-                var dto = await _svc.GetById(id);
+                var dto = await _svc.GetByIdAsync(id);
                 await Console.Out.ShowDetailsBrief(id, dto);
             });
 
@@ -47,7 +47,7 @@ namespace Icm.TaskManager.CommandLine
             async tokens =>
             {
                 Guid id = Guid.Parse(tokens[1]);
-                var dto = await _svc.GetById(id);
+                var dto = await _svc.GetByIdAsync(id);
                 await Console.Out.ShowDetailsBrief(id, dto);
             });
 
@@ -62,13 +62,13 @@ namespace Icm.TaskManager.CommandLine
             async tokens =>
             {
                 Guid id = Guid.Parse(tokens[1]);
-                Guid? newid = await _svc.Finish(id);
-                var dto = await _svc.GetById(id);
+                Guid? newid = await _svc.FinishAsync(id);
+                var dto = await _svc.GetByIdAsync(id);
                 await Console.Out.ShowDetailsBrief(id, dto);
                 if (newid.HasValue)
                 {
                     await Console.Out.WriteLineAsync("A new recurrence has been created");
-                    dto = await _svc.GetById(newid.Value);
+                    dto = await _svc.GetByIdAsync(newid.Value);
                     await Console.Out.ShowDetailsBrief(newid.Value, dto);
                 }
             });

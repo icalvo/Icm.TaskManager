@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using NodaTime;
 
-namespace Icm.TaskManager.Domain.Chores
+namespace Icm.ChoreManager.Domain.Chores
 {
     public class Chore
     {
@@ -39,13 +39,15 @@ namespace Icm.TaskManager.Domain.Chores
 
         public Instant? StartDate
         {
-            get => startDate;
-
+            get
+            {
+                return startDate;
+            }
             set
             {
                 if (value.HasValue && value > finishDate)
                 {
-                    throw new Exception("Cannot set a task start date after its finish date");
+                    throw new Exception("Cannot set a chore start date after its finish date");
                 }
 
                 startDate = value;
@@ -56,13 +58,13 @@ namespace Icm.TaskManager.Domain.Chores
 
         public Instant? FinishDate
         {
-            get => finishDate;
+            get { return finishDate; }
 
             set
             {
                 if (IsDone)
                 {
-                    throw new TaskAlreadyDoneException();
+                    throw new ChoreAlreadyFinishedException();
                 }
 
                 if (StartDate.HasValue && StartDate > value)

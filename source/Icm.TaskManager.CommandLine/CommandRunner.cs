@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
-using Icm.TaskManager.CommandLine.Commands;
+using Icm.ChoreManager.CommandLine.Commands;
 using JetBrains.Annotations;
 using static System.Threading.Tasks.Task;
 
-namespace Icm.TaskManager.CommandLine
+namespace Icm.ChoreManager.CommandLine
 {
     internal class CommandRunner
     {

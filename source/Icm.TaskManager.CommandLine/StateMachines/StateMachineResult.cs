@@ -1,4 +1,4 @@
-namespace Icm.TaskManager.CommandLine.StateMachines
+namespace Icm.ChoreManager.CommandLine.StateMachines
 {
     public class StateMachineResult<TInput, TState, TOutput>
     {

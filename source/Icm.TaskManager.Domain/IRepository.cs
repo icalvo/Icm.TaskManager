@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Icm.TaskManager.Domain.Chores;
-using Task = System.Threading.Tasks.Task;
 
-namespace Icm.TaskManager.Domain
+namespace Icm.ChoreManager.Domain
 {
     public interface IRepository<TKey, TItem> : IDisposable
     {
-        Task<TKey> Add(TItem item);
+        Task<TKey> AddAsync(TItem item);
 
         Task<Identified<TKey, TItem>> GetByIdAsync(TKey id);
 
-        Task Update(Identified<TKey, TItem> identifiedChore);
+        Task UpdateAsync(Identified<TKey, TItem> identifiedChore);
 
-        Task Delete(TKey key);
+        Task DeleteAsync(TKey key);
 
-        Task Save();
+        Task SaveAsync();
     }
 }
