@@ -14,8 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Icm.TaskManager.Application\Icm.TaskManager.Application.csproj" />
-    <ProjectReference Include="..\Icm.TaskManager.Infrastructure\Icm.TaskManager.Infrastructure.csproj" />
+    <ProjectReference Include="..\Icm.TaskManager.Application\Icm.ChoreManager.Application.csproj" />
+    <ProjectReference Include="..\Icm.TaskManager.Infrastructure\Icm.ChoreManager.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

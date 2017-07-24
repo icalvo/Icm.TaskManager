@@ -1,6 +1,6 @@
 using System;
 
-namespace Icm.TaskManager.CommandLine.StateMachines
+namespace Icm.ChoreManager.CommandLine.StateMachines
 {
     public class MealyItem<TState, TInput, TOutput>
     {

@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System.Linq;
-using Icm.TaskManager.Application;
-using Icm.TaskManager.Domain.Chores;
+using Icm.ChoreManager.Application;
+using Icm.ChoreManager.Domain.Chores;
 
-namespace Icm.TaskManager.CommandLine
+namespace Icm.ChoreManager.CommandLine
 {
     internal static class OutputExtensions
     {

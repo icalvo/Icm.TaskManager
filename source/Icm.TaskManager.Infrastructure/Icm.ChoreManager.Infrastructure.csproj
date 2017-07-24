@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Icm.TaskManager.Domain\Icm.TaskManager.Domain.csproj" />
+    <ProjectReference Include="..\Icm.TaskManager.Domain\Icm.ChoreManager.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

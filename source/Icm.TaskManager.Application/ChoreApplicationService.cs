@@ -2,16 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Icm.TaskManager.Domain.Chores;
+using Icm.ChoreManager.Domain.Chores;
 using NodaTime;
 
-namespace Icm.TaskManager.Application
+namespace Icm.ChoreManager.Application
 {
-    public interface IChoreRepositoryFactory
-    {
-        IChoreRepository Build();
-    }
-
     public class ChoreApplicationService : IChoreApplicationService
     {
         private readonly Func<IChoreRepository> buildChoreRepository;
@@ -23,7 +18,7 @@ namespace Icm.TaskManager.Application
             this.clock = clock;
         }
 
-        public async Task<Guid> Create(
+        public async Task<Guid> CreateAsync(
             string description,
             Instant dueDate,
             int priority,
@@ -32,57 +27,41 @@ namespace Icm.TaskManager.Application
         {
             using (var repository = buildChoreRepository())
             {
+                var id = await CreateAsync(description, dueDate, repository);
 
-                var id = await Create(description, dueDate, repository);
-
-                await ChangePriority(id, priority, repository);
-                await ChangeNotes(id, notes, repository);
-                await ChangeLabels(id, labels, repository);
-                await repository.Save();
+                await ChangePriorityAsync(id, priority, repository);
+                await ChangeNotesAsync(id, notes, repository);
+                await ChangeLabelsAsync(id, labels, repository);
+                await repository.SaveAsync();
                 return id;
             }
         }
 
-        public async Task<Guid> CreateDueDateRecurringTask(
-            string description,
-            Instant dueDate,
-            Duration repeatInterval,
-            int priority,
-            string notes,
-            string labels)
-        {
-            var id = await Create(description, dueDate, priority, notes, labels);
-
-            await ChangeRecurrenceToDueDate(id, repeatInterval);
-
-            return id;
-        }
-
-        public async Task ChangeStartDate(Guid taskId, Instant newStartDate)
+        public async Task ChangeStartDateAsync(Guid choreId, Instant newStartDate)
         {
             using (var choreRepository = buildChoreRepository())
             {
-                var id = new ChoreId(taskId);
-                var idtask = await choreRepository.GetByIdAsync(id);
+                var id = new ChoreId(choreId);
+                var identifiedChore = await choreRepository.GetByIdAsync(id);
 
-                idtask.Value.StartDate = newStartDate;
-                await choreRepository.Update(idtask);
-                await choreRepository.Save();
+                identifiedChore.Value.StartDate = newStartDate;
+                await choreRepository.UpdateAsync(identifiedChore);
+                await choreRepository.SaveAsync();
             }
         }
 
-        public async Task<Guid> Create(string description, Instant dueDate)
+        public async Task<Guid> CreateAsync(string description, Instant dueDate)
         {
             using (var repository = buildChoreRepository())
             {
-                var id = await Create(description, dueDate, repository);
-                await repository.Save();
+                var id = await CreateAsync(description, dueDate, repository);
+                await repository.SaveAsync();
                 return id;
 
             }
         }
 
-        public async Task<ChoreDto> GetById(Guid choreId)
+        public async Task<ChoreDto> GetByIdAsync(Guid choreId)
         {
             using (var repository = buildChoreRepository())
             {
@@ -90,190 +69,188 @@ namespace Icm.TaskManager.Application
             }
         }
 
-        public Task<IEnumerable<ChoreDto>> GetChoresFrom(Guid choreId)
+        public Task<IEnumerable<ChoreDto>> GetChoresFromAsync(Guid choreId)
         {
             using (var repository = buildChoreRepository())
             {
-                ////return (await repository.GetChores(choreId)).ToDto();
+                ////return (await repository.GetChoresAsync(choreId)).ToDto();
                 throw new NotImplementedException();
             }
         }
 
-        public async Task ChangeRecurrenceToFinishDate(Guid id, Duration repeatInterval)
+        public async Task ChangeRecurrenceToFinishDateAsync(Guid id, Duration repeatInterval)
         {
             using (var choreRepository = buildChoreRepository())
             {
-                var idtask = await choreRepository.GetByIdAsync(id);
+                var identifiedChore = await choreRepository.GetByIdAsync(id);
 
-                idtask.Value.Recurrence = new FinishDateRecurrence(repeatInterval);
-                await choreRepository.Update(idtask);
+                identifiedChore.Value.Recurrence = new FinishDateRecurrence(repeatInterval);
+                await choreRepository.UpdateAsync(identifiedChore);
             }
         }
 
-        public async Task ChangeRecurrenceToDueDate(Guid id, Duration repeatInterval)
+        public async Task ChangeRecurrenceToDueDateAsync(Guid id, Duration repeatInterval)
         {
             using (var choreRepository = buildChoreRepository())
             {
-                var taskId = new ChoreId(id);
-                var idtask = await choreRepository.GetByIdAsync(taskId);
+                var choreId = new ChoreId(id);
+                var identifiedChore = await choreRepository.GetByIdAsync(choreId);
 
-                idtask.Value.Recurrence = new DueDateRecurrence(repeatInterval);
-                await choreRepository.Update(idtask);
-                await choreRepository.Save();
+                identifiedChore.Value.Recurrence = new DueDateRecurrence(repeatInterval);
+                await choreRepository.UpdateAsync(identifiedChore);
+                await choreRepository.SaveAsync();
             }
         }
 
-        public async Task Start(Guid taskId)
+        public async Task StartAsync(Guid choreId)
         {
             using (var choreRepository = buildChoreRepository())
             {
-                var id = new ChoreId(taskId);
-                var idtask = await choreRepository.GetByIdAsync(id);
-                idtask.Value.StartDate = clock.GetCurrentInstant();
-                await choreRepository.Update(idtask);
-                await choreRepository.Save();
+                var id = new ChoreId(choreId);
+                var identifiedChore = await choreRepository.GetByIdAsync(id);
+                identifiedChore.Value.StartDate = clock.GetCurrentInstant();
+                await choreRepository.UpdateAsync(identifiedChore);
+                await choreRepository.SaveAsync();
             }
         }
 
-        public async Task<Guid?> Finish(Guid taskId)
+        public async Task<Guid?> FinishAsync(Guid choreId)
         {
             using (var choreRepository = buildChoreRepository())
             {
                 Instant finishInstant = clock.GetCurrentInstant();
-                var id = new ChoreId(taskId);
-                var idtask = await choreRepository.GetByIdAsync(id);
+                var id = new ChoreId(choreId);
+                var identifiedChore = await choreRepository.GetByIdAsync(id);
 
-                idtask.Value.FinishDate = finishInstant;
-                var recurringTask = idtask.Value.Recurrence.Match(
-                    recurrence => recurrence.CreateRecurringTask(idtask.Value, finishInstant));
+                identifiedChore.Value.FinishDate = finishInstant;
+                var recurringChore = identifiedChore.Value.Recurrence.Match(
+                    recurrence => recurrence.CreateRecurringChore(identifiedChore.Value, finishInstant));
 
-                await choreRepository.Update(idtask);
-                if (recurringTask == null)
+                await choreRepository.UpdateAsync(identifiedChore);
+                if (recurringChore == null)
                 {
                     return null;
                 }
 
-                var recurringTaskId = await choreRepository.Add(recurringTask);
-                await choreRepository.Save();
-                return recurringTaskId;
+                var recurringChoreId = await choreRepository.AddAsync(recurringChore);
+                await choreRepository.SaveAsync();
+                return recurringChoreId;
             }
         }
 
-        public async Task ChangeDescription(Guid taskId, string newDescription)
+        public async Task ChangeDescriptionAsync(Guid choreId, string newDescription)
         {
             using (var choreRepository = buildChoreRepository())
             {
-                var id = new ChoreId(taskId);
-                var idtask = await choreRepository.GetByIdAsync(id);
+                var id = new ChoreId(choreId);
+                var identifiedChore = await choreRepository.GetByIdAsync(id);
 
-                idtask.Value.Description = newDescription;
-                await choreRepository.Update(idtask);
-                await choreRepository.Save();
+                identifiedChore.Value.Description = newDescription;
+                await choreRepository.UpdateAsync(identifiedChore);
+                await choreRepository.SaveAsync();
             }
         }
 
-        public async Task ChangePriority(Guid taskId, int newPriority)
+        public async Task ChangePriorityAsync(Guid choreId, int newPriority)
         {
             using (var choreRepository = buildChoreRepository())
             {
-                await ChangePriority(taskId, newPriority, choreRepository);
+                await ChangePriorityAsync(choreId, newPriority, choreRepository);
             }
         }
 
-        public async Task ChangeDueDate(Guid taskId, Instant newDueDate)
+        public async Task ChangeDueDateAsync(Guid choreId, Instant newDueDate)
         {
             using (var choreRepository = buildChoreRepository())
             {
-                var id = new ChoreId(taskId);
-                var idtask = await choreRepository.GetByIdAsync(id);
+                var id = new ChoreId(choreId);
+                var identifiedChore = await choreRepository.GetByIdAsync(id);
 
-                idtask.Value.DueDate = newDueDate;
-                await choreRepository.Update(idtask);
-                await choreRepository.Save();
+                identifiedChore.Value.DueDate = newDueDate;
+                await choreRepository.UpdateAsync(identifiedChore);
+                await choreRepository.SaveAsync();
             }
         }
 
-        public async Task ChangeLabels(Guid taskId, string newLabels)
+        public async Task ChangeLabelsAsync(Guid choreId, string newLabels)
         {
             using (var choreRepository = buildChoreRepository())
             {
-                await ChangeLabels(taskId, newLabels, choreRepository);
+                await ChangeLabelsAsync(choreId, newLabels, choreRepository);
             }
         }
 
-        public async Task ChangeNotes(Guid taskId, string newNotes)
+        public async Task ChangeNotesAsync(Guid choreId, string newNotes)
         {
             using (var choreRepository = buildChoreRepository())
             {
-                await ChangeNotes(taskId, newNotes, choreRepository);
+                await ChangeNotesAsync(choreId, newNotes, choreRepository);
             }
         }
 
-        public async Task AddReminder(Guid taskId, Instant reminder)
+        public async Task AddReminderAsync(Guid choreId, Instant reminder)
         {
             using (var choreRepository = buildChoreRepository())
             {
-                var id = new ChoreId(taskId);
-                var idtask = await choreRepository.GetByIdAsync(id);
+                var id = new ChoreId(choreId);
+                var identifiedChore = await choreRepository.GetByIdAsync(id);
 
-                idtask.Value.Reminders.Add(reminder);
-                await choreRepository.Update(idtask);
-                await choreRepository.Save();
+                identifiedChore.Value.Reminders.Add(reminder);
+                await choreRepository.UpdateAsync(identifiedChore);
+                await choreRepository.SaveAsync();
             }
         }
 
-        public async Task<IEnumerable<TimeDto>> PendingTimes()
+        public async Task<IEnumerable<TimeDto>> PendingTimesAsync()
         {
             using (var choreRepository = buildChoreRepository())
             {
-                var activeReminders = await choreRepository.GetActiveReminders();
+                var activeReminders = await choreRepository.GetActiveRemindersAsync();
                 return activeReminders
                     .Select(t => new TimeDto(t.Item1, t.Item2));
             }
         }
 
-        private async Task<Guid> Create(string description, Instant dueDate, IChoreRepository choreRepository)
+        private async Task<Guid> CreateAsync(string description, Instant dueDate, IChoreRepository choreRepository)
         {
             var creationInstant = clock.GetCurrentInstant();
 
-            var task = Chore.Create(
+            var chore = Chore.Create(
                 description,
                 dueDate,
                 creationInstant);
 
-            var id = await choreRepository.Add(task);
-
-            return id;
+            return await choreRepository.AddAsync(chore);
         }
 
-        private static async Task ChangePriority(Guid taskId, int newPriority, IChoreRepository choreRepository)
+        private static async Task ChangePriorityAsync(Guid choreId, int newPriority, IChoreRepository choreRepository)
         {
-            var id = new ChoreId(taskId);
-            var idtask = await choreRepository.GetByIdAsync(id);
+            var id = new ChoreId(choreId);
+            var identifiedChore = await choreRepository.GetByIdAsync(id);
 
-            idtask.Value.Priority = newPriority;
-            await choreRepository.Update(idtask);
-            await choreRepository.Save();
+            identifiedChore.Value.Priority = newPriority;
+            await choreRepository.UpdateAsync(identifiedChore);
+            await choreRepository.SaveAsync();
         }
 
-        private static async Task ChangeLabels(Guid taskId, string newLabels, IChoreRepository choreRepository)
+        private static async Task ChangeLabelsAsync(Guid choreId, string newLabels, IChoreRepository choreRepository)
         {
-            var id = new ChoreId(taskId);
-            var idtask = await choreRepository.GetByIdAsync(id);
+            var id = new ChoreId(choreId);
+            var identifiedChore = await choreRepository.GetByIdAsync(id);
 
-            idtask.Value.Labels = newLabels;
-            await choreRepository.Update(idtask);
-            await choreRepository.Save();
+            identifiedChore.Value.Labels = newLabels;
+            await choreRepository.UpdateAsync(identifiedChore);
+            await choreRepository.SaveAsync();
         }
 
-        private static async Task ChangeNotes(Guid taskId, string newNotes, IChoreRepository choreRepository)
+        private static async Task ChangeNotesAsync(Guid choreId, string newNotes, IChoreRepository choreRepository)
         {
-            var id = new ChoreId(taskId);
-            var idtask = await choreRepository.GetByIdAsync(id);
+            var id = new ChoreId(choreId);
+            var identifiedChore = await choreRepository.GetByIdAsync(id);
 
-            idtask.Value.Notes = newNotes;
-            await choreRepository.Update(idtask);
-            await choreRepository.Save();
+            identifiedChore.Value.Notes = newNotes;
+            await choreRepository.UpdateAsync(identifiedChore);
+            await choreRepository.SaveAsync();
         }
     }
 }

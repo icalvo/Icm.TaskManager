@@ -1,4 +1,4 @@
-﻿namespace Icm.TaskManager.Domain.Chores
+﻿namespace Icm.ChoreManager.Domain.Chores
 {
     public static class IdentifiedChoreExtensions
     {

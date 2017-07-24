@@ -1,6 +1,6 @@
 ﻿using NodaTime;
 
-namespace Icm.TaskManager.Domain.Chores
+namespace Icm.ChoreManager.Domain.Chores
 {
     public class FinishDateRecurrence : Recurrence
     {
@@ -9,7 +9,7 @@ namespace Icm.TaskManager.Domain.Chores
         {
         }
 
-        public override Chore CreateRecurringTask(Chore chore, Instant now)
+        public override Chore CreateRecurringChore(Chore chore, Instant now)
         {
             return MonadicExtensions.Match(
                 chore.FinishDate,

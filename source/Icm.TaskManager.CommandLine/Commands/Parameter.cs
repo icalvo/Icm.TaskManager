@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace Icm.TaskManager.CommandLine.Commands
+namespace Icm.ChoreManager.CommandLine.Commands
 {
     internal class Parameter
     {

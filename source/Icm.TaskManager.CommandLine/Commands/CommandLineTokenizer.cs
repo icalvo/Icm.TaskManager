@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Icm.TaskManager.CommandLine.StateMachines;
+using Icm.ChoreManager.CommandLine.StateMachines;
 using JetBrains.Annotations;
 
-namespace Icm.TaskManager.CommandLine.Commands
+namespace Icm.ChoreManager.CommandLine.Commands
 {
     public static class CommandLineTokenizer
     {

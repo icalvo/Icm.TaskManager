@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Icm.TaskManager.CommandLine.Commands
+namespace Icm.ChoreManager.CommandLine.Commands
 {
     internal class Command
     {

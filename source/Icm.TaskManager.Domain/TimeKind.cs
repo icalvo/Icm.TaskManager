@@ -1,4 +1,4 @@
-﻿namespace Icm.TaskManager.Domain
+﻿namespace Icm.ChoreManager.Domain
 {
     public enum TimeKind
     {

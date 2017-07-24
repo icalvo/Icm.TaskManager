@@ -1,16 +1,16 @@
 using FluentAssertions;
-using Icm.TaskManager.Domain.Chores;
+using Icm.ChoreManager.Domain.Chores;
 using NodaTime;
 using NodaTime.Testing;
 using Xunit;
 
 namespace Icm.ChoreManager.Tests
 {
-    public class TaskServiceTests
+    public class ChoreServiceTests
     {
         private readonly FakeClock clock;
 
-        public TaskServiceTests()
+        public ChoreServiceTests()
         {
             clock = new FakeClock(CreateInstant(2016, 1, 1), Duration.FromDays(1));
         }
@@ -19,28 +19,28 @@ namespace Icm.ChoreManager.Tests
         public void Create()
         {
             var sut = new ChoreService(clock);
-            var task = CreateTask(sut);
+            var chore = CreateChore(sut);
 
-            task.CreationDate.Should().Be(CreateInstant(2016, 1, 1));
-            task.Description.Should().Be("My description");
-            task.Priority.Should().Be(3);
-            task.IsDone.Should().BeFalse();
+            chore.CreationDate.Should().Be(CreateInstant(2016, 1, 1));
+            chore.Description.Should().Be("My description");
+            chore.Priority.Should().Be(3);
+            chore.IsDone.Should().BeFalse();
         }
 
         [Fact]
         public void Finish()
         {
             var sut = new ChoreService(clock);
-            var task = CreateTask(sut);
+            var chore = CreateChore(sut);
 
-            sut.Finish(task);
+            sut.Finish(chore);
             var finishDate = CreateInstant(2016, 1, 2);
-            task.FinishDate.Should().Be(finishDate);
+            chore.FinishDate.Should().Be(finishDate);
         }
 
-        private static Chore CreateTask(IChoreService sut)
+        private static Chore CreateChore(IChoreService sut)
         {
-            return sut.CreateTask(
+            return sut.CreateChore(
                 "My description",
                 CreateInstant(2016, 1, 10));
         }

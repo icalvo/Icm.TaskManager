@@ -1,41 +1,18 @@
 using System;
 using System.Collections.Generic;
-using System.Reactive.Concurrency;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Icm.TaskManager.Application;
-using Icm.TaskManager.CommandLine;
-using Icm.TaskManager.Domain.Chores;
-using Icm.TaskManager.Infrastructure;
+using Icm.ChoreManager.Application;
+using Icm.ChoreManager.Domain.Chores;
+using Icm.ChoreManager.CommandLine;
+using Icm.ChoreManager.Infrastructure;
 using NodaTime;
 using NodaTime.Testing;
 using Xunit;
 
 namespace Icm.ChoreManager.Tests
 {
-    public class TestScheduler : VirtualTimeScheduler<Instant, Duration>
-    {
-        public TestScheduler(Instant initialTime) : base(initialTime, Comparer<Instant>.Default)
-        {
-        }
-
-        protected override Instant Add(Instant absolute, Duration relative)
-        {
-            return absolute + relative;
-        }
-
-        protected override DateTimeOffset ToDateTimeOffset(Instant absolute)
-        {
-            return absolute.ToDateTimeOffset();
-        }
-
-        protected override Duration ToRelative(TimeSpan timeSpan)
-        {
-            return Duration.FromTimeSpan(timeSpan);
-        }
-    }
-
     public class ChoreApplicationServiceTests
     {
         [Fact]
@@ -45,15 +22,15 @@ namespace Icm.ChoreManager.Tests
             var clock = new FakeClock(CreateInstant(2016, 5, 6));
             IChoreApplicationService sut = new ChoreApplicationService(() => repo, clock);
 
-            var choreId = await sut.Create(
+            var choreId = await sut.CreateAsync(
                 "My description",
                 CreateInstant(2016, 1, 10));
 
-            await sut.ChangeRecurrenceToDueDate(choreId, Duration.FromDays(2));
+            await sut.ChangeRecurrenceToDueDateAsync(choreId, Duration.FromDays(2));
 
             clock.AdvanceDays(1);
 
-            var secondChoreId = await sut.Finish(choreId);
+            var secondChoreId = await sut.FinishAsync(choreId);
 
             secondChoreId.Should().HaveValue();
             repo.Should().HaveCount(2);
@@ -70,13 +47,13 @@ namespace Icm.ChoreManager.Tests
             var clock = new FakeClock(CreateInstant(2016, 5, 6), Duration.FromDays(1));
             IChoreApplicationService sut = new ChoreApplicationService(() => repo, clock);
 
-            var choreId = await sut.Create(
+            var choreId = await sut.CreateAsync(
                 "My description",
                 CreateInstant(2016, 1, 10));
 
-            await sut.ChangeRecurrenceToDueDate(choreId, Duration.FromDays(3));
+            await sut.ChangeRecurrenceToDueDateAsync(choreId, Duration.FromDays(3));
 
-            var secondChoreId = await sut.Finish(choreId);
+            var secondChoreId = await sut.FinishAsync(choreId);
 
             secondChoreId.Should().HaveValue();
             repo.Should().HaveCount(2);
@@ -126,7 +103,7 @@ namespace Icm.ChoreManager.Tests
                 timerStarts, 
                 timerExpirations);
 
-            var choreId = await sut.Create(
+            var choreId = await sut.CreateAsync(
                 "My description",
                 choreDueDate);
 

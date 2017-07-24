@@ -1,4 +1,4 @@
-﻿namespace Icm.TaskManager.Domain.Reminder
+﻿namespace Icm.ChoreManager.Domain.Reminder
 {
     public interface IReminderRepository
     {

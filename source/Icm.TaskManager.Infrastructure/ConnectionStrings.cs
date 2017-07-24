@@ -2,7 +2,7 @@
 //using System.Data;
 //using System.Data.Common;
 
-//namespace Icm.TaskManager.Infrastructure
+//namespace Icm.ChoreManager.Infrastructure
 //{
 //    public static class ConnectionStrings
 //    {

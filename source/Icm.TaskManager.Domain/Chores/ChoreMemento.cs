@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using NodaTime;
 
-namespace Icm.TaskManager.Domain.Chores
+namespace Icm.ChoreManager.Domain.Chores
 {
     public class ChoreMemento
     {

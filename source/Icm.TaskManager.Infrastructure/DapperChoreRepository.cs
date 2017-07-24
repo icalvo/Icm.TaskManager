@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Dapper;
-using Icm.TaskManager.Domain;
-using Icm.TaskManager.Domain.Chores;
-using Icm.TaskManager.Domain.Chores.Icm.TaskManager.Domain.Tasks;
+using Icm.ChoreManager.Domain;
+using Icm.ChoreManager.Domain.Chores;
 using NodaTime;
 
-namespace Icm.TaskManager.Infrastructure
+namespace Icm.ChoreManager.Infrastructure
 {
     public static class Ext2
     {
@@ -48,7 +47,7 @@ namespace Icm.TaskManager.Infrastructure
             transaction = this.connection.BeginTransaction();
         }
 
-        public async Task<ChoreId> Add(Chore item)
+        public async Task<ChoreId> AddAsync(Chore item)
         {
             var id = await transaction.QuerySingleAsync<Guid>("INSERT INTO Tasks () VALUES ()");
             return id;
@@ -61,24 +60,24 @@ namespace Icm.TaskManager.Infrastructure
             return Identified.Create((ChoreId)row.Id, Chore.FromMemento(row));
         }
 
-        public async Task Update(Identified<ChoreId, Chore> identifiedChore)
+        public async Task UpdateAsync(Identified<ChoreId, Chore> identifiedChore)
         {
             await transaction.ExecuteAsync("UPDATE Tasks SET ");
             throw new NotImplementedException();
         }
 
-        public async Task Delete(ChoreId key)
+        public async Task DeleteAsync(ChoreId key)
         {
             await transaction.ExecuteAsync("DELETE FROM Tasks WHERE Id=@Id", key.Value);
         }
 
-        public Task Save()
+        public Task SaveAsync()
         {
             transaction.Commit();
             return Task.CompletedTask;
         }
 
-        public Task<IEnumerable<(Instant Time, TimeKind Kind)>> GetActiveReminders()
+        public Task<IEnumerable<(Instant Time, TimeKind Kind)>> GetActiveRemindersAsync()
         {
             throw new NotImplementedException();
         }

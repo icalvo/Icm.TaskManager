@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Icm.TaskManager.Domain.Chores
+namespace Icm.ChoreManager.Domain.Chores
 {
     public static class MonadicExtensions
     {
