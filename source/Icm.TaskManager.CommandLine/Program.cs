@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -17,94 +16,146 @@ namespace Icm.ChoreManager.CommandLine
     {
         private static IChoreApplicationServiceSchedulingAdapter _svc;
 
-        private static readonly Command CreateChoreCommand = Command.Create(
-            "CreateChore",
-            "create",
-            new Parameter<string>("description", x => CommandParseResult.ParameterSuccess(x, x)),
-            new Parameter<Instant>("due date", ParseInstantFunc("yyyy-MM-dd")),
-            "creates a chore",
-            async (description, dueDate) =>
-            {
-                var id = await _svc.CreateAsync(description, dueDate);
-
-                var dto = await _svc.GetByIdAsync(id);
-                await Console.Out.ShowDetailsBrief(id, dto);
-            });
-        
-        private static readonly Command AddReminderCommand = Command.Create(
-            "AddReminder",
-            "reminder",
-            new Parameter<ChoreId>("id", x => CommandParseResult.ParameterSuccess(x, ChoreId.Parse(x))),
-            new Parameter<Instant>("reminder time", ParseInstantFunc("yyyy-MM-dd")),
-            "creates a chore",
-            async (id, reminderTime) =>
-            {
-                await _svc.AddReminderAsync(id, reminderTime);
-
-                await Console.Out.WriteLineAsync("Reminder added!");
-                var dto = await _svc.GetByIdAsync(id);
-                await Console.Out.ShowDetailsBrief(id, dto);
-            });
-
-        private static readonly Command ChangeDescriptionCommand = Command.Create(
-            "ChangeDescription",
-            "desc",
-            new Parameter<ChoreId>("id", x => CommandParseResult.ParameterSuccess(x, ChoreId.Parse(x))),
-            new Parameter<string>("description", x => CommandParseResult.ParameterSuccess(x, x)),
-            "creates a chore",
-            async (id, description) =>
-            {
-                await _svc.ChangeDescriptionAsync(id, description);
-
-                await Console.Out.WriteLineAsync("Description changed!");
-                var dto = await _svc.GetByIdAsync(id);
-                await Console.Out.ShowDetailsBrief(id, dto);
-            });
-
-        private static readonly Command ChangeRecurrenceToDueDateCommand = Command.Create(
-            "ChangeDescription",
-            "recdue",
-            new Parameter<ChoreId>("id", x => CommandParseResult.ParameterSuccess(x, ChoreId.Parse(x))),
-            new Parameter<Duration>("repeat interval", ParseDurationFunc("HH:mm")),
-            "creates a chore",
-            async (id, repeatInterval) =>
-            {
-                await _svc.ChangeRecurrenceToDueDateAsync(id, repeatInterval);
-
-                await Console.Out.WriteLineAsync("Recurrence changed!");
-                var dto = await _svc.GetByIdAsync(id);
-                await Console.Out.ShowDetailsBrief(id, dto);
-            });
-
-
-        private static readonly Command ShowChoreCommand = Command.Create(
-            "ShowChore",
-            "show",
-            new Parameter<ChoreId>("chore id", x => CommandParseResult.ParameterSuccess(x, ChoreId.Parse(x))),
-            "shows chore details",
-            async id =>
-            {
-                var dto = await _svc.GetByIdAsync(id);
-                await Console.Out.ShowDetailsBrief(id, dto);
-            });
-
-        private static readonly Command FinishChoreCommand = Command.Create(
-            "FinishChore",
-            "finish",
-            new Parameter<ChoreId>("chore id", x => CommandParseResult.ParameterSuccess(x, ChoreId.Parse(x))),
-            "finishes a chore",
-            async id =>
-            {
-                ChoreId? newid = await _svc.FinishAsync(id);
-                var dto = await _svc.GetByIdAsync(id);
-                await Console.Out.ShowDetailsBrief(id, dto);
-                if (newid.HasValue)
+        private static readonly Command[] Commands =
+        {
+            Command.Create(
+                "CreateChore",
+                "create",
+                new Parameter<string>("description", x => CommandParseResult.ParameterSuccess(x, x)),
+                new Parameter<Instant>("due date", ParseInstantFunc("yyyy-MM-dd")),
+                "creates a chore",
+                async (description, dueDate) =>
                 {
-                    await Console.Out.WriteLineAsync("A new recurrence has been created");
-                    dto = await _svc.GetByIdAsync(newid.Value);
-                    await Console.Out.ShowDetailsBrief(newid.Value, dto);
-                }
-            });
+                    var id = await _svc.CreateAsync(description, dueDate);
+
+                    var dto = await _svc.GetByIdAsync(id);
+                    await Console.Out.ShowDetailsBrief(dto);
+                }),
+            Command.Create(
+                "AddReminder",
+                "reminder",
+                new Parameter<ChoreId>("id", x => CommandParseResult.ParameterSuccess(x, ChoreId.Parse(x))),
+                new Parameter<Instant>("reminder time", ParseInstantFunc("yyyy-MM-dd")),
+                "creates a chore",
+                async (id, reminderTime) =>
+                {
+                    await _svc.AddReminderAsync(id, reminderTime);
+
+                    await Console.Out.WriteLineAsync("Reminder added!");
+                    var dto = await _svc.GetByIdAsync(id);
+                    await Console.Out.ShowDetailsBrief(dto);
+                }),
+            Command.Create(
+                "ChangeDescription",
+                "desc",
+                new Parameter<ChoreId>("id", x => CommandParseResult.ParameterSuccess(x, ChoreId.Parse(x))),
+                new Parameter<string>("description", x => CommandParseResult.ParameterSuccess(x, x)),
+                "creates a chore",
+                async (id, description) =>
+                {
+                    await _svc.ChangeDescriptionAsync(id, description);
+
+                    await Console.Out.WriteLineAsync("Description changed!");
+                    var dto = await _svc.GetByIdAsync(id);
+                    await Console.Out.ShowDetailsBrief(dto);
+                }),
+            Command.Create(
+                "ChangeDescription",
+                "recdue",
+                new Parameter<ChoreId>("id", x => CommandParseResult.ParameterSuccess(x, ChoreId.Parse(x))),
+                new Parameter<Duration>("repeat interval", ParseDurationFunc("HH:mm")),
+                "creates a chore",
+                async (id, repeatInterval) =>
+                {
+                    await _svc.SetRecurrenceToDueDateAsync(id, repeatInterval);
+
+                    await Console.Out.WriteLineAsync("Recurrence changed!");
+                    var dto = await _svc.GetByIdAsync(id);
+                    await Console.Out.ShowDetailsBrief(dto);
+                }),
+            Command.Create(
+                "ChangeLabels",
+                "label",
+                new Parameter<ChoreId>("id", x => CommandParseResult.ParameterSuccess(x, ChoreId.Parse(x))),
+                new Parameter<string>("labels", x => CommandParseResult.ParameterSuccess(x, x)),
+                "sets labels for a chore",
+                async (id, labels) =>
+                {
+                    await _svc.ChangeLabelsAsync(id, labels);
+
+                    await Console.Out.WriteLineAsync("Labels changed!");
+                    var dto = await _svc.GetByIdAsync(id);
+                    await Console.Out.ShowDetailsBrief(dto);
+                }),
+            Command.Create(
+                "ChangeNotes",
+                "notes",
+                new Parameter<ChoreId>("id", x => CommandParseResult.ParameterSuccess(x, ChoreId.Parse(x))),
+                new Parameter<string>("notes", x => CommandParseResult.ParameterSuccess(x, x)),
+                "change notes of a chore",
+                async (id, notes) =>
+                {
+                    await _svc.ChangeNotesAsync(id, notes);
+
+                    await Console.Out.WriteLineAsync("Notes changed!");
+                    var dto = await _svc.GetByIdAsync(id);
+                    await Console.Out.ShowDetailsBrief(dto);
+                }),
+            Command.Create(
+                "ListPending",
+                "pending",
+                "change notes of a chore",
+                async () =>
+                {
+                    var pendingChores = await _svc.GetPendingChoresAsync();
+
+                    foreach (var chore in pendingChores)
+                    {
+                        await Console.Out.ShowDetailsRow(chore);
+                    }
+                }),
+            Command.Create(
+                "ChangePriority",
+                "prio",
+                new Parameter<ChoreId>("id", x => CommandParseResult.ParameterSuccess(x, ChoreId.Parse(x))),
+                new Parameter<int>("priority", x => CommandParseResult.ParameterSuccess(x, int.Parse(x))),
+                "change priority of a chore",
+                async (id, priority) =>
+                {
+                    await _svc.ChangePriorityAsync(id, priority);
+
+                    await Console.Out.WriteLineAsync("Priority changed!");
+                    var dto = await _svc.GetByIdAsync(id);
+                    await Console.Out.ShowDetailsBrief(dto);
+                }),
+            Command.Create(
+                "ShowChore",
+                "show",
+                new Parameter<ChoreId>("chore id", x => CommandParseResult.ParameterSuccess(x, ChoreId.Parse(x))),
+                "shows chore details",
+                async id =>
+                {
+                    var dto = await _svc.GetByIdAsync(id);
+                    await Console.Out.ShowDetailsBrief(dto);
+                }),
+            Command.Create(
+                "FinishChore",
+                "finish",
+                new Parameter<ChoreId>("chore id", x => CommandParseResult.ParameterSuccess(x, ChoreId.Parse(x))),
+                "finishes a chore",
+                async id =>
+                {
+                    ChoreId? newid = await _svc.FinishAsync(id);
+                    var dto = await _svc.GetByIdAsync(id);
+                    await Console.Out.ShowDetailsBrief(dto);
+                    if (newid.HasValue)
+                    {
+                        await Console.Out.WriteLineAsync("A new recurrence has been created");
+                        dto = await _svc.GetByIdAsync(newid.Value);
+                        await Console.Out.ShowDetailsBrief(dto);
+                    }
+                })
+        };
 
         private static Func<string, CommandParseResult<Instant>> ParseInstantFunc(
             string format,
@@ -159,8 +210,9 @@ namespace Icm.ChoreManager.CommandLine
 
             var timerExpirations = new Subject<TimeDto>();
             var timerStarts = new Subject<TimeDto>();
-            _svc = new SchedulingAdapter(basicSvc, TaskPoolScheduler.Default,
-                timerStarts,
+            _svc = new SchedulingAdapter(
+                basicSvc,
+                TaskPoolScheduler.Default,
                 timerExpirations);
 
             timerStarts
@@ -173,13 +225,7 @@ namespace Icm.ChoreManager.CommandLine
 
             await _svc.ScheduleExistingAsync();
 
-            var runner = new CommandRunner(
-                CreateChoreCommand,
-                AddReminderCommand,
-                ShowChoreCommand,
-                FinishChoreCommand,
-                ChangeRecurrenceToDueDateCommand,
-                ChangeDescriptionCommand);
+            var runner = new CommandRunner(Commands);
 
             CommandRunner.QuitCommand.Verbs.Add("out");
             await runner.Run();

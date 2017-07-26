@@ -26,7 +26,7 @@ namespace Icm.ChoreManager.Tests
                 "My description",
                 CreateInstant(2016, 1, 10));
 
-            await sut.ChangeRecurrenceToDueDateAsync(choreId, Duration.FromDays(2));
+            await sut.SetRecurrenceToDueDateAsync(choreId, Duration.FromDays(2));
 
             clock.AdvanceDays(1);
 
@@ -51,7 +51,7 @@ namespace Icm.ChoreManager.Tests
                 "My description",
                 CreateInstant(2016, 1, 10));
 
-            await sut.ChangeRecurrenceToDueDateAsync(choreId, Duration.FromDays(3));
+            await sut.SetRecurrenceToDueDateAsync(choreId, Duration.FromDays(3));
 
             var secondChoreId = await sut.FinishAsync(choreId);
 
@@ -91,7 +91,6 @@ namespace Icm.ChoreManager.Tests
 
             var clock = new FakeClock(now, Duration.FromDays(1));
 
-            var timerStarts = new ListSubject<TimeDto>();
             var timerExpirations = new ListSubject<TimeDto>();
             var scheduler = new TestScheduler(now);
 
@@ -100,18 +99,16 @@ namespace Icm.ChoreManager.Tests
             IChoreApplicationService sut = new SchedulingAdapter(
                 new ChoreApplicationService(() => repo, clock),
                 scheduler, 
-                timerStarts, 
                 timerExpirations);
 
             var choreId = await sut.CreateAsync(
                 "My description",
                 choreDueDate);
 
-            timerStarts.Should().HaveCount(1);
             timerExpirations.Should().HaveCount(0);
 
             scheduler.AdvanceTo(afterChoreDueDate);
-            timerStarts.Should().HaveCount(1);
+
             timerExpirations.Should().HaveCount(1);
         }
 

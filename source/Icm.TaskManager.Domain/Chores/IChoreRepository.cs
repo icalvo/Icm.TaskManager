@@ -7,5 +7,7 @@ namespace Icm.ChoreManager.Domain.Chores
     public interface IChoreRepository : IRepository<ChoreId, Chore>
     {
         Task<IEnumerable<(Instant Time, TimeKind Kind)>> GetActiveRemindersAsync();
+
+        Task<IEnumerable<Identified<ChoreId, Chore>>> GetPendingAsync();
     }
 }

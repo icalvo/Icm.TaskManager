@@ -13,26 +13,22 @@ namespace Icm.ChoreManager.CommandLine
     {
         private readonly IChoreApplicationService impl;
         private readonly IScheduler scheduler;
-        private readonly IObserver<TimeDto> timerStarts;
         private readonly IObserver<TimeDto> timerExpirations;
         private readonly IDictionary<Instant, List<IDisposable>> pending;
 
         public SchedulingAdapter(
             IChoreApplicationService impl,
             IScheduler scheduler,
-            IObserver<TimeDto> timerStarts,
             IObserver<TimeDto> timerExpirations)
         {
             this.impl = impl;
             this.scheduler = scheduler;
-            this.timerStarts = timerStarts;
             this.timerExpirations = timerExpirations;
             pending = new Dictionary<Instant, List<IDisposable>>();
         }
 
         public void Complete()
         {
-            timerStarts.OnCompleted();
             timerExpirations.OnCompleted();
         }
 
@@ -52,7 +48,6 @@ namespace Icm.ChoreManager.CommandLine
                 pending.Add(pendingTime.Time, new List<IDisposable>());
             }
             pending[pendingTime.Time].Add(scheduleHandler);
-            timerStarts.OnNext(pendingTime);
         }
 
         private void Unschedule(Instant instant)
@@ -83,11 +78,13 @@ namespace Icm.ChoreManager.CommandLine
         }
 
 
-        Task IChoreApplicationService.ChangeRecurrenceToDueDateAsync(ChoreId choreId, Duration repeatInterval) => impl.ChangeRecurrenceToDueDateAsync(choreId, repeatInterval);
+        Task IChoreApplicationService.SetRecurrenceToDueDateAsync(ChoreId choreId, Duration repeatInterval) => impl.SetRecurrenceToDueDateAsync(choreId, repeatInterval);
 
         Task IChoreApplicationService.ChangeStartDateAsync(ChoreId choreId, Instant newStartDate) => impl.ChangeStartDateAsync(choreId, newStartDate);
 
-        Task IChoreApplicationService.ChangeRecurrenceToFinishDateAsync(ChoreId choreId, Duration repeatInterval) => impl.ChangeRecurrenceToFinishDateAsync(choreId, repeatInterval);
+        Task IChoreApplicationService.SetRecurrenceToFinishDateAsync(ChoreId choreId, Duration repeatInterval) => impl.SetRecurrenceToFinishDateAsync(choreId, repeatInterval);
+
+        Task IChoreApplicationService.RemoveRecurrenceAsync(ChoreId choreId) => impl.RemoveRecurrenceAsync(choreId);
 
         Task IChoreApplicationService.ChangeDescriptionAsync(ChoreId choreId, string newDescription) => impl.ChangeDescriptionAsync(choreId, newDescription);
 
@@ -100,7 +97,7 @@ namespace Icm.ChoreManager.CommandLine
 
         Task<ChoreDto> IChoreApplicationService.GetByIdAsync(ChoreId choreId) => impl.GetByIdAsync(choreId);
 
-        Task<IEnumerable<ChoreDto>> IChoreApplicationService.GetActiveChoresAsync() => impl.GetActiveChoresAsync();
+        Task<IEnumerable<ChoreDto>> IChoreApplicationService.GetPendingChoresAsync() => impl.GetPendingChoresAsync();
 
         Task<ChoreId?> IChoreApplicationService.FinishAsync(ChoreId choreId) => impl.FinishAsync(choreId);
 

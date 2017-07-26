@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Icm.ChoreManager.Application;
 using Icm.ChoreManager.Domain.Chores;
 
@@ -7,7 +8,7 @@ namespace Icm.ChoreManager.CommandLine
 {
     internal static class OutputExtensions
     {
-        internal static async System.Threading.Tasks.Task ShowDetails(this TextWriter output, ChoreId choreId, ChoreDto chore)
+        internal static async Task ShowDetails(this TextWriter output, ChoreId choreId, ChoreDto chore)
         {
             await output.WriteLineAsync($"Task {choreId}: {chore.Description}");
             await output.WriteLineAsync($"  Start: {chore.StartDate}");
@@ -30,9 +31,9 @@ namespace Icm.ChoreManager.CommandLine
             }
         }
 
-        internal static async System.Threading.Tasks.Task ShowDetailsBrief(this TextWriter output, ChoreId choreId, ChoreDto chore)
+        internal static async Task ShowDetailsBrief(this TextWriter output, ChoreDto chore)
         {
-            await output.WriteLineAsync($"Task {choreId}: {chore.Description}");
+            await output.WriteLineAsync($"Task {chore.Id}: {chore.Description}");
             await output.WriteLnIfAsync($"  Start: {chore.StartDate}", chore.StartDate.HasValue);
             await output.WriteLineAsync($"  Due: {chore.DueDate}");
             await output.WriteLnIfAsync($"  Finish: {chore.FinishDate}", chore.FinishDate.HasValue);
@@ -51,7 +52,12 @@ namespace Icm.ChoreManager.CommandLine
             }
         }
 
-        private static async System.Threading.Tasks.Task WriteLnIfAsync(this TextWriter output, string message, bool condition)
+        internal static async Task ShowDetailsRow(this TextWriter output, ChoreDto chore)
+        {
+            await output.WriteLineAsync($"Task {chore.Id}: {chore.Description}");
+        }
+
+        private static async Task WriteLnIfAsync(this TextWriter output, string message, bool condition)
         {
             if (condition)
             {

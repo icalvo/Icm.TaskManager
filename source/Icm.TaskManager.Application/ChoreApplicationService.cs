@@ -7,6 +7,8 @@ using NodaTime;
 
 namespace Icm.ChoreManager.Application
 {
+
+
     public class ChoreApplicationService : IChoreApplicationService
     {
         private readonly Func<IChoreRepository> buildChoreRepository;
@@ -50,27 +52,37 @@ namespace Icm.ChoreManager.Application
             }
         }
 
-        public Task<IEnumerable<ChoreDto>> GetActiveChoresAsync()
+        public async Task<IEnumerable<ChoreDto>> GetPendingChoresAsync()
         {
             using (var repository = buildChoreRepository())
             {
-                //// return (await repository.GetUnfinishedChoresAsync()).ToDto();
-                throw new NotImplementedException();
+                return (await repository.GetPendingAsync()).Select(x => x.ToDto());
             }
         }
 
-        public async Task ChangeRecurrenceToFinishDateAsync(ChoreId id, Duration repeatInterval)
+        public async Task SetRecurrenceToFinishDateAsync(ChoreId choreId, Duration repeatInterval)
         {
             using (var choreRepository = buildChoreRepository())
             {
-                var identifiedChore = await choreRepository.GetByIdAsync(id);
+                var identifiedChore = await choreRepository.GetByIdAsync(choreId);
 
                 identifiedChore.Value.Recurrence = new FinishDateRecurrence(repeatInterval);
                 await choreRepository.UpdateAsync(identifiedChore);
             }
         }
 
-        public async Task ChangeRecurrenceToDueDateAsync(ChoreId id, Duration repeatInterval)
+        public async Task RemoveRecurrenceAsync(ChoreId choreId)
+        {
+            using (var choreRepository = buildChoreRepository())
+            {
+                var identifiedChore = await choreRepository.GetByIdAsync(choreId);
+
+                identifiedChore.Value.Recurrence = null;
+                await choreRepository.UpdateAsync(identifiedChore);
+            }
+        }
+
+        public async Task SetRecurrenceToDueDateAsync(ChoreId id, Duration repeatInterval)
         {
             using (var choreRepository = buildChoreRepository())
             {
@@ -108,12 +120,12 @@ namespace Icm.ChoreManager.Application
                     recurrence => recurrence.CreateRecurringChore(identifiedChore.Value, finishInstant));
 
                 await choreRepository.UpdateAsync(identifiedChore);
-                if (recurringChore == null)
+                ChoreId? recurringChoreId = null;
+                if (recurringChore != null)
                 {
-                    return null;
+                    recurringChoreId = await choreRepository.AddAsync(recurringChore);
                 }
 
-                var recurringChoreId = await choreRepository.AddAsync(recurringChore);
                 await choreRepository.SaveAsync();
                 return recurringChoreId;
             }

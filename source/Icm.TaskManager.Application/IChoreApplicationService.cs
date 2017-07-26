@@ -12,9 +12,11 @@ namespace Icm.ChoreManager.Application
 
         Task AddReminderAsync(ChoreId choreId, Instant reminder);
 
-        Task ChangeRecurrenceToDueDateAsync(ChoreId choreId, Duration repeatInterval);
+        Task SetRecurrenceToDueDateAsync(ChoreId choreId, Duration repeatInterval);
 
-        Task ChangeRecurrenceToFinishDateAsync(ChoreId choreId, Duration repeatInterval);
+        Task SetRecurrenceToFinishDateAsync(ChoreId choreId, Duration repeatInterval);
+
+        Task RemoveRecurrenceAsync(ChoreId choreId);
 
         Task ChangeDescriptionAsync(ChoreId choreId, string newDescription);
 
@@ -30,7 +32,7 @@ namespace Icm.ChoreManager.Application
 
         Task<ChoreDto> GetByIdAsync(ChoreId choreId);
 
-        Task<IEnumerable<ChoreDto>> GetActiveChoresAsync();
+        Task<IEnumerable<ChoreDto>> GetPendingChoresAsync();
 
         Task<ChoreId?> FinishAsync(ChoreId choreId);
 

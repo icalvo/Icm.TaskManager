@@ -7,6 +7,20 @@ namespace Icm.ChoreManager.CommandLine.Commands
 {
     internal class Command
     {
+        public static Command Create(
+            string name,
+            string verb,
+            string help,
+            Func<Task> process)
+        {
+            return new Command(
+                name,
+                verb,
+                new IParameter[0],
+                help,
+                arr => process());
+        }
+
         public static Command Create<T1>(
             string name,
             string verb,

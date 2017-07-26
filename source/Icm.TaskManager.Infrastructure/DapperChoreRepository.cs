@@ -82,6 +82,11 @@ namespace Icm.ChoreManager.Infrastructure
             throw new NotImplementedException();
         }
 
+        public Task<IEnumerable<Identified<ChoreId, Chore>>> GetPendingAsync()
+        {
+            throw new NotImplementedException();
+        }
+
 
         private bool disposed;
         public void Dispose()

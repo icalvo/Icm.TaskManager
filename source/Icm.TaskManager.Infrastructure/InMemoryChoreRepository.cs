@@ -126,6 +126,13 @@ namespace Icm.ChoreManager.Infrastructure
                 .SelectMany(GetActiveTimes));
         }
 
+        public Task<IEnumerable<Identified<ChoreId, Chore>>> GetPendingAsync()
+        {
+            return FromResult(
+                storage.Where(x => x.Value.FinishDate == null)
+                    .Select(x => Identified.Create(x.Key, Chore.FromMemento(x.Value))));
+        }
+
         private static IEnumerable<(Instant Time, TimeKind Kind)> GetActiveTimes(ChoreMemento chore)
         {
             yield return (chore.DueDate, TimeKind.DueDate);
