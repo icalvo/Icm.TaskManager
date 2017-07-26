@@ -46,6 +46,36 @@ namespace Icm.ChoreManager.CommandLine
                 await Console.Out.ShowDetailsBrief(id, dto);
             });
 
+        private static readonly Command ChangeDescriptionCommand = Command.Create(
+            "ChangeDescription",
+            "desc",
+            new Parameter<ChoreId>("id", x => CommandParseResult.ParameterSuccess(x, ChoreId.Parse(x))),
+            new Parameter<string>("description", x => CommandParseResult.ParameterSuccess(x, x)),
+            "creates a chore",
+            async (id, description) =>
+            {
+                await _svc.ChangeDescriptionAsync(id, description);
+
+                await Console.Out.WriteLineAsync("Description changed!");
+                var dto = await _svc.GetByIdAsync(id);
+                await Console.Out.ShowDetailsBrief(id, dto);
+            });
+
+        private static readonly Command ChangeRecurrenceToDueDateCommand = Command.Create(
+            "ChangeDescription",
+            "recdue",
+            new Parameter<ChoreId>("id", x => CommandParseResult.ParameterSuccess(x, ChoreId.Parse(x))),
+            new Parameter<Duration>("repeat interval", ParseDurationFunc("HH:mm")),
+            "creates a chore",
+            async (id, repeatInterval) =>
+            {
+                await _svc.ChangeRecurrenceToDueDateAsync(id, repeatInterval);
+
+                await Console.Out.WriteLineAsync("Recurrence changed!");
+                var dto = await _svc.GetByIdAsync(id);
+                await Console.Out.ShowDetailsBrief(id, dto);
+            });
+
 
         private static readonly Command ShowChoreCommand = Command.Create(
             "ShowChore",
@@ -82,16 +112,35 @@ namespace Icm.ChoreManager.CommandLine
         {
             return token =>
             {
-                var parseResult = ZonedDateTimePattern
-                    .CreateWithInvariantCulture(format, DateTimeZoneProviders.Tzdb).Parse(token);
+                var parseResult = InstantPattern
+                    .CreateWithInvariantCulture(format).Parse(token);
 
 
                 if (parseResult.Success)
                 {
-                    return CommandParseResult.ParameterSuccess(token, parseResult.Value.ToInstant());
+                    return CommandParseResult.ParameterSuccess(token, parseResult.Value);
                 }
 
                 return CommandParseResult.ParameterError<Instant>(token, errorMessage);
+            };
+        }
+
+        private static Func<string, CommandParseResult<Duration>> ParseDurationFunc(
+            string format,
+            string errorMessage = "Invalid duration")
+        {
+            return token =>
+            {
+                var parseResult = DurationPattern
+                    .CreateWithInvariantCulture(format).Parse(token);
+
+
+                if (parseResult.Success)
+                {
+                    return CommandParseResult.ParameterSuccess(token, parseResult.Value);
+                }
+
+                return CommandParseResult.ParameterError<Duration>(token, errorMessage);
             };
         }
 
@@ -128,7 +177,9 @@ namespace Icm.ChoreManager.CommandLine
                 CreateChoreCommand,
                 AddReminderCommand,
                 ShowChoreCommand,
-                FinishChoreCommand);
+                FinishChoreCommand,
+                ChangeRecurrenceToDueDateCommand,
+                ChangeDescriptionCommand);
 
             CommandRunner.QuitCommand.Verbs.Add("out");
             await runner.Run();
