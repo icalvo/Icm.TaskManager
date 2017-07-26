@@ -1,39 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Icm.ChoreManager.Domain.Chores;
 using NodaTime;
 
 namespace Icm.ChoreManager.Application
 {
     public interface IChoreApplicationService
     {
-        Task<Guid> CreateAsync(string description, Instant dueDate);
+        Task<ChoreId> CreateAsync(string description, Instant dueDate);
 
-        Task AddReminderAsync(Guid choreId, Instant reminder);
+        Task AddReminderAsync(ChoreId choreId, Instant reminder);
 
-        Task ChangeRecurrenceToDueDateAsync(Guid choreId, Duration repeatInterval);
+        Task ChangeRecurrenceToDueDateAsync(ChoreId choreId, Duration repeatInterval);
 
-        Task ChangeRecurrenceToFinishDateAsync(Guid choreId, Duration repeatInterval);
+        Task ChangeRecurrenceToFinishDateAsync(ChoreId choreId, Duration repeatInterval);
 
-        Task ChangeDescriptionAsync(Guid choreId, string newDescription);
+        Task ChangeDescriptionAsync(ChoreId choreId, string newDescription);
 
-        Task ChangeLabelsAsync(Guid choreId, string newLabels);
+        Task ChangeLabelsAsync(ChoreId choreId, string newLabels);
 
-        Task ChangeNotesAsync(Guid choreId, string newNotes);
+        Task ChangeNotesAsync(ChoreId choreId, string newNotes);
 
-        Task ChangePriorityAsync(Guid choreId, int newPriority);
+        Task ChangePriorityAsync(ChoreId choreId, int newPriority);
 
-        Task ChangeStartDateAsync(Guid choreId, Instant newStartDate);
+        Task ChangeStartDateAsync(ChoreId choreId, Instant newStartDate);
 
-        Task ChangeDueDateAsync(Guid choreId, Instant newDueDate);
+        Task ChangeDueDateAsync(ChoreId choreId, Instant newDueDate);
 
-        Task<ChoreDto> GetByIdAsync(Guid choreId);
+        Task<ChoreDto> GetByIdAsync(ChoreId choreId);
 
-        Task<IEnumerable<ChoreDto>> GetChoresFromAsync(Guid choreId);
+        Task<IEnumerable<ChoreDto>> GetActiveChoresAsync();
 
-        Task<Guid?> FinishAsync(Guid choreId);
+        Task<ChoreId?> FinishAsync(ChoreId choreId);
 
-        Task StartAsync(Guid choreId);
+        Task StartAsync(ChoreId choreId);
 
         Task<IEnumerable<TimeDto>> PendingTimesAsync();
     }

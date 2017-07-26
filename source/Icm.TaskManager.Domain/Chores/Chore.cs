@@ -104,10 +104,10 @@ namespace Icm.ChoreManager.Domain.Chores
         public static Chore Create(
             string description,
             Instant dueDate,
-            Instant now) =>
+            Instant creationDate) =>
         new Chore(
             description: description,
-            creationDate: now,
+            creationDate: creationDate,
             dueDate: dueDate,
             finishDate: null,
             recurrence: null,

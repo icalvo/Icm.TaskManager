@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NodaTime;
 
 namespace Icm.ChoreManager.Domain.Chores
 {
     public class ChoreMemento
     {
-        public Guid Id { get; set; }
+        public ChoreId Id { get; set; }
 
         public string Description { get; set; }
 
@@ -26,6 +25,6 @@ namespace Icm.ChoreManager.Domain.Chores
 
         public string Labels { get; set; }
 
-        public ICollection<Instant> Reminders { get; set; }
+        public List<Instant> Reminders { get; set; }
     }
 }

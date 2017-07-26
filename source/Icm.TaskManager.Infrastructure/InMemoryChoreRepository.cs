@@ -1,20 +1,72 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Icm.ChoreManager.Domain;
 using Icm.ChoreManager.Domain.Chores;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NodaTime;
+using NodaTime.Serialization.JsonNet;
 using static System.Threading.Tasks.Task;
 
 namespace Icm.ChoreManager.Infrastructure
 {
     public class InMemoryChoreRepository : IChoreRepository, IEnumerable<ChoreMemento>
     {
+        private const string Path = @"C:\Logs\store.json";
+        private static readonly IDictionary<ChoreId, ChoreMemento> _staticStorage = new Dictionary<ChoreId, ChoreMemento>();
+        private static int _latestKey;
+
+        private static bool _staticStorageLoaded;
+
+        private readonly IDictionary<ChoreId, ChoreMemento> storage;
+        private readonly List<Operation> transactionLog = new List<Operation>();
+        private static readonly JsonSerializer JsonSerializer;
+
+        static InMemoryChoreRepository()
+        {
+            JsonSerializer = JsonSerializer.CreateDefault();
+            JsonSerializer.Converters.Add(new ChoreIdConverter());
+            JsonSerializer.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
+        }
         private InMemoryChoreRepository(IDictionary<ChoreId, ChoreMemento> storage)
         {
             this.storage = storage;
+        }
+
+        private static IDictionary<ChoreId, ChoreMemento> StaticStorage
+        {
+            get
+            {
+                if (!_staticStorageLoaded)
+                {
+                    if (File.Exists(Path))
+                    {
+                        List<ChoreMemento> mementos;
+                        using (StreamReader file = File.OpenText(Path))
+                        {
+                            using (var reader = new JsonTextReader(file))
+                            {
+                                mementos = 
+                                    JsonSerializer.Deserialize<List<ChoreMemento>>(reader);
+                            }
+                        }
+                        mementos.ForEach(m => _staticStorage.Add(m.Id, m));
+                    }
+
+                    if (_staticStorage.Any())
+                    {
+                        _latestKey = _staticStorage.Keys.Max(x => x.Value);
+                    }
+                    _staticStorageLoaded = true;
+                }
+
+                return _staticStorage;
+            }
         }
 
         public static InMemoryChoreRepository WithStaticStorage()
@@ -22,20 +74,15 @@ namespace Icm.ChoreManager.Infrastructure
             return new InMemoryChoreRepository(StaticStorage);
         }
 
+
         public static InMemoryChoreRepository WithInstanceStorage()
         {
             return new InMemoryChoreRepository(new Dictionary<ChoreId, ChoreMemento>());
         }
 
-        private static readonly object StorageLock = new object();
-        private static readonly IDictionary<ChoreId, ChoreMemento> StaticStorage = new Dictionary<ChoreId, ChoreMemento>();
-        private readonly IDictionary<ChoreId, ChoreMemento> storage;
-
-        private readonly List<Operation> transactionLog = new List<Operation>();
-
         public Task<ChoreId> AddAsync(Chore item)
         {
-            var newId = Guid.NewGuid();
+            var newId = Interlocked.Increment(ref _latestKey);
             transactionLog.Add(new AddOperation(item.ToMemento(newId)));
             return FromResult<ChoreId>(newId);
         }
@@ -57,18 +104,19 @@ namespace Icm.ChoreManager.Infrastructure
             return CompletedTask;
         }
 
-        public Task SaveAsync()
+        public async Task SaveAsync()
         {
-            lock (StorageLock)
+            foreach (var logEntry in transactionLog)
             {
-                foreach (var logEntry in transactionLog)
-                {
-                    logEntry.Execute(storage);
-                }
+                logEntry.Execute(storage);
+            }
+
+            if (_staticStorageLoaded)
+            {
+                await DumpToFileAsync();
             }
 
             transactionLog.Clear();
-            return CompletedTask;
         }
 
         public Task<IEnumerable<(Instant Time, TimeKind Kind)>> GetActiveRemindersAsync()
@@ -80,17 +128,7 @@ namespace Icm.ChoreManager.Infrastructure
 
         private static IEnumerable<(Instant Time, TimeKind Kind)> GetActiveTimes(ChoreMemento chore)
         {
-            if (chore.StartDate.HasValue)
-            {
-                yield return (chore.StartDate.Value, TimeKind.StartDate);
-            }
-
             yield return (chore.DueDate, TimeKind.DueDate);
-
-            if (chore.FinishDate.HasValue)
-            {
-                yield return (chore.FinishDate.Value, TimeKind.FinishDate);
-            }
 
             foreach (var reminder in chore.Reminders)
             {
@@ -98,13 +136,23 @@ namespace Icm.ChoreManager.Infrastructure
             }
         }
 
-        private bool disposed;
-
         public void Dispose()
         {
-            if (disposed) return;
+        }
 
-            disposed = true;
+        private static Task DumpToFileAsync()
+        {
+            using (StreamWriter file = new StreamWriter(File.Open(Path, FileMode.Create)))
+            {
+                using (var writer = new JsonTextWriter(file))
+                {
+                    writer.Formatting = Formatting.Indented;
+
+                    JsonSerializer.Serialize(writer, StaticStorage.Values);
+                }
+            }
+
+            return CompletedTask;
         }
 
         public IEnumerator<ChoreMemento> GetEnumerator()
@@ -167,6 +215,25 @@ namespace Icm.ChoreManager.Infrastructure
             public override void Execute(IDictionary<ChoreId, ChoreMemento> storage)
             {
                 storage.Remove(id);
+            }
+        }
+
+        private class ChoreIdConverter : JsonConverter
+        {
+            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+            {
+                serializer.Serialize(writer, value.ToString());
+            }
+
+            public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+            {
+                var value = serializer.Deserialize<string>(reader);
+                return ChoreId.Parse(value);
+            }
+
+            public override bool CanConvert(Type objectType)
+            {
+                return objectType == typeof(ChoreId);
             }
         }
     }

@@ -7,7 +7,7 @@ namespace Icm.ChoreManager.Application
 {
     public class ChoreDto
     {
-        public Guid Id { get; set; }
+        public ChoreId Id { get; set; }
 
         public string Description { get; set; }
 

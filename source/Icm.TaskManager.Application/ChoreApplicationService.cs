@@ -18,26 +18,7 @@ namespace Icm.ChoreManager.Application
             this.clock = clock;
         }
 
-        public async Task<Guid> CreateAsync(
-            string description,
-            Instant dueDate,
-            int priority,
-            string notes,
-            string labels)
-        {
-            using (var repository = buildChoreRepository())
-            {
-                var id = await CreateAsync(description, dueDate, repository);
-
-                await ChangePriorityAsync(id, priority, repository);
-                await ChangeNotesAsync(id, notes, repository);
-                await ChangeLabelsAsync(id, labels, repository);
-                await repository.SaveAsync();
-                return id;
-            }
-        }
-
-        public async Task ChangeStartDateAsync(Guid choreId, Instant newStartDate)
+        public async Task ChangeStartDateAsync(ChoreId choreId, Instant newStartDate)
         {
             using (var choreRepository = buildChoreRepository())
             {
@@ -50,7 +31,7 @@ namespace Icm.ChoreManager.Application
             }
         }
 
-        public async Task<Guid> CreateAsync(string description, Instant dueDate)
+        public async Task<ChoreId> CreateAsync(string description, Instant dueDate)
         {
             using (var repository = buildChoreRepository())
             {
@@ -61,7 +42,7 @@ namespace Icm.ChoreManager.Application
             }
         }
 
-        public async Task<ChoreDto> GetByIdAsync(Guid choreId)
+        public async Task<ChoreDto> GetByIdAsync(ChoreId choreId)
         {
             using (var repository = buildChoreRepository())
             {
@@ -69,16 +50,16 @@ namespace Icm.ChoreManager.Application
             }
         }
 
-        public Task<IEnumerable<ChoreDto>> GetChoresFromAsync(Guid choreId)
+        public Task<IEnumerable<ChoreDto>> GetActiveChoresAsync()
         {
             using (var repository = buildChoreRepository())
             {
-                ////return (await repository.GetChoresAsync(choreId)).ToDto();
+                //// return (await repository.GetUnfinishedChoresAsync()).ToDto();
                 throw new NotImplementedException();
             }
         }
 
-        public async Task ChangeRecurrenceToFinishDateAsync(Guid id, Duration repeatInterval)
+        public async Task ChangeRecurrenceToFinishDateAsync(ChoreId id, Duration repeatInterval)
         {
             using (var choreRepository = buildChoreRepository())
             {
@@ -89,7 +70,7 @@ namespace Icm.ChoreManager.Application
             }
         }
 
-        public async Task ChangeRecurrenceToDueDateAsync(Guid id, Duration repeatInterval)
+        public async Task ChangeRecurrenceToDueDateAsync(ChoreId id, Duration repeatInterval)
         {
             using (var choreRepository = buildChoreRepository())
             {
@@ -102,7 +83,7 @@ namespace Icm.ChoreManager.Application
             }
         }
 
-        public async Task StartAsync(Guid choreId)
+        public async Task StartAsync(ChoreId choreId)
         {
             using (var choreRepository = buildChoreRepository())
             {
@@ -114,7 +95,7 @@ namespace Icm.ChoreManager.Application
             }
         }
 
-        public async Task<Guid?> FinishAsync(Guid choreId)
+        public async Task<ChoreId?> FinishAsync(ChoreId choreId)
         {
             using (var choreRepository = buildChoreRepository())
             {
@@ -138,7 +119,7 @@ namespace Icm.ChoreManager.Application
             }
         }
 
-        public async Task ChangeDescriptionAsync(Guid choreId, string newDescription)
+        public async Task ChangeDescriptionAsync(ChoreId choreId, string newDescription)
         {
             using (var choreRepository = buildChoreRepository())
             {
@@ -151,7 +132,7 @@ namespace Icm.ChoreManager.Application
             }
         }
 
-        public async Task ChangePriorityAsync(Guid choreId, int newPriority)
+        public async Task ChangePriorityAsync(ChoreId choreId, int newPriority)
         {
             using (var choreRepository = buildChoreRepository())
             {
@@ -159,7 +140,7 @@ namespace Icm.ChoreManager.Application
             }
         }
 
-        public async Task ChangeDueDateAsync(Guid choreId, Instant newDueDate)
+        public async Task ChangeDueDateAsync(ChoreId choreId, Instant newDueDate)
         {
             using (var choreRepository = buildChoreRepository())
             {
@@ -172,7 +153,7 @@ namespace Icm.ChoreManager.Application
             }
         }
 
-        public async Task ChangeLabelsAsync(Guid choreId, string newLabels)
+        public async Task ChangeLabelsAsync(ChoreId choreId, string newLabels)
         {
             using (var choreRepository = buildChoreRepository())
             {
@@ -180,7 +161,7 @@ namespace Icm.ChoreManager.Application
             }
         }
 
-        public async Task ChangeNotesAsync(Guid choreId, string newNotes)
+        public async Task ChangeNotesAsync(ChoreId choreId, string newNotes)
         {
             using (var choreRepository = buildChoreRepository())
             {
@@ -188,7 +169,7 @@ namespace Icm.ChoreManager.Application
             }
         }
 
-        public async Task AddReminderAsync(Guid choreId, Instant reminder)
+        public async Task AddReminderAsync(ChoreId choreId, Instant reminder)
         {
             using (var choreRepository = buildChoreRepository())
             {
@@ -211,7 +192,7 @@ namespace Icm.ChoreManager.Application
             }
         }
 
-        private async Task<Guid> CreateAsync(string description, Instant dueDate, IChoreRepository choreRepository)
+        private async Task<ChoreId> CreateAsync(string description, Instant dueDate, IChoreRepository choreRepository)
         {
             var creationInstant = clock.GetCurrentInstant();
 
@@ -223,7 +204,7 @@ namespace Icm.ChoreManager.Application
             return await choreRepository.AddAsync(chore);
         }
 
-        private static async Task ChangePriorityAsync(Guid choreId, int newPriority, IChoreRepository choreRepository)
+        private static async Task ChangePriorityAsync(ChoreId choreId, int newPriority, IChoreRepository choreRepository)
         {
             var id = new ChoreId(choreId);
             var identifiedChore = await choreRepository.GetByIdAsync(id);
@@ -233,7 +214,7 @@ namespace Icm.ChoreManager.Application
             await choreRepository.SaveAsync();
         }
 
-        private static async Task ChangeLabelsAsync(Guid choreId, string newLabels, IChoreRepository choreRepository)
+        private static async Task ChangeLabelsAsync(ChoreId choreId, string newLabels, IChoreRepository choreRepository)
         {
             var id = new ChoreId(choreId);
             var identifiedChore = await choreRepository.GetByIdAsync(id);
@@ -243,7 +224,7 @@ namespace Icm.ChoreManager.Application
             await choreRepository.SaveAsync();
         }
 
-        private static async Task ChangeNotesAsync(Guid choreId, string newNotes, IChoreRepository choreRepository)
+        private static async Task ChangeNotesAsync(ChoreId choreId, string newNotes, IChoreRepository choreRepository)
         {
             var id = new ChoreId(choreId);
             var identifiedChore = await choreRepository.GetByIdAsync(id);

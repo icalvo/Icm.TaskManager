@@ -1,9 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using Icm.TaskManager.Application;
-using NodaTime;
+﻿using System.Threading.Tasks;
+using Icm.ChoreManager.Application;
 
-namespace Icm.TaskManager.CommandLine
+namespace Icm.ChoreManager.CommandLine
 {
     public interface IChoreApplicationServiceSchedulingAdapter : IChoreApplicationService
     {

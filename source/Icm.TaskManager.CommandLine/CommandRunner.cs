@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Icm.ChoreManager.CommandLine.Commands;
 using JetBrains.Annotations;
@@ -34,7 +36,7 @@ namespace Icm.ChoreManager.CommandLine
                 "ShowHelp",
                 "help",
                 "shows help",
-                async tokens =>
+                async _ =>
                 {
                     foreach (var command in this.commands)
                     {
@@ -86,6 +88,7 @@ namespace Icm.ChoreManager.CommandLine
 
         public Task Run()
         {
+            ConsoleErrorWriterDecorator.SetToConsole();
             return 
                 ConsoleInput()
                 .Select(line =>
@@ -139,6 +142,54 @@ namespace Icm.ChoreManager.CommandLine
             {
                 Console.Write("> ");
                 yield return Console.ReadLine();
+            }
+        }
+
+        public class ConsoleErrorWriterDecorator : TextWriter
+        {
+            private readonly TextWriter originalConsoleStream;
+
+            public ConsoleErrorWriterDecorator(TextWriter consoleTextWriter)
+            {
+                originalConsoleStream = consoleTextWriter;
+            }
+
+            public override void Write(char value)
+            {
+                ConsoleColor originalColor = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Red;
+
+                originalConsoleStream.WriteLine(value);
+
+                Console.ForegroundColor = originalColor;
+            }
+
+            public override void Write(string value)
+            {
+                ConsoleColor originalColor = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Red;
+
+                originalConsoleStream.Write(value);
+
+                Console.ForegroundColor = originalColor;
+            }
+
+
+            public override void WriteLine(string value)
+            {
+                ConsoleColor originalColor = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.Red;
+
+                originalConsoleStream.WriteLine(value);
+
+                Console.ForegroundColor = originalColor;
+            }
+
+            public override Encoding Encoding => Console.Error.Encoding;
+
+            public static void SetToConsole()
+            {
+                Console.SetError(new ConsoleErrorWriterDecorator(Console.Error));
             }
         }
     }

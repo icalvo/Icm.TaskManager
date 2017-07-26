@@ -1,62 +1,22 @@
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 
 namespace Icm.ChoreManager.CommandLine.Commands
 {
-    internal class Parameter
+    internal class Parameter<T> : IParameter
     {
-        public Parameter(string name)
-            : this(name, _ => Enumerable.Empty<string>())
-        {
-        }
+        private readonly Func<string, CommandParseResult<T>> parseFunc;
 
-        public Parameter(string name, Func<string, bool> valid)
+        public Parameter(string name, Func<string, CommandParseResult<T>> parseFunc)
         {
+            this.parseFunc = parseFunc;
             Name = name;
-            Validation = arg =>
-                valid(arg)
-                    ? Enumerable.Empty<string>()
-                    : new[] { $"{name} is invalid" };
-        }
-
-        public Parameter(string name, Func<string, bool> valid, Func<string, string> errorMessage)
-        {
-            Name = name;
-            Validation = arg =>
-                valid(arg)
-                    ? Enumerable.Empty<string>()
-                    : new[] {errorMessage(arg)};
-        }
-
-        private Parameter(string name, Func<string, IEnumerable<string>> validation)
-        {
-            Name = name;
-            Validation = validation;
         }
 
         public string Name { get; }
-        public Func<string, IEnumerable<string>> Validation { get; }
 
-        public static bool DateParses(string arg, string format)
+        public ICommandParseResult Parse(string token)
         {
-            return DateTime.TryParseExact(
-                arg,
-                format,
-                CultureInfo.InvariantCulture,
-                DateTimeStyles.None,
-                out DateTime d);
-        }
-
-        public static bool IntParses(string arg)
-        {
-            return int.TryParse(arg, out int _);
-        }
-
-        public static bool GuidParses(string arg)
-        {
-            return Guid.TryParse(arg, out Guid _);
+            return parseFunc(token);
         }
     }
 }

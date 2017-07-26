@@ -17,52 +17,55 @@ namespace Icm.ChoreManager.CommandLine
     {
         private static IChoreApplicationServiceSchedulingAdapter _svc;
 
-        private static readonly Command CreateChoreCommand = new Command(
+        private static readonly Command CreateChoreCommand = Command.Create(
             "CreateChore",
             "create",
-            new[] {
-                new Parameter("description"),
-                new Parameter("due date", arg => Parameter.DateParses(arg, "yyyy-MM-dd")) },
+            new Parameter<string>("description", x => CommandParseResult.ParameterSuccess(x, x)),
+            new Parameter<Instant>("due date", ParseInstantFunc("yyyy-MM-dd")),
             "creates a chore",
-            async tokens =>
+            async (description, dueDate) =>
             {
-                await Console.Out.WriteLineAsync("Creating chore...");
-
-                var description = tokens[1];
-                var dueDate = ZonedDateTimePattern.CreateWithInvariantCulture("yyyy-MM-dd", DateTimeZoneProviders.Tzdb).Parse(tokens[2]).Value.ToInstant();
                 var id = await _svc.CreateAsync(description, dueDate);
-                await Console.Out.WriteLineAsync($"Task {id} created");
+
+                var dto = await _svc.GetByIdAsync(id);
+                await Console.Out.ShowDetailsBrief(id, dto);
+            });
+        
+        private static readonly Command AddReminderCommand = Command.Create(
+            "AddReminder",
+            "reminder",
+            new Parameter<ChoreId>("id", x => CommandParseResult.ParameterSuccess(x, ChoreId.Parse(x))),
+            new Parameter<Instant>("reminder time", ParseInstantFunc("yyyy-MM-dd")),
+            "creates a chore",
+            async (id, reminderTime) =>
+            {
+                await _svc.AddReminderAsync(id, reminderTime);
+
+                await Console.Out.WriteLineAsync("Reminder added!");
                 var dto = await _svc.GetByIdAsync(id);
                 await Console.Out.ShowDetailsBrief(id, dto);
             });
 
-        private static readonly Command ShowChoreCommand = new Command(
+
+        private static readonly Command ShowChoreCommand = Command.Create(
             "ShowChore",
             "show",
-            new []
-            {
-                new Parameter("chore id", Parameter.GuidParses), 
-            },
+            new Parameter<ChoreId>("chore id", x => CommandParseResult.ParameterSuccess(x, ChoreId.Parse(x))),
             "shows chore details",
-            async tokens =>
+            async id =>
             {
-                Guid id = Guid.Parse(tokens[1]);
                 var dto = await _svc.GetByIdAsync(id);
                 await Console.Out.ShowDetailsBrief(id, dto);
             });
 
-        private static readonly Command FinishChoreCommand = new Command(
+        private static readonly Command FinishChoreCommand = Command.Create(
             "FinishChore",
-            new [] {"finish"},
-            new[]
-            {
-                new Parameter("chore id", Parameter.IntParses),
-            },
+            "finish",
+            new Parameter<ChoreId>("chore id", x => CommandParseResult.ParameterSuccess(x, ChoreId.Parse(x))),
             "finishes a chore",
-            async tokens =>
+            async id =>
             {
-                Guid id = Guid.Parse(tokens[1]);
-                Guid? newid = await _svc.FinishAsync(id);
+                ChoreId? newid = await _svc.FinishAsync(id);
                 var dto = await _svc.GetByIdAsync(id);
                 await Console.Out.ShowDetailsBrief(id, dto);
                 if (newid.HasValue)
@@ -73,6 +76,25 @@ namespace Icm.ChoreManager.CommandLine
                 }
             });
 
+        private static Func<string, CommandParseResult<Instant>> ParseInstantFunc(
+            string format,
+            string errorMessage = "Invalid date")
+        {
+            return token =>
+            {
+                var parseResult = ZonedDateTimePattern
+                    .CreateWithInvariantCulture(format, DateTimeZoneProviders.Tzdb).Parse(token);
+
+
+                if (parseResult.Success)
+                {
+                    return CommandParseResult.ParameterSuccess(token, parseResult.Value.ToInstant());
+                }
+
+                return CommandParseResult.ParameterError<Instant>(token, errorMessage);
+            };
+        }
+
         internal static void Main()
         {
             MainAsync().GetAwaiter().GetResult();
@@ -81,8 +103,8 @@ namespace Icm.ChoreManager.CommandLine
         private static async Task MainAsync()
         {
             //// IChoreRepository RepoBuilder() => new DapperChoreRepository(ConnectionStrings.ByName("Trolo"));
-            //// IChoreRepository RepoBuilder() => InMemoryChoreRepository.WithStaticStorage();
-            IChoreRepository RepoBuilder() => new AzureChoreRepository();
+            IChoreRepository RepoBuilder() => InMemoryChoreRepository.WithStaticStorage();
+            //// IChoreRepository RepoBuilder() => new AzureChoreRepository();
 
             IChoreApplicationService basicSvc = new ChoreApplicationService(RepoBuilder, SystemClock.Instance);
 
@@ -104,10 +126,11 @@ namespace Icm.ChoreManager.CommandLine
 
             var runner = new CommandRunner(
                 CreateChoreCommand,
+                AddReminderCommand,
                 ShowChoreCommand,
                 FinishChoreCommand);
 
-            CommandRunner.QuitCommand.Verbs = new List<string> {"quit"};
+            CommandRunner.QuitCommand.Verbs.Add("out");
             await runner.Run();
         }
     }

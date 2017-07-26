@@ -32,7 +32,7 @@ namespace Icm.ChoreManager.Tests
 
             var secondChoreId = await sut.FinishAsync(choreId);
 
-            secondChoreId.Should().HaveValue();
+            secondChoreId.Should().NotBeNull();
             repo.Should().HaveCount(2);
 
             var chore = (await repo.GetByIdAsync(new ChoreId(choreId))).Value;
@@ -55,7 +55,7 @@ namespace Icm.ChoreManager.Tests
 
             var secondChoreId = await sut.FinishAsync(choreId);
 
-            secondChoreId.Should().HaveValue();
+            secondChoreId.Should().NotBeNull();
             repo.Should().HaveCount(2);
 
             var chore = (await repo.GetByIdAsync(new ChoreId(choreId))).Value;

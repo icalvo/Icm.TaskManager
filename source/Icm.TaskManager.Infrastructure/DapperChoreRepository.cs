@@ -49,7 +49,7 @@ namespace Icm.ChoreManager.Infrastructure
 
         public async Task<ChoreId> AddAsync(Chore item)
         {
-            var id = await transaction.QuerySingleAsync<Guid>("INSERT INTO Tasks () VALUES ()");
+            var id = await transaction.QuerySingleAsync<int>("INSERT INTO Tasks () VALUES ()");
             return id;
         }
 

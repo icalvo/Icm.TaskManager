@@ -7,20 +7,51 @@ namespace Icm.ChoreManager.CommandLine.Commands
 {
     internal class Command
     {
-        public static Command WithoutVerb(string name, string help, Func<string[], Task> process)
+        public static Command Create<T1>(
+            string name,
+            string verb,
+            Parameter<T1> parameter1,
+            string help,
+            Func<T1, Task> process)
+        {
+            return new Command(
+                name,
+                verb,
+                new IParameter[] { parameter1 },
+                help,
+                arr => process((T1)arr[0]));
+        }
+
+        public static Command Create<T1, T2>(
+            string name,
+            string verb,
+            Parameter<T1> parameter1,
+            Parameter<T2> parameter2,
+            string help,
+            Func<T1, T2, Task> process)
+        {
+            return new Command(
+                name,
+                verb,
+                new IParameter[] {parameter1, parameter2},
+                help,
+                arr => process((T1)arr[0], (T2)arr[1]));
+        }
+
+        public static Command WithoutVerb(string name, string help, Func<object[], Task> process)
         {
             return new Command(name, help, process);
         }
 
-        private readonly Func<string[], Task> process;
+        private readonly Func<object[], Task> process;
         private readonly string help;
 
         public Command(
             string name,
             IEnumerable<string> verbs,
-            IEnumerable<Parameter> parameters,
+            IEnumerable<IParameter> parameters,
             string help,
-            Func<string[], Task> process)
+            Func<object[], Task> process)
         {
             Name = name;
             this.process = process;
@@ -32,9 +63,9 @@ namespace Icm.ChoreManager.CommandLine.Commands
         public Command(
             string name,
             string verb,
-            IEnumerable<Parameter> parameters,
+            IEnumerable<IParameter> parameters,
             string help,
-            Func<string[], Task> process)
+            Func<object[], Task> process)
             : this(name, new[] { verb }, parameters, help, process)
         {
         }
@@ -43,38 +74,38 @@ namespace Icm.ChoreManager.CommandLine.Commands
             string name,
             string verb,
             string help,
-            Func<string[], Task> process)
+            Func<object[], Task> process)
         {
             Name = name;
             this.process = process;
             this.help = help;
             Verbs = new[] { verb };
-            Parameters = new List<Parameter>();
+            Parameters = new List<IParameter>();
         }
 
         public Command(
             string name,
             IEnumerable<string> verbs,
             string help,
-            Func<string[], Task> process)
+            Func<object[], Task> process)
         {
             Name = name;
             this.process = process;
             this.help = help;
             Verbs = verbs.ToList();
-            Parameters = new List<Parameter>();
+            Parameters = new List<IParameter>();
         }
 
         private Command(
             string name,
             string help,
-            Func<string[], Task> process)
+            Func<object[], Task> process)
         {
             Name = name;
             this.process = process;
             this.help = help;
             Verbs = new List<string>();
-            Parameters = new List<Parameter>();
+            Parameters = new List<IParameter>();
         }
 
         public bool Matches(string[] tokens)
@@ -82,7 +113,7 @@ namespace Icm.ChoreManager.CommandLine.Commands
             return Verbs.Any(tokens.VerbIs);
         }
 
-        private IEnumerable<string> ArgumentErrors(string[] tokens)
+        private IEnumerable<ICommandParseResult> Results(string[] tokens)
         {
             if (!Parameters.Any())
             {
@@ -91,16 +122,15 @@ namespace Icm.ChoreManager.CommandLine.Commands
 
             if (Parameters.Any() && tokens.Length != Parameters.Count + 1)
             {
-                yield return $"I need {Parameters.Count} arguments ({Parameters.JoinStr(", ", p => p.Name)}) to execute {Name}";
+                yield return CommandParseResult.GeneralError($"I need {Parameters.Count} arguments ({Parameters.JoinStr(", ", p => p.Name)}) to execute {Name}");
                 yield break;
             }
 
-            var errors = 
+            var results = 
                 tokens
                     .Skip(1)
-                    .Zip(Parameters, (arg, param) => param.Validation(arg))
-                    .SelectMany(x => x);
-            foreach (var error in errors)
+                    .Zip(Parameters, (arg, param) => param.Parse(arg));
+            foreach (var error in results)
             {
                 yield return error;
             }
@@ -113,22 +143,25 @@ namespace Icm.ChoreManager.CommandLine.Commands
 
         public async Task Process(string[] tokens)
         {
-            var errors = ArgumentErrors(tokens).ToArray();
+            var results = Results(tokens).ToList();
+
+            var errors = results.Where(x => !x.IsValid).ToList();
             if (errors.Any())
             {
-                foreach (var error in errors)
+                foreach (var result in errors)
                 {
-                    Console.Error.WriteLine(error);
+                    Console.Error.WriteLine(result);
                 }
             }
             else
             {
-                await process(tokens);
+                await Console.Out.WriteLineAsync($"Executing {Name}...");
+                await process(results.Select(x => x.Value).ToArray());
             }
         }
 
         public IList<string> Verbs { get; set; }
 
-        public IList<Parameter> Parameters { get; }
+        public IList<IParameter> Parameters { get; }
     }
 }
