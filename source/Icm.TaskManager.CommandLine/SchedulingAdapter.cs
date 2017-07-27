@@ -88,16 +88,18 @@ namespace Icm.ChoreManager.CommandLine
 
         Task IChoreApplicationService.ChangeDescriptionAsync(ChoreId choreId, string newDescription) => impl.ChangeDescriptionAsync(choreId, newDescription);
 
-        Task IChoreApplicationService.ChangeLabelsAsync(ChoreId choreId, string newLabels) => impl.ChangeLabelsAsync(choreId, newLabels);
+        Task IChoreApplicationService.AddLabelsAsync(ChoreId choreId, string[] newLabels) => impl.AddLabelsAsync(choreId, newLabels);
+
+        Task IChoreApplicationService.RemoveLabelsAsync(ChoreId choreId, string[] labelsToRemove) => impl.RemoveLabelsAsync(choreId, labelsToRemove);
 
         Task IChoreApplicationService.ChangeNotesAsync(ChoreId choreId, string newNotes) => impl.ChangeNotesAsync(choreId, newNotes);
 
 
         Task IChoreApplicationService.ChangePriorityAsync(ChoreId choreId, int newPriority) => impl.ChangePriorityAsync(choreId, newPriority);
 
-        Task<ChoreDto> IChoreApplicationService.GetByIdAsync(ChoreId choreId) => impl.GetByIdAsync(choreId);
+        Task<ChoreMemento> IChoreApplicationService.GetByIdAsync(ChoreId choreId) => impl.GetByIdAsync(choreId);
 
-        Task<IEnumerable<ChoreDto>> IChoreApplicationService.GetPendingChoresAsync() => impl.GetPendingChoresAsync();
+        Task<IEnumerable<ChoreMemento>> IChoreApplicationService.GetPendingChoresAsync() => impl.GetPendingChoresAsync();
 
         Task<ChoreId?> IChoreApplicationService.FinishAsync(ChoreId choreId) => impl.FinishAsync(choreId);
 

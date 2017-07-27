@@ -17,7 +17,7 @@ namespace Icm.ChoreManager.Domain.Chores
             Recurrence recurrence,
             int priority,
             string notes,
-            string labels,
+            string[] labels,
             ICollection<Instant> reminders,
             Instant? startDate)
         {
@@ -82,9 +82,9 @@ namespace Icm.ChoreManager.Domain.Chores
 
         public string Notes { get; set; }
 
-        public string Labels { get; set; }
+        public string[] Labels { get; set; }
 
-        public ICollection<Instant> Reminders { get; internal set; }
+        public ICollection<Instant> Reminders { get; }
 
         public bool IsDone => FinishDate.HasValue;
 
@@ -113,7 +113,7 @@ namespace Icm.ChoreManager.Domain.Chores
             recurrence: null,
             priority: 3,
             notes: null,
-            labels: null,
+            labels: new string[0], 
             reminders: new HashSet<Instant>(),
             startDate: null);
 
@@ -128,7 +128,7 @@ namespace Icm.ChoreManager.Domain.Chores
                 FinishDate = FinishDate,
                 Labels = Labels,
                 Notes = Notes,
-                Recurrence = Recurrence,
+                Recurrence = Recurrence == null ? null : new RecurrenceMemento { Kind = Recurrence.Kind, Interval = Recurrence.RepeatInterval },
                 Reminders = new List<Instant>(Reminders),
                 Priority = Priority,
                 StartDate = StartDate
@@ -142,10 +142,10 @@ namespace Icm.ChoreManager.Domain.Chores
                 creationDate: memento.CreationDate,
                 dueDate: memento.DueDate,
                 finishDate: memento.FinishDate,
-                labels: memento.Labels,
+                labels: memento.Labels ?? new string[0],
                 notes: memento.Notes,
-                recurrence: memento.Recurrence,
-                reminders: memento.Reminders == null? new List<Instant>() : new List<Instant>(memento.Reminders),
+                recurrence: memento.Recurrence == null ? null : Recurrence.FromMemento(memento.Recurrence),
+                reminders: memento.Reminders == null ? new List<Instant>() : new List<Instant>(memento.Reminders),
                 priority: memento.Priority,
                 startDate: memento.StartDate);
         }

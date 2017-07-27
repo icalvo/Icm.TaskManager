@@ -17,14 +17,20 @@ namespace Icm.ChoreManager.Domain.Chores
 
         public Instant? FinishDate { get; set; }
 
-        public Recurrence Recurrence { get; set; }
+        public RecurrenceMemento Recurrence { get; set; }
 
         public int Priority { get; set; }
 
         public string Notes { get; set; }
 
-        public string Labels { get; set; }
+        public string[] Labels { get; set; }
 
         public List<Instant> Reminders { get; set; }
+    }
+
+    public class RecurrenceMemento
+    {
+        public RecurrenceKind Kind { get; set; }
+        public Duration Interval { get; set; }
     }
 }

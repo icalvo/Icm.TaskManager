@@ -152,7 +152,8 @@ namespace Icm.ChoreManager.CommandLine.Commands
 
         public string Name { get; }
 
-        public string Help => $"{help}\r\nUsage: {Verbs.JoinStr("/")} {Parameters.JoinStr(" ", p => p.Name.Replace(" ", "_"))}\r\n";
+        public string Help => 
+            $"{help}\r\nUsage: {Verbs.JoinStr("/")} {Parameters.JoinStr(" ", p => p.Name.Replace(" ", "_"))}\r\n";
 
 
         public async Task Process(string[] tokens)
@@ -169,7 +170,6 @@ namespace Icm.ChoreManager.CommandLine.Commands
             }
             else
             {
-                await Console.Out.WriteLineAsync($"Executing {Name}...");
                 await process(results.Select(x => x.Value).ToArray());
             }
         }

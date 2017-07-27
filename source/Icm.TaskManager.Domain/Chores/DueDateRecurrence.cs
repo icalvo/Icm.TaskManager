@@ -9,6 +9,8 @@ namespace Icm.ChoreManager.Domain.Chores
         {
         }
 
+        public override RecurrenceKind Kind => RecurrenceKind.DueDate;
+
         public override Chore CreateRecurringChore(Chore chore, Instant now)
         {
             Instant dueDate = chore.DueDate + RepeatInterval;

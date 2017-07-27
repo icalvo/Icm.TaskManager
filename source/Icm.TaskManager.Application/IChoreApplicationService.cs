@@ -20,7 +20,9 @@ namespace Icm.ChoreManager.Application
 
         Task ChangeDescriptionAsync(ChoreId choreId, string newDescription);
 
-        Task ChangeLabelsAsync(ChoreId choreId, string newLabels);
+        Task AddLabelsAsync(ChoreId choreId, string[] newLabels);
+
+        Task RemoveLabelsAsync(ChoreId choreId, string[] labelsToRemove);
 
         Task ChangeNotesAsync(ChoreId choreId, string newNotes);
 
@@ -30,9 +32,9 @@ namespace Icm.ChoreManager.Application
 
         Task ChangeDueDateAsync(ChoreId choreId, Instant newDueDate);
 
-        Task<ChoreDto> GetByIdAsync(ChoreId choreId);
+        Task<ChoreMemento> GetByIdAsync(ChoreId choreId);
 
-        Task<IEnumerable<ChoreDto>> GetPendingChoresAsync();
+        Task<IEnumerable<ChoreMemento>> GetPendingChoresAsync();
 
         Task<ChoreId?> FinishAsync(ChoreId choreId);
 

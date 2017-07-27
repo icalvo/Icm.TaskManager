@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -36,7 +37,7 @@ namespace Icm.ChoreManager.CommandLine
                 "reminder",
                 new Parameter<ChoreId>("id", x => CommandParseResult.ParameterSuccess(x, ChoreId.Parse(x))),
                 new Parameter<Instant>("reminder time", ParseInstantFunc("yyyy-MM-dd")),
-                "creates a chore",
+                "adds a reminder",
                 async (id, reminderTime) =>
                 {
                     await _svc.AddReminderAsync(id, reminderTime);
@@ -50,7 +51,7 @@ namespace Icm.ChoreManager.CommandLine
                 "desc",
                 new Parameter<ChoreId>("id", x => CommandParseResult.ParameterSuccess(x, ChoreId.Parse(x))),
                 new Parameter<string>("description", x => CommandParseResult.ParameterSuccess(x, x)),
-                "creates a chore",
+                "changes a description",
                 async (id, description) =>
                 {
                     await _svc.ChangeDescriptionAsync(id, description);
@@ -60,11 +61,11 @@ namespace Icm.ChoreManager.CommandLine
                     await Console.Out.ShowDetailsBrief(dto);
                 }),
             Command.Create(
-                "ChangeDescription",
+                "SetRecurrenceToDueDate",
                 "recdue",
                 new Parameter<ChoreId>("id", x => CommandParseResult.ParameterSuccess(x, ChoreId.Parse(x))),
-                new Parameter<Duration>("repeat interval", ParseDurationFunc("HH:mm")),
-                "creates a chore",
+                new Parameter<Duration>("repeat interval", ParseDurationFunc("-D", "HH:mm")),
+                "sets the recurrence on the due date. It will clone itself when the task is finished",
                 async (id, repeatInterval) =>
                 {
                     await _svc.SetRecurrenceToDueDateAsync(id, repeatInterval);
@@ -74,14 +75,55 @@ namespace Icm.ChoreManager.CommandLine
                     await Console.Out.ShowDetailsBrief(dto);
                 }),
             Command.Create(
-                "ChangeLabels",
-                "label",
+                "SetRecurrenceToFinishDate",
+                "recfin",
                 new Parameter<ChoreId>("id", x => CommandParseResult.ParameterSuccess(x, ChoreId.Parse(x))),
-                new Parameter<string>("labels", x => CommandParseResult.ParameterSuccess(x, x)),
-                "sets labels for a chore",
+                new Parameter<Duration>("repeat interval", ParseDurationFunc("%D", "HH:mm")),
+                "sets the recurrence on the finish date. It will clone itself when the task is finished",
+                async (id, repeatInterval) =>
+                {
+                    await _svc.SetRecurrenceToFinishDateAsync(id, repeatInterval);
+
+                    await Console.Out.WriteLineAsync("Recurrence changed!");
+                    var dto = await _svc.GetByIdAsync(id);
+                    await Console.Out.ShowDetailsBrief(dto);
+                }),
+            Command.Create(
+                "RemoveRecurrence",
+                "rmrec",
+                new Parameter<ChoreId>("id", x => CommandParseResult.ParameterSuccess(x, ChoreId.Parse(x))),
+                "removes the recurrence",
+                async id =>
+                {
+                    await _svc.RemoveRecurrenceAsync(id);
+
+                    await Console.Out.WriteLineAsync("Recurrence removed!");
+                    var dto = await _svc.GetByIdAsync(id);
+                    await Console.Out.ShowDetailsBrief(dto);
+                }),
+            Command.Create(
+                "AddLabels",
+                "addlabel",
+                new Parameter<ChoreId>("id", x => CommandParseResult.ParameterSuccess(x, ChoreId.Parse(x))),
+                new Parameter<string[]>("labels", ParseLabels),
+                "adds labels for a chore",
                 async (id, labels) =>
                 {
-                    await _svc.ChangeLabelsAsync(id, labels);
+                    await _svc.AddLabelsAsync(id, labels);
+
+                    await Console.Out.WriteLineAsync("Labels changed!");
+                    var dto = await _svc.GetByIdAsync(id);
+                    await Console.Out.ShowDetailsBrief(dto);
+                }),
+            Command.Create(
+                "RemoveLabels",
+                "rmlabel",
+                new Parameter<ChoreId>("id", x => CommandParseResult.ParameterSuccess(x, ChoreId.Parse(x))),
+                new Parameter<string[]>("labels", ParseLabels),
+                "remove labels for a chore",
+                async (id, labels) =>
+                {
+                    await _svc.RemoveLabelsAsync(id, labels);
 
                     await Console.Out.WriteLineAsync("Labels changed!");
                     var dto = await _svc.GetByIdAsync(id);
@@ -104,7 +146,7 @@ namespace Icm.ChoreManager.CommandLine
             Command.Create(
                 "ListPending",
                 "pending",
-                "change notes of a chore",
+                "lists pending chores",
                 async () =>
                 {
                     var pendingChores = await _svc.GetPendingChoresAsync();
@@ -119,7 +161,7 @@ namespace Icm.ChoreManager.CommandLine
                 "prio",
                 new Parameter<ChoreId>("id", x => CommandParseResult.ParameterSuccess(x, ChoreId.Parse(x))),
                 new Parameter<int>("priority", x => CommandParseResult.ParameterSuccess(x, int.Parse(x))),
-                "change priority of a chore",
+                "change priority",
                 async (id, priority) =>
                 {
                     await _svc.ChangePriorityAsync(id, priority);
@@ -157,6 +199,11 @@ namespace Icm.ChoreManager.CommandLine
                 })
         };
 
+        private static CommandParseResult<string[]> ParseLabels(string labels)
+        {
+            return CommandParseResult.ParameterSuccess(labels, labels.Split(',').Select(x => x.Trim()).ToArray());
+        }
+
         private static Func<string, CommandParseResult<Instant>> ParseInstantFunc(
             string format,
             string errorMessage = "Invalid date")
@@ -177,21 +224,26 @@ namespace Icm.ChoreManager.CommandLine
         }
 
         private static Func<string, CommandParseResult<Duration>> ParseDurationFunc(
-            string format,
-            string errorMessage = "Invalid duration")
+            params string[] formats)
         {
             return token =>
             {
-                var parseResult = DurationPattern
-                    .CreateWithInvariantCulture(format).Parse(token);
+                var patternBuilder = new CompositePatternBuilder<Duration>();
 
+                foreach (var format in formats)
+                {
+                    var pattern = DurationPattern
+                        .CreateWithInvariantCulture(format);
+                    patternBuilder.Add(pattern, _ => true);
+                }
+                var parseResult = patternBuilder.Build().Parse(token);
 
                 if (parseResult.Success)
                 {
                     return CommandParseResult.ParameterSuccess(token, parseResult.Value);
                 }
 
-                return CommandParseResult.ParameterError<Duration>(token, errorMessage);
+                return CommandParseResult.ParameterError<Duration>(token, "Invalid duration");
             };
         }
 
@@ -209,15 +261,10 @@ namespace Icm.ChoreManager.CommandLine
             IChoreApplicationService basicSvc = new ChoreApplicationService(RepoBuilder, SystemClock.Instance);
 
             var timerExpirations = new Subject<TimeDto>();
-            var timerStarts = new Subject<TimeDto>();
             _svc = new SchedulingAdapter(
                 basicSvc,
                 TaskPoolScheduler.Default,
                 timerExpirations);
-
-            timerStarts
-                .Select(dto => dto.ToString())
-                .Subscribe(x => Console.WriteLine($"Timer started, due {x}"));
 
             timerExpirations
                 .Select(dto => dto.ToString())

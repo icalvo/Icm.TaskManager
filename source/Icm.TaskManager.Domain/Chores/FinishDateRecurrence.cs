@@ -9,6 +9,8 @@ namespace Icm.ChoreManager.Domain.Chores
         {
         }
 
+        public override RecurrenceKind Kind => RecurrenceKind.FinishDate;
+
         public override Chore CreateRecurringChore(Chore chore, Instant now)
         {
             return MonadicExtensions.Match(

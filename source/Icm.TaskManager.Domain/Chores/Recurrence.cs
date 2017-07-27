@@ -11,19 +11,27 @@ namespace Icm.ChoreManager.Domain.Chores
 
         public Duration RepeatInterval { get; }
 
+        public abstract RecurrenceKind Kind { get; }
+
         public abstract Chore CreateRecurringChore(Chore chore, Instant now);
 
-        public static Recurrence FromType(string recurrenceType, Duration repeatInterval)
+        public static Recurrence FromMemento(RecurrenceMemento memento)
         {
-            switch (recurrenceType)
+            switch (memento.Kind)
             {
-                case "DueDate":
-                    return new DueDateRecurrence(repeatInterval);
-                case "FinishDate":
-                    return new FinishDateRecurrence(repeatInterval);
+                case RecurrenceKind.DueDate:
+                    return new DueDateRecurrence(memento.Interval);
+                case RecurrenceKind.FinishDate:
+                    return new FinishDateRecurrence(memento.Interval);
                 default:
                     return null;
             }
         }
+    }
+
+    public enum RecurrenceKind
+    {
+        DueDate,
+        FinishDate
     }
 }

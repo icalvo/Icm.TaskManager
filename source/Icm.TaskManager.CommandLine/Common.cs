@@ -8,7 +8,7 @@ namespace Icm.ChoreManager.CommandLine
 {
     internal static class OutputExtensions
     {
-        internal static async Task ShowDetails(this TextWriter output, ChoreId choreId, ChoreDto chore)
+        internal static async Task ShowDetails(this TextWriter output, ChoreId choreId, ChoreMemento chore)
         {
             await output.WriteLineAsync($"Task {choreId}: {chore.Description}");
             await output.WriteLineAsync($"  Start: {chore.StartDate}");
@@ -31,14 +31,15 @@ namespace Icm.ChoreManager.CommandLine
             }
         }
 
-        internal static async Task ShowDetailsBrief(this TextWriter output, ChoreDto chore)
+        internal static async Task ShowDetailsBrief(this TextWriter output, ChoreMemento chore)
         {
             await output.WriteLineAsync($"Task {chore.Id}: {chore.Description}");
             await output.WriteLnIfAsync($"  Start: {chore.StartDate}", chore.StartDate.HasValue);
             await output.WriteLineAsync($"  Due: {chore.DueDate}");
             await output.WriteLnIfAsync($"  Finish: {chore.FinishDate}", chore.FinishDate.HasValue);
+            await output.WriteLnIfAsync($"  Recurrence: {chore.Recurrence?.Kind} {chore.Recurrence?.Interval}", chore.Recurrence != null);
             await output.WriteLineAsync($"  Priority: {chore.Priority}");
-            await output.WriteLnIfAsync($"  Labels: {chore.Labels}", !string.IsNullOrEmpty(chore.Labels));
+            await output.WriteLnIfAsync($"  Labels: {chore.Labels.JoinStr(", ")}", chore.Labels.Any());
             await output.WriteLnIfAsync($"  Notes: {chore.Notes}", !string.IsNullOrEmpty(chore.Notes));
             if (!chore.Reminders.Any())
             {
@@ -52,7 +53,7 @@ namespace Icm.ChoreManager.CommandLine
             }
         }
 
-        internal static async Task ShowDetailsRow(this TextWriter output, ChoreDto chore)
+        internal static async Task ShowDetailsRow(this TextWriter output, ChoreMemento chore)
         {
             await output.WriteLineAsync($"Task {chore.Id}: {chore.Description}");
         }

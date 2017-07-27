@@ -37,26 +37,32 @@ namespace Icm.ChoreManager.Application
         {
             using (var repository = buildChoreRepository())
             {
-                var id = await CreateAsync(description, dueDate, repository);
+                var creationInstant = clock.GetCurrentInstant();
+
+                var chore = Chore.Create(
+                    description,
+                    dueDate,
+                    creationInstant);
+                var id = await repository.AddAsync(chore);
                 await repository.SaveAsync();
                 return id;
 
             }
         }
 
-        public async Task<ChoreDto> GetByIdAsync(ChoreId choreId)
+        public async Task<ChoreMemento> GetByIdAsync(ChoreId choreId)
         {
             using (var repository = buildChoreRepository())
             {
-                return (await repository.GetByIdAsync(choreId)).ToDto();
+                return (await repository.GetByIdAsync(choreId)).ToMemento();
             }
         }
 
-        public async Task<IEnumerable<ChoreDto>> GetPendingChoresAsync()
+        public async Task<IEnumerable<ChoreMemento>> GetPendingChoresAsync()
         {
             using (var repository = buildChoreRepository())
             {
-                return (await repository.GetPendingAsync()).Select(x => x.ToDto());
+                return (await repository.GetPendingAsync()).Select(x => x.ToMemento());
             }
         }
 
@@ -68,6 +74,7 @@ namespace Icm.ChoreManager.Application
 
                 identifiedChore.Value.Recurrence = new FinishDateRecurrence(repeatInterval);
                 await choreRepository.UpdateAsync(identifiedChore);
+                await choreRepository.SaveAsync();
             }
         }
 
@@ -79,6 +86,7 @@ namespace Icm.ChoreManager.Application
 
                 identifiedChore.Value.Recurrence = null;
                 await choreRepository.UpdateAsync(identifiedChore);
+                await choreRepository.SaveAsync();
             }
         }
 
@@ -148,7 +156,12 @@ namespace Icm.ChoreManager.Application
         {
             using (var choreRepository = buildChoreRepository())
             {
-                await ChangePriorityAsync(choreId, newPriority, choreRepository);
+                var id = new ChoreId(choreId);
+                var identifiedChore = await choreRepository.GetByIdAsync(id);
+
+                identifiedChore.Value.Priority = newPriority;
+                await choreRepository.UpdateAsync(identifiedChore);
+                await choreRepository.SaveAsync();
             }
         }
 
@@ -165,11 +178,29 @@ namespace Icm.ChoreManager.Application
             }
         }
 
-        public async Task ChangeLabelsAsync(ChoreId choreId, string newLabels)
+        public async Task AddLabelsAsync(ChoreId choreId, string[] newLabels)
         {
             using (var choreRepository = buildChoreRepository())
             {
-                await ChangeLabelsAsync(choreId, newLabels, choreRepository);
+                var id = new ChoreId(choreId);
+                var identifiedChore = await choreRepository.GetByIdAsync(id);
+
+                identifiedChore.Value.Labels = identifiedChore.Value.Labels.Union(newLabels.Select(x => x.ToLower())).ToArray();
+                await choreRepository.UpdateAsync(identifiedChore);
+                await choreRepository.SaveAsync();
+            }
+        }
+
+        public async Task RemoveLabelsAsync(ChoreId choreId, string[] labelsToRemove)
+        {
+            using (var choreRepository = buildChoreRepository())
+            {
+                var id = new ChoreId(choreId);
+                var identifiedChore = await choreRepository.GetByIdAsync(id);
+
+                identifiedChore.Value.Labels = identifiedChore.Value.Labels.Except(labelsToRemove.Select(x => x.ToLower())).ToArray();
+                await choreRepository.UpdateAsync(identifiedChore);
+                await choreRepository.SaveAsync();
             }
         }
 
@@ -177,7 +208,12 @@ namespace Icm.ChoreManager.Application
         {
             using (var choreRepository = buildChoreRepository())
             {
-                await ChangeNotesAsync(choreId, newNotes, choreRepository);
+                var id = new ChoreId(choreId);
+                var identifiedChore = await choreRepository.GetByIdAsync(id);
+
+                identifiedChore.Value.Notes = newNotes;
+                await choreRepository.UpdateAsync(identifiedChore);
+                await choreRepository.SaveAsync();
             }
         }
 
@@ -202,48 +238,6 @@ namespace Icm.ChoreManager.Application
                 return activeReminders
                     .Select(t => new TimeDto(t.Item1, t.Item2));
             }
-        }
-
-        private async Task<ChoreId> CreateAsync(string description, Instant dueDate, IChoreRepository choreRepository)
-        {
-            var creationInstant = clock.GetCurrentInstant();
-
-            var chore = Chore.Create(
-                description,
-                dueDate,
-                creationInstant);
-
-            return await choreRepository.AddAsync(chore);
-        }
-
-        private static async Task ChangePriorityAsync(ChoreId choreId, int newPriority, IChoreRepository choreRepository)
-        {
-            var id = new ChoreId(choreId);
-            var identifiedChore = await choreRepository.GetByIdAsync(id);
-
-            identifiedChore.Value.Priority = newPriority;
-            await choreRepository.UpdateAsync(identifiedChore);
-            await choreRepository.SaveAsync();
-        }
-
-        private static async Task ChangeLabelsAsync(ChoreId choreId, string newLabels, IChoreRepository choreRepository)
-        {
-            var id = new ChoreId(choreId);
-            var identifiedChore = await choreRepository.GetByIdAsync(id);
-
-            identifiedChore.Value.Labels = newLabels;
-            await choreRepository.UpdateAsync(identifiedChore);
-            await choreRepository.SaveAsync();
-        }
-
-        private static async Task ChangeNotesAsync(ChoreId choreId, string newNotes, IChoreRepository choreRepository)
-        {
-            var id = new ChoreId(choreId);
-            var identifiedChore = await choreRepository.GetByIdAsync(id);
-
-            identifiedChore.Value.Notes = newNotes;
-            await choreRepository.UpdateAsync(identifiedChore);
-            await choreRepository.SaveAsync();
         }
     }
 }
